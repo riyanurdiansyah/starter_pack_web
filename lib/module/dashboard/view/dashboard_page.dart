@@ -25,13 +25,13 @@ class DashboardPage extends StatelessWidget {
       body: Row(
         children: [
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Siderbar(
               route: route,
             ),
           ),
           Expanded(
-            flex: 6,
+            flex: 10,
             child: widget,
           ),
         ],

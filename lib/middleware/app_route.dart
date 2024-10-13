@@ -30,7 +30,7 @@ CustomTransitionPage buildPageWithDefaultTransition<T>({
 GoRouter router = GoRouter(
   errorBuilder: (context, state) => Container(),
   navigatorKey: navigatorKey,
-  initialLocation: "/",
+  initialLocation: "/home",
   debugLogDiagnostics: true,
   routes: [
     ShellRoute(

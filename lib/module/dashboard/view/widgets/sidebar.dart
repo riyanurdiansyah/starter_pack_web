@@ -16,8 +16,10 @@ class Siderbar extends StatelessWidget {
   });
 
   final String route;
-
   final _dC = Get.find<DashboardController>();
+
+  // Variabel untuk menyimpan index dari ExpansionTile yang terbuka
+  final ValueNotifier<int?> _openExpansionTileIndex = ValueNotifier<int?>(null);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class Siderbar extends StatelessWidget {
                       () => Column(
                         children: List.generate(
                           _dC.menus.length,
-                          (index) => _buildMenu(_dC.menus[index]),
+                          (index) => _buildMenu(_dC.menus[index], index),
                         ),
                       ),
                     ),
@@ -93,7 +95,7 @@ class Siderbar extends StatelessWidget {
     );
   }
 
-  Widget _buildMenu(SidebarM sidebar) {
+  Widget _buildMenu(SidebarM sidebar, int index) {
     if (sidebar.submenus.isEmpty) {
       return Container(
         decoration: BoxDecoration(
@@ -120,30 +122,38 @@ class Siderbar extends StatelessWidget {
         ),
       );
     }
+
     sidebar.submenus.sort((a, b) => a.title.compareTo(b.title));
-    return ExpansionTile(
-      childrenPadding: const EdgeInsets.only(left: 6),
-      title: AppTextNormal.labelNormal(
-        sidebar.title,
-        16,
-        sidebar.route == route.split("/")[1] && sidebar.route.isNotEmpty
-            ? colorPrimaryDark
-            : Colors.white,
-      ),
-      iconColor: Colors.white,
-      collapsedIconColor: Colors.white,
-      children: List.generate(sidebar.submenus.length, (index) {
-        if (sidebar.submenus[index].submenus.isEmpty) {
-          if (index + 1 == sidebar.submenus.length) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: _buildMenu(sidebar.submenus[index]),
-            );
-          }
-          return _buildMenu(sidebar.submenus[index]);
-        }
-        return _buildSubMenu(sidebar.submenus[index].submenus);
-      }),
+    return ValueListenableBuilder<int?>(
+      valueListenable: _openExpansionTileIndex,
+      builder: (context, openIndex, child) {
+        return ExpansionTile(
+          childrenPadding: const EdgeInsets.only(left: 6),
+          title: AppTextNormal.labelNormal(
+            sidebar.title,
+            16,
+            sidebar.route == route.split("/")[1] && sidebar.route.isNotEmpty
+                ? colorPrimaryDark
+                : Colors.white,
+          ),
+          iconColor: Colors.white,
+          collapsedIconColor: Colors.white,
+          initiallyExpanded: openIndex == index,
+          onExpansionChanged: (isExpanded) {
+            if (isExpanded) {
+              _openExpansionTileIndex.value = index; // Update index yang dibuka
+            } else if (openIndex == index) {
+              _openExpansionTileIndex.value = null; // Jika ditutup, set ke null
+            }
+          },
+          children: List.generate(sidebar.submenus.length, (subIndex) {
+            if (sidebar.submenus[subIndex].submenus.isEmpty) {
+              return _buildMenu(sidebar.submenus[subIndex], subIndex);
+            }
+            return _buildSubMenu(sidebar.submenus[subIndex].submenus);
+          }),
+        );
+      },
     );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "607751535948",
+    "project_id": "mfg-rakor",
+    "storage_bucket": "mfg-rakor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607751535948:android:b9bc04b3149896582d23e9",
+        "android_client_info": {
+          "package_name": "com.kalbenutritionals.rakor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu1dfxypu7NSsB0zv5r3k3PoNFyA09Gu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
