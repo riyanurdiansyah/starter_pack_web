@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../../../utils/app_color.dart';
 import '../../play/view/play_page.dart';
@@ -38,7 +39,7 @@ class _ChallengePageState extends State<ChallengePage> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 25.0),
                 child: Image.asset(
-                  "images/back.png",
+                  backImage,
                   width: 50,
                 ),
               ),
@@ -49,7 +50,7 @@ class _ChallengePageState extends State<ChallengePage> {
           Row(
             children: [
               Image.asset(
-                "images/dollar.png",
+                dollarImage,
                 width: 30,
               ),
               10.pw,
@@ -108,8 +109,8 @@ class _ChallengePageState extends State<ChallengePage> {
                               height: size.height / 1.5,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image:
-                                      AssetImage("images/${(index + 1)}.jpg"),
+                                  image: AssetImage(
+                                      "$baseImage/${(index + 1)}.png"),
                                   fit: BoxFit.fill,
                                 ),
                               ),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../../play/view/play_page.dart';
 import 'tabbar_item.dart';
@@ -29,7 +30,7 @@ class ProductPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 25.0),
                 child: Image.asset(
-                  "images/back.png",
+                  backImage,
                   width: 50,
                 ),
               ),
@@ -40,7 +41,7 @@ class ProductPage extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                "images/dollar.png",
+                dollarImage,
                 width: 30,
               ),
               10.pw,

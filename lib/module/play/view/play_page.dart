@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 class PlayPage extends StatelessWidget {
   PlayPage({super.key});
@@ -28,7 +29,7 @@ class PlayPage extends StatelessWidget {
             width: double.infinity,
             height: size.height,
             child: Image.asset(
-              "images/bg.jpg",
+              bgImage,
               fit: BoxFit.fill,
               filterQuality: FilterQuality.high,
             ),
@@ -43,7 +44,7 @@ class PlayPage extends StatelessWidget {
                 children: [
                   25.ph,
                   Image.asset(
-                    "assets/images/text.png",
+                    textImage,
                     width: size.width / 2.5,
                   ),
                   35.ph,
@@ -65,7 +66,7 @@ class PlayPage extends StatelessWidget {
                     child: Row(
                       children: [
                         Image.asset(
-                          "images/c.png",
+                          cImage,
                           width: 20,
                           color: Colors.white,
                         ),

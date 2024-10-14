@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/module/home/controller/home_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
 class HomePage extends StatelessWidget {
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
             width: double.infinity,
             height: size.height,
             child: Image.asset(
-              "images/bg2.jpg",
+              bg2Image,
               fit: BoxFit.fill,
               filterQuality: FilterQuality.high,
             ),
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(
-                      "images/crown.png",
+                      crownImage,
                       width: 40,
                     ),
                     const SizedBox(
