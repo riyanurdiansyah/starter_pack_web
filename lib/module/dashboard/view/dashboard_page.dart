@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:starter_pack_web/utils/app_color.dart';
 
 import '../controller/dashboard_controller.dart';
 import 'widgets/sidebar.dart';
@@ -19,6 +20,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colorPrimaryDark,
       drawer: Siderbar(
         route: route,
       ),

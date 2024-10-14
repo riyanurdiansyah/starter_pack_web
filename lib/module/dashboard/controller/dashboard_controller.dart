@@ -18,5 +18,7 @@ class DashboardController extends GetxController {
     menus.value = response.docs.map((e) {
       return SidebarM.fromJson(e.data());
     }).toList();
+
+    // menus.sort((a, b) => a.title.compareTo(b.title));
   }
 }

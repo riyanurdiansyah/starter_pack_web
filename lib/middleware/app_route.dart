@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
 import 'package:starter_pack_web/module/profile/controller/profile_controller.dart';
+import 'package:starter_pack_web/module/user/controller/user_controller.dart';
+import 'package:starter_pack_web/module/user/view/user_page.dart';
 
 import '../module/dashboard/controller/dashboard_controller.dart';
 import '../module/home/controller/home_controller.dart';
@@ -69,7 +71,19 @@ GoRouter router = GoRouter(
               },
               pageBuilder: (context, state) {
                 Get.put(HomeController());
-                return const NoTransitionPage(child: HomePage());
+                return NoTransitionPage(child: HomePage());
+              },
+            ),
+            GoRoute(
+              path: AppRouteName.user,
+              name: AppRouteName.user,
+              onExit: (_, __) {
+                Get.delete<UserController>();
+                return true;
+              },
+              pageBuilder: (context, state) {
+                Get.put(UserController());
+                return NoTransitionPage(child: UserPage());
               },
             ),
             GoRoute(

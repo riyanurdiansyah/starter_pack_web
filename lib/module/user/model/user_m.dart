@@ -1,0 +1,73 @@
+// To parse this JSON data, do
+//
+//     final userM = userMFromJson(jsonString);
+
+import 'dart:convert';
+
+UserM userMFromJson(String str) => UserM.fromJson(json.decode(str));
+
+String userMToJson(UserM data) => json.encode(data.toJson());
+
+class UserM {
+  final String id;
+  final String nama;
+  final String username;
+  final int roleId;
+  final String role;
+  final String kelompok;
+  final int kelompokId;
+  final int page;
+
+  UserM({
+    required this.id,
+    required this.nama,
+    required this.username,
+    required this.roleId,
+    required this.role,
+    required this.kelompok,
+    required this.kelompokId,
+    required this.page,
+  });
+
+  UserM copyWith({
+    String? id,
+    String? nama,
+    String? username,
+    int? roleId,
+    String? role,
+    String? kelompok,
+    int? kelompokId,
+    int? page,
+  }) =>
+      UserM(
+        id: id ?? this.id,
+        nama: nama ?? this.nama,
+        username: username ?? this.username,
+        roleId: roleId ?? this.roleId,
+        role: role ?? this.role,
+        kelompok: kelompok ?? this.kelompok,
+        kelompokId: kelompokId ?? this.kelompokId,
+        page: page ?? this.page,
+      );
+
+  factory UserM.fromJson(Map<String, dynamic> json) => UserM(
+        id: json["id"],
+        nama: json["nama"],
+        username: json["username"],
+        roleId: json["role_id"],
+        role: json["role"],
+        kelompok: json["kelompok"],
+        kelompokId: json["kelompok_id"] ?? 0,
+        page: json["page"] ?? 0,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "nama": nama,
+        "username": username,
+        "role_id": roleId,
+        "role": role,
+        "kelompok": kelompok,
+        "kelompok_id": kelompokId,
+      };
+}
