@@ -43,7 +43,7 @@ class PlayPage extends StatelessWidget {
                 children: [
                   25.ph,
                   Image.asset(
-                    "images/text.png",
+                    "assets/images/text.png",
                     width: size.width / 2.5,
                   ),
                   35.ph,
