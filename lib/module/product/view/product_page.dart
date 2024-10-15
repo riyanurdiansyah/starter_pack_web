@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:starter_pack_web/module/product/controller/product_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
@@ -9,7 +13,9 @@ import '../../play/view/play_page.dart';
 import 'tabbar_item.dart';
 
 class ProductPage extends StatelessWidget {
-  const ProductPage({super.key});
+  ProductPage({super.key});
+
+  final _c = Get.find<ProductController>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,16 +71,83 @@ class ProductPage extends StatelessWidget {
           //   width: double.infinity,
           //   height: size.height,
           //   child: Image.asset(
-          //     "images/bg3.jpg",
+          //     bgAll,
           //     fit: BoxFit.fill,
           //     filterQuality: FilterQuality.high,
           //   ),
           // ),
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 flex: 7,
-                child: SizedBox(),
+                child: Obx(() {
+                  if (_c.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: CarouselSlider(
+                          items: _c.products
+                              .map(
+                                (item) => CachedNetworkImage(
+                                  imageUrl: item.image,
+                                  width: double.infinity,
+                                  fit: BoxFit.contain,
+                                  // placeholder: (context, url) => const SizedBox(
+                                  //     width: 20,
+                                  //     height: 20,
+                                  //     child: CircularProgressIndicator()),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                              )
+                              .toList(),
+                          options: CarouselOptions(
+                              onPageChanged: (index, _) {
+                                _c.onChangeProduct(index);
+                              },
+                              enlargeCenterPage: true,
+                              height: size.height / 2),
+                          carouselController: _c.carouselSliderController,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Flexible(
+                            child: ElevatedButton(
+                              onPressed: () =>
+                                  _c.carouselSliderController.previousPage(),
+                              child: const Text('←'),
+                            ),
+                          ),
+                          14.pw,
+                          ...Iterable<int>.generate(_c.products.length).map(
+                            (int pageIndex) => Flexible(
+                              child: ElevatedButton(
+                                onPressed: () => _c.carouselSliderController
+                                    .animateToPage(pageIndex),
+                                child: Text(_c.products[pageIndex].nama),
+                              ),
+                            ),
+                          ),
+                          14.pw,
+                          Flexible(
+                            child: ElevatedButton(
+                              onPressed: () =>
+                                  _c.carouselSliderController.nextPage(),
+                              child: const Text('→'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      50.ph,
+                    ],
+                  );
+                }),
               ),
               Expanded(
                 flex: 4,

@@ -15,10 +15,10 @@ class PlayController extends GetxController {
   }
 
   Future playMusic() async {
-    await audioPlayer.play(AssetSource("music/sound.mp3"));
+    // await audioPlayer.play(AssetSource("music/sound.mp3"));
   }
 
   Future playMusicCar() async {
-    await audioPlayer.play(AssetSource("music/car.wav"));
+    // await audioPlayer.play(AssetSource("music/car.wav"));
   }
 }

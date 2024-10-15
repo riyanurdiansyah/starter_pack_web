@@ -62,7 +62,7 @@ GoRouter router = GoRouter(
             },
             pageBuilder: (context, state) {
               Get.put(ProductController());
-              return const NoTransitionPage(child: ProductPage());
+              return NoTransitionPage(child: ProductPage());
             },
           ),
           GoRoute(
