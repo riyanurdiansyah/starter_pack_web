@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 
-import '../../../utils/app_color.dart';
 import '../../play/view/play_page.dart';
 
 class ChallengePage extends StatefulWidget {
@@ -24,9 +23,9 @@ class _ChallengePageState extends State<ChallengePage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: colorPrimary,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: colorPrimaryDark,
+        backgroundColor: Colors.amber.shade200,
         leadingWidth: 115,
         leading: InkWell(
           onTap: () => context.pop(),
@@ -34,7 +33,7 @@ class _ChallengePageState extends State<ChallengePage> {
             clipper: TrapezoidClipper(),
             child: Container(
               alignment: Alignment.center,
-              color: Colors.white.withOpacity(0.4),
+              color: Colors.black26,
               height: 45,
               child: Padding(
                 padding: const EdgeInsets.only(right: 25.0),
@@ -47,24 +46,31 @@ class _ChallengePageState extends State<ChallengePage> {
           ),
         ),
         actions: [
-          Row(
-            children: [
-              Image.asset(
-                dollarImage,
-                width: 30,
-              ),
-              10.pw,
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 300),
-                style: GoogleFonts.nanumGothicCoding(
-                  fontSize: 26,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: const BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Row(
+              children: [
+                Image.asset(
+                  dollarImage,
+                  width: 30,
                 ),
-                child: const Text("339.2"),
-              ),
-              16.pw,
-            ],
+                10.pw,
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 300),
+                  style: GoogleFonts.nanumGothicCoding(
+                    fontSize: 26,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  child: const Text("339.2"),
+                ),
+                16.pw,
+              ],
+            ),
           )
         ],
       ),
@@ -108,6 +114,7 @@ class _ChallengePageState extends State<ChallengePage> {
                                   const EdgeInsets.symmetric(horizontal: 10),
                               height: size.height / 1.5,
                               decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white),
                                 image: DecorationImage(
                                   image: AssetImage(
                                       "$baseImage/${(index + 1)}.png"),
@@ -156,7 +163,7 @@ class _ChallengePageState extends State<ChallengePage> {
                         back: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           height: size.height / 1.5,
-                          color: Colors.black,
+                          color: Colors.amber.shade200,
                           child: Center(
                             child: Text(
                               "Back of Card ${index + 1}",

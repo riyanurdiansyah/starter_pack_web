@@ -32,6 +32,7 @@ dependencies:
   cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
   cloud_firestore: ^5.4.4
+  country_flags: ^3.0.0
   cupertino_icons: ^1.0.8
   dropdown_search: ^6.0.1
   file_picker: ^8.1.2
@@ -39,6 +40,7 @@ dependencies:
   flip_card: ^0.7.0
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.0
   flutter_map: ^6.1.0
   flutter_map_cancellable_tile_provider: ^2.0.0
   get: ^4.6.6

@@ -14,3 +14,7 @@ const crownImage = "assets/images/crown.png";
 const dollarImage = "assets/images/dollar.png";
 const textImage = "assets/images/text.png";
 const bgAll = "assets/images/bgall.png";
+const goldMedal = "assets/images/gold.png";
+const silverMedal = "assets/images/silver.png";
+const bronzeMedal = "assets/images/bronze.png";
+const garageImage = "assets/images/garage.png";

@@ -4,41 +4,88 @@
 
 import 'dart:convert';
 
-GroupM groupMFromJson(String str) => GroupM.fromJson(json.decode(str));
+List<GroupM> groupMFromJson(String str) =>
+    List<GroupM>.from(json.decode(str).map((x) => GroupM.fromJson(x)));
 
-String groupMToJson(GroupM data) => json.encode(data.toJson());
+String groupMToJson(List<GroupM> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class GroupM {
-  final String id;
-  final String nama;
+  final String alias;
+  final String country;
   final int groupId;
+  final String id;
+  final String image;
+  final String name;
+  final int point;
+  final int pointBefore;
+  final String updatedDate;
+  final int? rank;
+  final int? rankOld;
 
-  GroupM({
-    required this.id,
-    required this.nama,
-    required this.groupId,
-  });
+  GroupM(
+      {required this.alias,
+      required this.country,
+      required this.groupId,
+      required this.id,
+      required this.image,
+      required this.name,
+      required this.point,
+      required this.pointBefore,
+      required this.updatedDate,
+      this.rank,
+      this.rankOld});
 
   GroupM copyWith({
-    String? id,
-    String? nama,
+    String? alias,
+    String? country,
     int? groupId,
+    String? id,
+    String? image,
+    String? name,
+    int? point,
+    int? pointBefore,
+    String? updatedDate,
+    int? rank,
+    int? rankOld,
   }) =>
       GroupM(
-        id: id ?? this.id,
-        nama: nama ?? this.nama,
+        alias: alias ?? this.alias,
+        country: country ?? this.country,
         groupId: groupId ?? this.groupId,
+        id: id ?? this.id,
+        image: image ?? this.image,
+        name: name ?? this.name,
+        point: point ?? this.point,
+        pointBefore: pointBefore ?? this.pointBefore,
+        updatedDate: updatedDate ?? this.updatedDate,
+        rank: rank ?? this.rank,
+        rankOld: rankOld ?? this.rankOld,
       );
 
   factory GroupM.fromJson(Map<String, dynamic> json) => GroupM(
-        id: json["id"],
-        nama: json["nama"],
+        alias: json["alias"],
+        country: json["country"],
         groupId: json["group_id"],
+        id: json["id"],
+        image: json["image"],
+        name: json["name"],
+        point: json["point"],
+        pointBefore: json["point_before"],
+        updatedDate: json["updated_date"],
+        rank: 0,
+        rankOld: 0,
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "nama": nama,
+        "alias": alias,
+        "country": country,
         "group_id": groupId,
+        "id": id,
+        "image": image,
+        "name": name,
+        "point": point,
+        "point_before": pointBefore,
+        "updated_date": updatedDate,
       };
 }

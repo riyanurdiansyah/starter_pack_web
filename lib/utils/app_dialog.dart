@@ -198,7 +198,7 @@ class AppDialog {
                   },
                   // asyncItems: (String filter) =>
                   //     iC.customerRepository.getCustomers(),
-                  itemAsString: (GroupM u) => u.nama,
+                  itemAsString: (GroupM u) => u.name,
                   selectedItem: uC.selectedGroup.value,
                   onChanged: uC.onSelectGroup,
                 ),

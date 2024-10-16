@@ -67,7 +67,7 @@ class UserController extends GetxController {
     final list = response.docs.map((e) {
       return GroupM.fromJson(e.data());
     }).toList();
-    list.sort((a, b) => a.nama.compareTo(b.nama));
+    list.sort((a, b) => a.name.compareTo(b.name));
     return list;
   }
 
@@ -136,7 +136,7 @@ class UserController extends GetxController {
         username: tcUsername.text,
         roleId: selectedRole.value.roleId,
         role: selectedRole.value.role,
-        kelompok: selectedGroup.value.nama,
+        kelompok: selectedGroup.value.name,
         kelompokId: selectedGroup.value.groupId,
         page: 0,
       );
