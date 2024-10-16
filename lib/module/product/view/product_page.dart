@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/module/product/controller/product_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
-import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
@@ -393,33 +392,32 @@ class ProductPage extends StatelessWidget {
                 child: Row(
                   children: [
                     // const Spacer(),
-                    SizedBox(
-                      width: 125,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: colorGold,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                            )),
-                        child: Row(
-                          children: [
-                            AppTextNormal.labelW600(
-                              "SAVE",
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: colorGold,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          )),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 18),
+                            child: AppTextNormal.labelBold(
+                              "SAVE!",
                               20,
                               Colors.black,
                             ),
-                            10.pw,
-                            const Icon(
-                              Icons.arrow_upward_rounded,
-                              color: Colors.red,
-                              size: 25,
-                            ),
-                          ],
-                        ),
+                          ),
+                          const Icon(
+                            Icons.play_arrow_rounded,
+                            color: Colors.black,
+                            size: 35,
+                          ),
+                        ],
                       ),
                     )
                   ],
