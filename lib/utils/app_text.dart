@@ -16,7 +16,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
         fontWeight: FontWeight.normal,
         fontSize: fontSize,
         color: colors,
@@ -40,7 +40,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
           fontWeight: FontWeight.w400,
           fontSize: fontSize,
           color: colors,
@@ -62,7 +62,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
         letterSpacing: letterSpacing,
         fontWeight: FontWeight.w500,
         fontSize: fontSize,
@@ -110,7 +110,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
         fontWeight: FontWeight.w700,
         fontSize: fontSize,
         color: colors,
@@ -132,7 +132,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
         fontWeight: FontWeight.w800,
         fontSize: fontSize,
         color: colors,
@@ -153,7 +153,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
         fontWeight: FontWeight.w900,
         fontSize: fontSize,
         color: colors,
@@ -175,7 +175,7 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.openSans(
+      style: GoogleFonts.nanumGothicCoding(
         fontWeight: FontWeight.bold,
         fontSize: fontSize,
         color: colors,

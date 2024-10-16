@@ -5,9 +5,12 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/module/product/controller/product_controller.dart';
+import 'package:starter_pack_web/module/product/view/brand_page.dart';
+import 'package:starter_pack_web/module/product/view/informasi_page.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
+import 'package:starter_pack_web/utils/app_text.dart';
 
 import '../../play/view/play_page.dart';
 import 'tabbar_item.dart';
@@ -149,142 +152,198 @@ class ProductPage extends StatelessWidget {
                   );
                 }),
               ),
+
               Expanded(
                 flex: 4,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  color: Colors.grey.shade200.withOpacity(0.4),
-                  child: DefaultTabController(
-                    length: 2, // Jumlah tab
-                    child: Column(
-                      children: [
-                        PreferredSize(
-                          preferredSize: const Size.fromHeight(40),
-                          child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            child: Container(
-                              height: 45,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(14),
-                                  bottomRight: Radius.circular(14),
-                                ),
-                                color: colorPrimaryDark.withOpacity(0.2),
-                              ),
-                              child: const TabBar(
-                                indicatorSize: TabBarIndicatorSize.tab,
-                                dividerColor: Colors.transparent,
-                                indicator: BoxDecoration(
-                                  color: colorGold,
-                                  borderRadius: BorderRadius.only(
+                child: Obx(() {
+                  if (_c.isLoading.value) {
+                    return const SizedBox();
+                  }
+                  return Container(
+                    width: size.width,
+                    height: size.height,
+                    color: colorPrimaryDark.withOpacity(0.2),
+                    child: DefaultTabController(
+                      length: 2, // Jumlah tab
+                      child: Column(
+                        children: [
+                          16.ph,
+                          PreferredSize(
+                            preferredSize: const Size.fromHeight(40),
+                            child: ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              child: Container(
+                                height: 45,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(14),
                                     bottomRight: Radius.circular(14),
                                   ),
+                                  color: colorPrimaryDark.withOpacity(0.2),
                                 ),
-                                labelColor: Colors.white,
-                                unselectedLabelColor: Colors.black54,
-                                tabs: [
-                                  TabItem(title: 'Brand'),
-                                  TabItem(title: 'Komposisi'),
-                                ],
+                                child: const TabBar(
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  dividerColor: Colors.transparent,
+                                  indicator: BoxDecoration(
+                                    color: colorGold,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(14),
+                                      bottomRight: Radius.circular(14),
+                                    ),
+                                  ),
+                                  labelColor: Colors.white,
+                                  unselectedLabelColor: Colors.black54,
+                                  tabs: [
+                                    TabItem(title: 'Brand'),
+                                    TabItem(title: 'Informasi'),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              const Expanded(
-                                child: TabBarView(
-                                  children: [
-                                    Center(
-                                        child: Text(
-                                            'Konten untuk Tab 1')), // Konten untuk tab 1
-                                    Center(
-                                        child: Text(
-                                            'Konten untuk Tab 2')), // Konten untuk tab 2
-                                  ],
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: TabBarView(
+                                    children: [
+                                      BrandPage(),
+                                      InformasiPage(),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.grey.shade300,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(14),
-                                              bottomRight: Radius.circular(14),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 14),
+                                  child: Column(
+                                    children: [
+                                      Obx(
+                                        () {
+                                          if (_c.price.value == 0) {
+                                            return const SizedBox();
+                                          }
+                                          return Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 14),
+                                            width: double.infinity,
+                                            height: 35,
+                                            color: Colors.white,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                AppTextNormal.labelW600(
+                                                  "TOTAL  :",
+                                                  20,
+                                                  colorPrimaryDark,
+                                                ),
+                                                AppTextNormal.labelBold(
+                                                  "\$${_c.price.value}",
+                                                  25,
+                                                  Colors.red,
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ),
-                                        onPressed: () {},
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 14),
-                                          child: AnimatedDefaultTextStyle(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            style:
-                                                GoogleFonts.nanumGothicCoding(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            child: const Text("RESET"),
-                                          ),
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    ),
-                                    16.pw,
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: colorGold,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(14),
-                                              bottomRight: Radius.circular(14),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.grey.shade300,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(6)),
+                                                ),
+                                              ),
+                                              onPressed: () {},
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 14),
+                                                child: AnimatedDefaultTextStyle(
+                                                  duration: const Duration(
+                                                      milliseconds: 300),
+                                                  style: GoogleFonts
+                                                      .nanumGothicCoding(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  child: const Text("RESET"),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        onPressed: () {},
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 14),
-                                          child: AnimatedDefaultTextStyle(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            style:
-                                                GoogleFonts.nanumGothicCoding(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600,
+                                          16.pw,
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    colorPrimaryDark,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(6)),
+                                                ),
+                                              ),
+                                              onPressed: () {},
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 14),
+                                                child: AnimatedDefaultTextStyle(
+                                                  duration: const Duration(
+                                                      milliseconds: 300),
+                                                  style: GoogleFonts
+                                                      .nanumGothicCoding(
+                                                    fontSize: 20,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  child: const Text("SAVE"),
+                                                ),
+                                              ),
                                             ),
-                                            child: const Text("SAVE"),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ),
+              // Expanded(
+              //   flex: 4,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(vertical: 16),
+              //     color: Colors.grey.shade200.withOpacity(0.4),
+              //     child:
+              //   ),
+              // ),
             ],
           ),
         ],

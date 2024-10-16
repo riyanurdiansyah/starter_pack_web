@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -13,9 +11,15 @@ class ProductController extends GetxController {
 
   Rx<int> currentPage = 0.obs;
 
+  Rx<int> price = 0.obs;
+
   Rx<bool> isLoading = true.obs;
 
+  Rx<bool> isUseIklan = false.obs;
+
   RxList<ProductM> products = <ProductM>[].obs;
+
+  RxList<InformasiProductM> informasiSelected = <InformasiProductM>[].obs;
 
   @override
   void onInit() async {
@@ -40,6 +44,20 @@ class ProductController extends GetxController {
 
   void onChangeProduct(int index) {
     currentPage.value = index;
-    log(currentPage.value);
+  }
+
+  void onChangeIklan(bool val) {
+    isUseIklan.value = val;
+  }
+
+  void onSelectInformasi(InformasiProductM infor) {
+    if (informasiSelected.contains(infor)) {
+      informasiSelected
+          .removeWhere((x) => x.gizi == infor.gizi && x.price == infor.price);
+      price.value -= infor.price;
+    } else {
+      informasiSelected.add(infor);
+      price.value += infor.price;
+    }
   }
 }
