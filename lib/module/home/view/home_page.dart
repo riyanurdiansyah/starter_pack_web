@@ -187,6 +187,10 @@ class HomePage extends StatelessWidget {
                                                   imageUrl: data.image,
                                                   width: 25,
                                                   fit: BoxFit.cover,
+                                                  httpHeaders: const {
+                                                    'Access-Control-Allow-Origin':
+                                                        '*'
+                                                  },
                                                   errorWidget:
                                                       (context, url, error) =>
                                                           const SizedBox(),

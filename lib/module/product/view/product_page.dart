@@ -145,6 +145,9 @@ class ProductPage extends StatelessWidget {
                                             imageUrl: item.image,
                                             width: double.infinity,
                                             fit: BoxFit.contain,
+                                            httpHeaders: const {
+                                              'Access-Control-Allow-Origin': '*'
+                                            },
                                             // placeholder: (context, url) => const SizedBox(
                                             //     width: 20,
                                             //     height: 20,
