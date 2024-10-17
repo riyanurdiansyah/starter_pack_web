@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
+import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 
@@ -29,8 +29,8 @@ class PlayPage extends StatelessWidget {
             width: double.infinity,
             height: size.height,
             child: Image.asset(
-              bgImage,
-              fit: BoxFit.fill,
+              bgUImage,
+              fit: BoxFit.cover,
               filterQuality: FilterQuality.high,
             ),
           ),
@@ -47,7 +47,7 @@ class PlayPage extends StatelessWidget {
                     textImage,
                     width: size.width / 2.5,
                   ),
-                  35.ph,
+                  100.ph,
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 100),
                     width: size.width / 2,
@@ -71,15 +71,15 @@ class PlayPage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         10.pw,
-                        AnimatedDefaultTextStyle(
-                          duration: const Duration(milliseconds: 300),
-                          style: GoogleFonts.nanumGothicCoding(
-                            fontSize: 18,
+                        const AnimatedDefaultTextStyle(
+                          duration: Duration(milliseconds: 300),
+                          style: TextStyle(
+                            fontFamily: 'Race',
                             letterSpacing: 10,
                             fontStyle: FontStyle.italic,
                             color: Colors.white,
                           ),
-                          child: const Text("Tim Rakor MFG"),
+                          child: Text("Tim Rakor MFG"),
                         ),
                       ],
                     ),
@@ -168,12 +168,13 @@ class _HoverTextItemState extends State<HoverTextItem> {
               EdgeInsets.only(left: isHovered ? 10 : 0), // Transisi dari kiri
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 300),
-            style: GoogleFonts.nanumGothicCoding(
+            style: TextStyle(
+              fontFamily: 'Race',
               fontSize: isHovered ? 45 : 35, // Ukuran font berubah saat hover
               height: 2.5,
               letterSpacing: 10,
               fontStyle: FontStyle.italic,
-              color: Colors.white,
+              color: isHovered ? colorPointRank : Colors.white,
             ),
             child: Text(widget.text),
           ),

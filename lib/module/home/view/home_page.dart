@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/home/controller/home_controller.dart';
+import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
@@ -53,7 +53,7 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   width: size.width / 1.6,
                   height: 40,
-                  color: Colors.amber.shade200,
+                  color: colorElectricViolet,
                   child: Row(
                     children: [
                       SizedBox(
@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
                         child: AppTextNormal.labelBold(
                           "RANK",
                           14,
-                          Colors.black,
+                          Colors.white,
                         ),
                       ),
                       SizedBox(
@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                         child: AppTextNormal.labelBold(
                           "EVOLUTION",
                           14,
-                          Colors.black,
+                          Colors.white,
                         ),
                       ),
                       SizedBox(
@@ -77,7 +77,7 @@ class HomePage extends StatelessWidget {
                         child: AppTextNormal.labelBold(
                           "",
                           14,
-                          Colors.black,
+                          Colors.white,
                         ),
                       ),
                       Expanded(
@@ -85,7 +85,7 @@ class HomePage extends StatelessWidget {
                         child: AppTextNormal.labelBold(
                           "TEAM",
                           14,
-                          Colors.black,
+                          Colors.white,
                         ),
                       ),
                       Expanded(
@@ -93,15 +93,15 @@ class HomePage extends StatelessWidget {
                         child: AppTextNormal.labelBold(
                           "RESULT",
                           14,
-                          Colors.black,
+                          Colors.white,
                         ),
                       ),
                       SizedBox(
                         width: 70,
                         child: AppTextNormal.labelBold(
-                          "MONEY",
+                          "PROFIT",
                           14,
-                          Colors.black,
+                          Colors.white,
                         ),
                       ),
                     ],
@@ -131,7 +131,7 @@ class HomePage extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: Image.asset(
-                                      silverMedal,
+                                      bronzeMedal,
                                       width: 30,
                                     ),
                                   ),
@@ -141,6 +141,7 @@ class HomePage extends StatelessWidget {
                                     child: Image.asset(
                                       bronzeMedal,
                                       width: 30,
+                                      color: Colors.brown,
                                     ),
                                   ),
                                 if (index > 2)
@@ -153,8 +154,8 @@ class HomePage extends StatelessWidget {
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
+                                        decoration: const BoxDecoration(
+                                          color: colorCardRank,
                                         ),
                                         margin: const EdgeInsets.only(
                                             bottom: 10, left: 20),
@@ -171,7 +172,7 @@ class HomePage extends StatelessWidget {
                                                 child: AppTextNormal.labelBold(
                                                   "${index + 1}",
                                                   16,
-                                                  Colors.white,
+                                                  Colors.black,
                                                 ),
                                               ),
                                               SizedBox(
@@ -208,27 +209,27 @@ class HomePage extends StatelessWidget {
                                                     AppTextNormal.labelBold(
                                                       data.alias.toUpperCase(),
                                                       14,
-                                                      Colors.white,
+                                                      Colors.black,
                                                     ),
-                                                    5.ph,
-                                                    Row(
-                                                      children: [
-                                                        CountryFlag
-                                                            .fromLanguageCode(
-                                                          data.country
-                                                              .toLowerCase(),
-                                                          width: 15,
-                                                          height: 12,
-                                                        ),
-                                                        8.pw,
-                                                        AppTextNormal
-                                                            .labelNormal(
-                                                          data.name,
-                                                          12,
-                                                          Colors.white30,
-                                                        ),
-                                                      ],
-                                                    ),
+                                                    // 5.ph,
+                                                    // Row(
+                                                    //   children: [
+                                                    //     CountryFlag
+                                                    //         .fromLanguageCode(
+                                                    //       data.country
+                                                    //           .toLowerCase(),
+                                                    //       width: 15,
+                                                    //       height: 12,
+                                                    //     ),
+                                                    //     8.pw,
+                                                    //     AppTextNormal
+                                                    //         .labelNormal(
+                                                    //       data.name,
+                                                    //       12,
+                                                    //       Colors.black,
+                                                    //     ),
+                                                    //   ],
+                                                    // ),
                                                   ],
                                                 ),
                                               ),
@@ -241,14 +242,14 @@ class HomePage extends StatelessWidget {
                                                 ),
                                               ),
                                               Container(
-                                                width: 80,
+                                                width: 70,
                                                 margin: const EdgeInsets.all(6),
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(8)),
-                                                  color: Colors.red,
+                                                  color: colorPointRank,
                                                 ),
                                                 child: AppTextNormal.labelBold(
                                                   "\$ ${data.point}",
@@ -256,7 +257,7 @@ class HomePage extends StatelessWidget {
                                                   Colors.white,
                                                 ),
                                               ),
-                                              36.pw,
+                                              25.pw,
                                             ],
                                           ),
                                         ),

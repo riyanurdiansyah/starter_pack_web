@@ -1,11 +1,9 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
-
-import '../../play/view/play_page.dart';
+import 'package:starter_pack_web/utils/app_text.dart';
 
 class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
@@ -18,167 +16,236 @@ class _ChallengePageState extends State<ChallengePage> {
   List<GlobalKey<FlipCardState>> cardKeys =
       List.generate(4, (index) => GlobalKey<FlipCardState>());
   List<bool> isHoveredList = List.generate(4, (index) => false);
+  bool isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.amber.shade200,
-        leadingWidth: 115,
-        leading: InkWell(
-          onTap: () => context.pop(),
-          child: ClipPath(
-            clipper: TrapezoidClipper(),
-            child: Container(
-              alignment: Alignment.center,
-              color: Colors.black26,
-              height: 45,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 25.0),
-                child: Image.asset(
-                  backImage,
-                  width: 50,
-                ),
-              ),
-            ),
-          ),
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: const BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: Row(
-              children: [
-                Image.asset(
-                  dollarImage,
-                  width: 30,
-                ),
-                10.pw,
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 300),
-                  style: GoogleFonts.nanumGothicCoding(
-                    fontSize: 26,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  child: const Text("339.2"),
-                ),
-                16.pw,
-              ],
-            ),
-          )
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.black,
+      //   leadingWidth: 115,
+      //   leading:
+      //   actions: [
+      //     Container(
+      //       margin: const EdgeInsets.symmetric(horizontal: 16),
+      //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      //       decoration: const BoxDecoration(
+      //           color: Colors.black26,
+      //           borderRadius: BorderRadius.all(Radius.circular(8))),
+      //       child: Row(
+      //         children: [
+      //           Image.asset(
+      //             dollarImage,
+      //             width: 30,
+      //           ),
+      //           10.pw,
+      //           AnimatedDefaultTextStyle(
+      //             duration: const Duration(milliseconds: 300),
+      //             style: GoogleFonts.nanumGothicCoding(
+      //               fontSize: 26,
+      //               color: Colors.white,
+      //               fontWeight: FontWeight.w600,
+      //             ),
+      //             child: const Text("339.2"),
+      //           ),
+      //           16.pw,
+      //         ],
+      //       ),
+      //     )
+      //   ],
+      // ),
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              children: List.generate(
-                4,
-                (index) => Expanded(
-                  child: ClipPath(
-                    clipper: MyClipper(),
+          // SizedBox(
+          //   width: double.infinity,
+          //   height: size.height,
+          //   child: ColorFiltered(
+          //     colorFilter: const ColorFilter.mode(
+          //       Colors.black,
+          //       BlendMode.saturation,
+          //     ),
+          //     child: Image.asset(
+          //       bgUImage,
+          //       fit: BoxFit.cover,
+          //       filterQuality: FilterQuality.high,
+          //     ),
+          //   ),
+          // ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18.0, left: 35),
                     child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
                       onEnter: (_) {
                         setState(() {
-                          isHoveredList[index] = true;
+                          isHovered = true;
+                          // isHoveredList[index] = true;
                         });
 
-                        if (cardKeys[index].currentState?.isFront == true) {
-                          cardKeys[index].currentState?.toggleCard();
-                        }
+                        // if (cardKeys[index].currentState?.isFront == true) {
+                        //   cardKeys[index].currentState?.toggleCard();
+                        // }
                       },
                       onExit: (_) {
                         setState(() {
-                          isHoveredList[index] = false;
+                          isHovered = false;
+                          // isHoveredList[index] = false;
                         });
 
-                        if (cardKeys[index].currentState?.isFront == false) {
-                          cardKeys[index].currentState?.toggleCard();
-                        }
+                        // if (cardKeys[index].currentState?.isFront ==
+                        //     false) {
+                        //   cardKeys[index].currentState?.toggleCard();
+                        // }
                       },
-                      child: FlipCard(
-                        key: cardKeys[index],
-                        flipOnTouch: false,
-                        front: Stack(
-                          children: [
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              height: size.height / 1.5,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      "$baseImage/${(index + 1)}.png"),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            // Positioned(
-                            //   top: 0,
-                            //   bottom: 0,
-                            //   left: 0,
-                            //   right: 0,
-                            //   child: Image.asset(
-                            //     "assets/5.png",
-                            //     width: 50,
-                            //   ),
-                            // ),
-                            Positioned(
-                              bottom: 0,
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 20),
-                                child: Text(
-                                  "Week of 1",
-                                  style: GoogleFonts.exo2(
-                                    fontSize: 26,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 8,
-                                    shadows: [
-                                      Shadow(
-                                        offset: const Offset(
-                                            2.0, 2.0), // Posisi bayangan (x, y)
-                                        blurRadius:
-                                            3.0, // Tingkat blur bayangan
-                                        color: Colors.white.withOpacity(
-                                            0.5), // Warna bayangan dengan opacity
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        back: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          height: size.height / 1.5,
-                          color: Colors.amber.shade200,
-                          child: Center(
-                            child: Text(
-                              "Back of Card ${index + 1}",
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 24),
+                      child: InkWell(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.black26,
+                          height: 45,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 25.0),
+                            child: AppTextNormal.labelBold(
+                              "HOME",
+                              26,
+                              isHovered ? colorElectricViolet : Colors.white,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ),
-          )
+              Container(
+                height: size.height / 1.1,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: List.generate(
+                    4,
+                    (index) => Expanded(
+                      child: ClipPath(
+                        clipper: MyClipper(),
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          onEnter: (_) {
+                            setState(() {
+                              isHoveredList[index] = true;
+                            });
+
+                            if (cardKeys[index].currentState?.isFront == true) {
+                              cardKeys[index].currentState?.toggleCard();
+                            }
+                          },
+                          onExit: (_) {
+                            setState(() {
+                              isHoveredList[index] = false;
+                            });
+
+                            if (cardKeys[index].currentState?.isFront ==
+                                false) {
+                              cardKeys[index].currentState?.toggleCard();
+                            }
+                          },
+                          child:
+                              // FlipCard(
+                              //   key: cardKeys[index],
+                              //   flipOnTouch: false,
+                              //   front:
+
+                              Stack(
+                            children: [
+                              ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  isHoveredList[index]
+                                      ? Colors.transparent
+                                      : Colors.grey,
+                                  BlendMode.saturation,
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  height: size.height / 1.5,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          "$baseImage/${(index + 1)}.png"),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Positioned(
+                              //   top: 0,
+                              //   bottom: 0,
+                              //   left: 0,
+                              //   right: 0,
+                              //   child: Image.asset(
+                              //     "assets/5.png",
+                              //     width: 50,
+                              //   ),
+                              // ),
+                              Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                  child: Text(
+                                    "Challenge ${index + 1}",
+                                    style: TextStyle(
+                                      fontFamily: "Race",
+                                      fontSize: 26,
+                                      color: isHoveredList[index]
+                                          ? colorElectricViolet
+                                          : Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 4,
+                                      shadows: !isHoveredList[index]
+                                          ? null
+                                          : [
+                                              const Shadow(
+                                                offset: Offset(2.0,
+                                                    2.0), // Posisi bayangan (x, y)
+                                                blurRadius:
+                                                    1.0, // Tingkat blur bayangan
+                                                color: Colors
+                                                    .white, // Warna bayangan dengan opacity
+                                              ),
+                                            ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            // ),
+                            // back: Container(
+                            //   margin: const EdgeInsets.symmetric(horizontal: 10),
+                            //   height: size.height / 1.5,
+                            //   color: Colors.amber.shade200,
+                            //   child: Center(
+                            //     child: Text(
+                            //       "Back of Card ${index + 1}",
+                            //       style: const TextStyle(
+                            //           color: Colors.white, fontSize: 24),
+                            //     ),
+                            //   ),
+                            // ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

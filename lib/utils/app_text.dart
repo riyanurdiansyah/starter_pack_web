@@ -16,7 +16,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+        fontFamily: 'Bigail',
         fontWeight: FontWeight.normal,
         fontSize: fontSize,
         color: colors,
@@ -40,7 +41,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+          fontFamily: 'Bigail',
           fontWeight: FontWeight.w400,
           fontSize: fontSize,
           color: colors,
@@ -62,7 +64,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+        fontFamily: 'Bigail',
         letterSpacing: letterSpacing,
         fontWeight: FontWeight.w500,
         fontSize: fontSize,
@@ -110,7 +113,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+        fontFamily: 'Bigail',
         fontWeight: FontWeight.w700,
         fontSize: fontSize,
         color: colors,
@@ -132,7 +136,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+        fontFamily: 'Bigail',
         fontWeight: FontWeight.w800,
         fontSize: fontSize,
         color: colors,
@@ -153,7 +158,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+        fontFamily: 'Bigail',
         fontWeight: FontWeight.w900,
         fontSize: fontSize,
         color: colors,
@@ -175,7 +181,8 @@ class AppTextNormal {
       title,
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
-      style: GoogleFonts.nanumGothicCoding(
+      style: TextStyle(
+        fontFamily: 'Bigail',
         fontWeight: FontWeight.bold,
         fontSize: fontSize,
         color: colors,
