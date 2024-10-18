@@ -1,6 +1,7 @@
 class AppRouteName {
   static const String app = "/";
   static const String home = 'home';
+  static const String signin = 'signin';
   static const String board = 'board';
   static const String product = 'product';
   static const String challenge = 'challenge';

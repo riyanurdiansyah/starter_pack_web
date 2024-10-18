@@ -12,6 +12,9 @@ InputDecoration textFieldAuthDecoration(
     fillColor: Colors.white,
     filled: true,
     hintText: hintText,
+    hintStyle: const TextStyle(
+      fontSize: 14,
+    ),
     focusedErrorBorder: OutlineInputBorder(
         borderSide: const BorderSide(
           color: Colors.red,

@@ -2,6 +2,7 @@ const baseImage = "assets/images";
 
 const bgImage = "assets/images/bg.png";
 const bgUImage = "assets/images/bg_bu_2.png";
+const bgSigninImage = "assets/images/signin.png";
 const bg2Image = "assets/images/bg2.png";
 const bg3Image = "assets/images/bg3.png";
 const cImage = "assets/images/c.png";

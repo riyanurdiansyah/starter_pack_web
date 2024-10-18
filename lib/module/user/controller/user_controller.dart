@@ -139,6 +139,7 @@ class UserController extends GetxController {
         kelompok: selectedGroup.value.name,
         kelompokId: selectedGroup.value.groupId,
         page: 0,
+        password: "",
       );
 
       userCollection.add(newUser.toJson());

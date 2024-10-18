@@ -12,6 +12,7 @@ class UserM {
   final String id;
   final String nama;
   final String username;
+  final String password;
   final int roleId;
   final String role;
   final String kelompok;
@@ -22,6 +23,7 @@ class UserM {
     required this.id,
     required this.nama,
     required this.username,
+    required this.password,
     required this.roleId,
     required this.role,
     required this.kelompok,
@@ -33,6 +35,7 @@ class UserM {
     String? id,
     String? nama,
     String? username,
+    String? password,
     int? roleId,
     String? role,
     String? kelompok,
@@ -43,6 +46,7 @@ class UserM {
         id: id ?? this.id,
         nama: nama ?? this.nama,
         username: username ?? this.username,
+        password: password ?? this.password,
         roleId: roleId ?? this.roleId,
         role: role ?? this.role,
         kelompok: kelompok ?? this.kelompok,
@@ -54,6 +58,7 @@ class UserM {
         id: json["id"],
         nama: json["nama"],
         username: json["username"],
+        password: json["password"],
         roleId: json["role_id"],
         role: json["role"],
         kelompok: json["kelompok"],
@@ -65,6 +70,7 @@ class UserM {
         "id": id,
         "nama": nama,
         "username": username,
+        "password": password,
         "role_id": roleId,
         "role": role,
         "kelompok": kelompok,

@@ -21,7 +21,6 @@ class HomeController extends GetxController {
 
   Future getGroups() async {
     final response = await firestore.collection("group").get();
-    // final response2 = await firestore.collection("group").get();
 
     groups.value = response.docs.map((e) {
       return GroupM.fromJson(e.data());
@@ -60,9 +59,6 @@ class HomeController extends GetxController {
   int getEvolution(GroupM data) {
     final oldRank = oldGroups.indexOf(data) + 1;
     final thenRank = thenGroups.indexOf(data) + 1;
-
-    // log("CEK RANK ${data.name} : $oldRank");
-    // log("CEK RANK 2 ${data.name}  : $thenRank");
 
     return thenRank - oldRank;
   }

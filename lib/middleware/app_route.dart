@@ -1,18 +1,26 @@
 // app_pages.dart
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/challenge/controller/challenge_controller.dart';
 import 'package:starter_pack_web/module/challenge/view/challenge_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
+import 'package:starter_pack_web/module/login/controller/login_controller.dart';
+import 'package:starter_pack_web/module/login/view/login_page.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/module/play/view/play_page.dart';
 import 'package:starter_pack_web/module/product/controller/product_controller.dart';
 import 'package:starter_pack_web/module/product/view/product_page.dart';
 import 'package:starter_pack_web/module/profile/controller/profile_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
+import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/module/user/view/user_page.dart';
+import 'package:universal_html/html.dart' as html;
 
 import '../module/dashboard/controller/dashboard_controller.dart';
 import '../module/home/controller/home_controller.dart';
@@ -35,12 +43,64 @@ CustomTransitionPage buildPageWithDefaultTransition<T>({
   );
 }
 
+String? getSessionFromCookie() {
+  String cookies = html.document.cookie ?? "";
+  List<String> cookiesList = cookies.split("; ");
+
+  for (String cookie in cookiesList) {
+    if (cookie.startsWith("WebRakorMFG=")) {
+      return cookie.substring("WebRakorMFG=".length);
+    }
+  }
+  return null;
+}
+
 GoRouter router = GoRouter(
   errorBuilder: (context, state) => Container(),
   navigatorKey: navigatorKey,
   initialLocation: "/play",
   debugLogDiagnostics: true,
+  redirect: (context, state) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final user = pref.getString("user");
+    if (user == null) {
+      return "/signin";
+    }
+
+    String? sessionId = getSessionFromCookie();
+
+    if (sessionId == null &&
+        state.uri.toString() != "/${AppRouteName.signin}") {
+      return "/${AppRouteName.signin}";
+    }
+
+    final userObj = UserM.fromJson(json.decode(user));
+
+    if (sessionId != userObj.id) {
+      return "/${AppRouteName.signin}";
+    }
+
+    log(state.uri.toString());
+
+    if (state.uri.toString() == "/${AppRouteName.signin}") {
+      return "/${AppRouteName.app}";
+    }
+
+    return null;
+  },
   routes: [
+    GoRoute(
+      path: "/${AppRouteName.signin}",
+      name: AppRouteName.signin,
+      onExit: (_, __) {
+        Get.delete<LoginController>();
+        return true;
+      },
+      pageBuilder: (context, state) {
+        Get.put(LoginController());
+        return NoTransitionPage(child: LoginPage());
+      },
+    ),
     GoRoute(
         path: "/${AppRouteName.play}",
         name: AppRouteName.play,
@@ -74,7 +134,7 @@ GoRouter router = GoRouter(
             },
             pageBuilder: (context, state) {
               Get.put(ChallengeController());
-              return const NoTransitionPage(child: ChallengePage());
+              return NoTransitionPage(child: ChallengePage());
             },
           ),
         ]),
@@ -157,25 +217,5 @@ GoRouter router = GoRouter(
         ),
       ],
     ),
-    // GoRoute(
-    //   path: '/signin',
-    //   name: AppRouteName.signin,
-    //   builder: (context, state) {
-    //     return WebSigninPage();
-    //   },
-    // ),
-    // GoRoute(
-    //   path: '/invoice/:id',
-    //   name: AppRouteName.invoicesDetail,
-    //   onExit: (context) {
-    //     Get.delete<InvoiceDetailController>();
-    //     return true;
-    //   },
-    //   pageBuilder: (context, state) {
-    //     String id = state.pathParameters["id"] ?? "";
-    //     Get.put(InvoiceDetailController()).invoiceId.value = id;
-    //     return NoTransitionPage(child: WebInvoiceDetailPage());
-    //   },
-    // ),
   ],
 );
