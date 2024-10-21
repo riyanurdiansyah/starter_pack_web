@@ -11,6 +11,8 @@ import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:universal_html/html.dart' as html;
 
+import '../../../utils/app_dialog.dart';
+
 class LoginController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -45,6 +47,7 @@ class LoginController extends GetxController {
 
   Future onLogin() async {
     if (formKey.currentState!.validate()) {
+      navigatorKey.currentContext!.pop();
       isLoading.value = true;
       final response = await firestore
           .collection("user")
@@ -54,6 +57,7 @@ class LoginController extends GetxController {
         const Duration(seconds: 2),
         () {
           if (response.docs.isEmpty) {
+            AppDialog.dialogSignin();
             errorMessage.value = "Username not found";
             isLoading.value = false;
           } else {
@@ -64,6 +68,7 @@ class LoginController extends GetxController {
               isLoading.value = false;
               navigatorKey.currentContext!.goNamed(AppRouteName.play);
             } else {
+              AppDialog.dialogSignin();
               errorMessage.value = "Incorrect password";
               isLoading.value = false;
             }

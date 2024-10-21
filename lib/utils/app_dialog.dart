@@ -3,17 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
+import 'package:starter_pack_web/utils/app_extension.dart';
 
 import '../middleware/app_route.dart';
 import '../module/user/model/group_m.dart';
 import '../module/user/model/role_m.dart';
+import 'app_decoration.dart';
 import 'app_text.dart';
 import 'app_validator.dart';
 
 class AppDialog {
+  static dialogSignin() {
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierColor: Colors.grey.withOpacity(0.4),
+      builder: (context) {
+        return _AppDialogContent(size: size);
+      },
+    );
+  }
+
   static dialogUser({
     UserM? oldUser,
   }) {
@@ -252,6 +266,132 @@ class AppDialog {
                         ),
                       ),
                     ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AppDialogContent extends StatefulWidget {
+  final Size size;
+
+  const _AppDialogContent({super.key, required this.size});
+
+  @override
+  __AppDialogContentState createState() => __AppDialogContentState();
+}
+
+class __AppDialogContentState extends State<_AppDialogContent>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  final _c = Get.find<LoginController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Inisialisasi AnimationController dengan TickerProvider
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    // Menambahkan animasi dengan efek zoom
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+
+    // Memulai animasi saat dialog muncul
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = widget.size;
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: size.width / 6),
+      child: ScaleTransition(
+        scale: _animation,
+        child: Container(
+          width: size.width / 3,
+          height: size.height / 1.5,
+          // color: Colors.white.withOpacity(0.6),
+          padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 50),
+          child: Form(
+            key: _c.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                125.ph,
+                TextFormField(
+                  controller: _c.tcUsername,
+                  textInputAction: TextInputAction.next,
+                  decoration: textFieldAuthDecoration(
+                      fontSize: 14, hintText: "username", radius: 4),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (val) => AppValidator.requiredField(val!,
+                      errorMsg: "Username tidak boleh kosong"),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                TextFormField(
+                  obscureText: true,
+                  controller: _c.tcPassword,
+                  textInputAction: TextInputAction.go,
+                  onEditingComplete: () => _c.onLogin(),
+                  decoration: textFieldAuthDecoration(
+                      fontSize: 14, hintText: "Password", radius: 4),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (val) => AppValidator.requiredField(val!,
+                      errorMsg: "Password tidak boleh kosong"),
+                ),
+                Obx(() {
+                  if (_c.errorMessage.isEmpty) {
+                    return const SizedBox();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 18.0),
+                    child: AppTextNormal.labelNormal(
+                        _c.errorMessage.value, 14, Colors.red),
+                  );
+                }),
+                const SizedBox(
+                  height: 35,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: WidgetStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6)))),
+                      backgroundColor: WidgetStateProperty.all(colorPointRank),
+                    ),
+                    onPressed: () => _c.onLogin(),
+                    child: AppTextNormal.labelBold(
+                      "SIGN IN",
+                      18,
+                      Colors.white,
+                    ),
                   ),
                 ),
               ],

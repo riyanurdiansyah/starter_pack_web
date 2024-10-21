@@ -83,7 +83,7 @@ GoRouter router = GoRouter(
     log(state.uri.toString());
 
     if (state.uri.toString() == "/${AppRouteName.signin}") {
-      return "/${AppRouteName.app}";
+      return "/${AppRouteName.play}";
     }
 
     return null;

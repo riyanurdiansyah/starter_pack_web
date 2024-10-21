@@ -107,10 +107,15 @@ class ChallengePage extends StatelessWidget {
                                                 : Colors.grey,
                                             BlendMode.saturation,
                                           ),
-                                          child: Container(
+                                          child: AnimatedContainer(
+                                            duration: const Duration(
+                                                milliseconds: 500),
                                             margin: const EdgeInsets.symmetric(
                                                 horizontal: 10),
-                                            height: size.height / 1.5,
+                                            height:
+                                                _c.isHoveredList[displayIndex]
+                                                    ? size.height / 1.4
+                                                    : size.height / 1.5,
                                             decoration: BoxDecoration(
                                               border: Border.all(
                                                   color: Colors.white),
@@ -192,7 +197,7 @@ class ChallengePage extends StatelessWidget {
                       ),
                       // Tombol Next
                       Positioned(
-                        right: -20,
+                        right: 0,
                         top: size.height / 3.5,
                         child: IconButton(
                           icon: Icon(

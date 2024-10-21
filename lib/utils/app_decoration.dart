@@ -9,7 +9,7 @@ InputDecoration textFieldAuthDecoration(
       fontWeight: FontWeight.w500,
       fontSize: fontSize,
     ),
-    fillColor: Colors.white,
+    fillColor: Colors.white.withOpacity(0.8),
     filled: true,
     hintText: hintText,
     hintStyle: const TextStyle(

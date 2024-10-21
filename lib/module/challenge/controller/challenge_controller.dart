@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
@@ -15,15 +13,16 @@ class ChallengeController extends GetxController {
 
   RxList<ChallengeM> challenges = <ChallengeM>[].obs;
 
+  Rx<double> widthDefault = 0.0.obs;
+
   @override
-  void onInit() {
-    getChallenges();
+  void onInit() async {
+    await getChallenges();
     super.onInit();
   }
 
   void nextImage() {
     currentIndex.value = (currentIndex.value + 1) % challenges.length;
-    log("CEK : ${currentIndex.value}");
   }
 
   void previousImage() {

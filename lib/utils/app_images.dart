@@ -20,3 +20,6 @@ const goldMedal = "assets/images/gold.png";
 const silverMedal = "assets/images/silver.png";
 const bronzeMedal = "assets/images/bronze.png";
 const garageImage = "assets/images/garage.png";
+
+const gbSigninGif = "assets/gif/login.gif";
+const loadingGif = "assets/gif/loading.gif";
