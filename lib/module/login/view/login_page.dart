@@ -42,7 +42,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: size.height,
-              child: Image.asset(
+              child: Image.network(
                 gbSigninGif,
                 fit: BoxFit.cover,
                 filterQuality: FilterQuality.high,
