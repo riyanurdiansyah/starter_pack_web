@@ -22,4 +22,5 @@ const bronzeMedal = "assets/images/bronze.png";
 const garageImage = "assets/images/garage.png";
 
 const gbSigninGif = "assets/gif/login.gif";
-const loadingGif = "assets/gif/loading.gif";
+const loadingGif =
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin.gif?alt=media";
