@@ -12,6 +12,7 @@ class SidebarM {
   final String created;
   final String updated;
   final List<SidebarM> submenus;
+  final int no;
 
   SidebarM({
     required this.route,
@@ -21,17 +22,18 @@ class SidebarM {
     required this.created,
     required this.updated,
     required this.submenus,
+    required this.no,
   });
 
-  SidebarM copyWith({
-    String? route,
-    String? id,
-    List<int>? role,
-    String? title,
-    String? created,
-    String? updated,
-    List<SidebarM>? submenus,
-  }) =>
+  SidebarM copyWith(
+          {String? route,
+          String? id,
+          List<int>? role,
+          String? title,
+          String? created,
+          String? updated,
+          List<SidebarM>? submenus,
+          int? no}) =>
       SidebarM(
         route: route ?? this.route,
         id: id ?? this.id,
@@ -40,6 +42,7 @@ class SidebarM {
         created: created ?? this.created,
         updated: updated ?? this.updated,
         submenus: submenus ?? this.submenus,
+        no: no ?? this.no,
       );
 
   factory SidebarM.fromJson(Map<String, dynamic> json) => SidebarM(
@@ -54,7 +57,11 @@ class SidebarM {
         submenus: json["submenus"] == null
             ? []
             : List<SidebarM>.from(
-                json["submenus"].map((x) => SidebarM.fromJson(x))),
+                json["submenus"].map(
+                  (x) => SidebarM.fromJson(x),
+                ),
+              ),
+        no: json["no"] ?? 99,
       );
 
   Map<String, dynamic> toJson() => {

@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_constanta.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/role_m.dart';
@@ -23,7 +25,7 @@ class UserController extends GetxController {
   Rx<GroupM> selectedGroup = groupEmpty.obs;
 
   Rx<int> currentPage = 1.obs;
-  Rx<int> dataPerPage = 5.obs;
+  Rx<int> dataPerPage = 8.obs;
 
   Rx<bool> isSearched = false.obs;
 
@@ -49,6 +51,12 @@ class UserController extends GetxController {
       return UserM.fromJson(e.data());
     }).toList();
     users.sort((a, b) => a.kelompok.compareTo(b.kelompok));
+
+    double pageTemp = 0;
+    for (int i = 0; i < users.length; i++) {
+      pageTemp = (i + 1) ~/ 8 < 1 ? 1 : (i + 1) / 8;
+      users[i] = users[i].copyWith(page: pageTemp.ceil());
+    }
     return users;
   }
 
@@ -85,7 +93,12 @@ class UserController extends GetxController {
     } else {
       isSearched.value = true;
       usersTemp = users
-          .where((e) => e.nama.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (e) =>
+                e.nama.toLowerCase().contains(query.toLowerCase()) ||
+                e.kelompok.toLowerCase().contains(query.toLowerCase()) ||
+                e.username.toLowerCase().contains(query.toLowerCase()),
+          )
           .toList();
       for (int i = 0; i < usersTemp.length; i++) {
         pageTemp = (i + 1) / dataPerPage.value;
@@ -98,9 +111,9 @@ class UserController extends GetxController {
 
   List<UserM> isUsingUsers() {
     if (isSearched.value) {
-      return usersSearch;
+      return usersSearch.where((e) => e.page == currentPage.value).toList();
     }
-    return users;
+    return users.where((e) => e.page == currentPage.value).toList();
   }
 
   int isTotalPage() {
@@ -126,28 +139,54 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> addNewUser() async {
+  String hashPassword(String password) {
+    var bytes = utf8.encode(password);
+    var digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
+  Future<void> addNewUser(
+    UserM? user,
+  ) async {
     try {
-      CollectionReference userCollection = firestore.collection('user');
+      if (user != null) {
+        final documentRef = firestore.collection('user').doc(user.id);
 
-      UserM newUser = UserM(
-        id: const Uuid().v4(),
-        nama: tcNama.text,
-        username: tcUsername.text,
-        roleId: selectedRole.value.roleId,
-        role: selectedRole.value.role,
-        kelompok: selectedGroup.value.name,
-        kelompokId: selectedGroup.value.groupId,
-        page: 0,
-        password: "",
-      );
+        user = user.copyWith(
+          nama: tcNama.text,
+          username: tcUsername.text,
+          roleId: selectedRole.value.roleId,
+          role: selectedRole.value.role,
+          kelompok: selectedGroup.value.name,
+          kelompokId: selectedGroup.value.groupId,
+          page: 0,
+          password: user.password,
+        );
 
-      userCollection.add(newUser.toJson());
+        await documentRef.update(user.toJson());
+      } else {
+        CollectionReference userCollection = firestore.collection('user');
+
+        UserM newUser = UserM(
+          id: const Uuid().v4(),
+          nama: tcNama.text,
+          username: tcUsername.text,
+          roleId: selectedRole.value.roleId,
+          role: selectedRole.value.role,
+          kelompok: selectedGroup.value.name,
+          kelompokId: selectedGroup.value.groupId,
+          page: 0,
+          password: hashPassword(tcUsername.text),
+        );
+
+        userCollection.add(newUser.toJson());
+      }
+
       navigatorKey.currentContext!.pop();
       getUsers();
       clearAllField();
     } catch (e) {
-      log('Error adding user: $e');
+      AppDialog.dialogSnackbar("Error while adding : $e");
     }
   }
 
@@ -156,5 +195,40 @@ class UserController extends GetxController {
     tcUsername.clear();
     selectedGroup.value = groupEmpty;
     selectedRole.value = roleEmpty;
+  }
+
+  void setUserToDialog(UserM oldUser) {
+    tcNama.text = oldUser.nama;
+    tcUsername.text = oldUser.username;
+    selectedGroup.value = GroupM(
+      alias: "",
+      country: "",
+      groupId: oldUser.kelompokId,
+      id: "",
+      image: "",
+      name: oldUser.kelompok,
+      point: 0,
+      page: 0,
+      pointBefore: 0,
+      updatedDate: DateTime.now().toIso8601String(),
+    );
+    selectedRole.value = RoleM(
+      id: "",
+      role: oldUser.role,
+      roleId: oldUser.roleId,
+      page: 0,
+    );
+  }
+
+  void deleteData(String documentId) async {
+    try {
+      final documentRef = firestore.collection('user').doc(documentId);
+
+      await documentRef.delete();
+      getUsers();
+      AppDialog.dialogSnackbar("Data has been deleted");
+    } catch (e) {
+      AppDialog.dialogSnackbar("Error while deleting : $e");
+    }
   }
 }

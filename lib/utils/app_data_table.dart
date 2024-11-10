@@ -42,8 +42,19 @@ class AppDataTable<T> extends StatelessWidget {
           ),
           child: Row(
             children: List.generate(
-              headers.length,
+              headers.length + 1,
               (index) {
+                if (index == headers.length) {
+                  return SizedBox(
+                    width: 100,
+                    child: AppTextNormal.labelBold(
+                      "ACTION",
+                      16,
+                      Colors.white,
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
                 return Expanded(
                   child: AppTextNormal.labelBold(
                     headers[index],

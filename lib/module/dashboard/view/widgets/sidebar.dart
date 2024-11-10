@@ -62,13 +62,13 @@ class Siderbar extends StatelessWidget {
       ),
       bottomNavigationBar: ListTile(
         tileColor: Colors.red,
-        onTap: () {},
+        onTap: () => context.pop(),
         leading: const Icon(
           Icons.logout_rounded,
           color: Colors.white,
         ),
         title: AppTextNormal.labelW600(
-          "Keluar",
+          "Back",
           16,
           Colors.white,
         ),
@@ -100,10 +100,7 @@ class Siderbar extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color:
-              sidebar.route == route.split("/")[1] && sidebar.route.isNotEmpty
-                  ? Colors.white
-                  : null,
+          color: null,
         ),
         child: ListTile(
           selectedColor: Colors.amber,
@@ -115,9 +112,7 @@ class Siderbar extends StatelessWidget {
           title: AppTextNormal.labelNormal(
             sidebar.title,
             16,
-            sidebar.route == route.split("/")[1] && sidebar.route.isNotEmpty
-                ? colorPrimaryDark
-                : Colors.white,
+            Colors.white,
           ),
         ),
       );
@@ -132,9 +127,7 @@ class Siderbar extends StatelessWidget {
           title: AppTextNormal.labelNormal(
             sidebar.title,
             16,
-            sidebar.route == route.split("/")[1] && sidebar.route.isNotEmpty
-                ? colorPrimaryDark
-                : Colors.white,
+            Colors.white,
           ),
           iconColor: Colors.white,
           collapsedIconColor: Colors.white,

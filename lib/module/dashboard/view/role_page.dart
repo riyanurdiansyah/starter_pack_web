@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:starter_pack_web/module/user/controller/user_controller.dart';
-import 'package:starter_pack_web/module/user/model/user_m.dart';
+import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
+import 'package:starter_pack_web/module/user/model/role_m.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 
@@ -10,10 +9,10 @@ import '../../../utils/app_color.dart';
 import '../../../utils/app_dialog.dart';
 import '../../../utils/app_text.dart';
 
-class UserPage extends StatelessWidget {
-  UserPage({super.key});
+class RolePage extends StatelessWidget {
+  RolePage({super.key});
 
-  final _c = Get.find<UserController>();
+  final _c = Get.find<RoleController>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +26,9 @@ class UserPage extends StatelessWidget {
             Obx(
               () => Container(
                 color: Colors.white,
-                child: AppDataTable<UserM>(
-                  headers: const ["Name", "Username", "Kelompok", "Role"],
-                  datas: _c.isUsingUsers(),
+                child: AppDataTable<RoleM>(
+                  headers: const ["ID", "Role"],
+                  datas: _c.isUsingRoles(),
                   currentPage: _c.currentPage.value,
                   totalPage: _c.isTotalPage(),
                   onPageChanged: _c.onChangepage,
@@ -44,23 +43,7 @@ class UserPage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: AppTextNormal.labelW500(
-                                data.nama,
-                                16,
-                                colorPrimaryDark,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Expanded(
-                              child: AppTextNormal.labelW500(
-                                data.username,
-                                16,
-                                colorPrimaryDark,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Expanded(
-                              child: AppTextNormal.labelW500(
-                                data.kelompok,
+                                data.id,
                                 16,
                                 colorPrimaryDark,
                                 textAlign: TextAlign.center,
@@ -88,8 +71,7 @@ class UserPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: InkWell(
-                                      onTap: () =>
-                                          AppDialog.dialogUser(oldUser: data),
+                                      onTap: () {},
                                       child: const Icon(
                                         Icons.edit_rounded,
                                         size: 16,
@@ -107,11 +89,7 @@ class UserPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: InkWell(
-                                      onTap: () =>
-                                          AppDialog.dialogDelete(callback: () {
-                                        context.pop();
-                                        _c.deleteData(data.id);
-                                      }),
+                                      onTap: () {},
                                       child: const Icon(
                                         Icons.delete_rounded,
                                         size: 16,

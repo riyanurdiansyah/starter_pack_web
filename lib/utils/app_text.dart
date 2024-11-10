@@ -180,6 +180,7 @@ class AppTextNormal {
     TextOverflow? overflow,
     int? maxLines,
     double? height,
+    double? letterSpacing,
   }) {
     return Text(
       title,
@@ -191,6 +192,7 @@ class AppTextNormal {
         fontSize: fontSize,
         color: colors,
         height: height ?? 1.0,
+        letterSpacing: letterSpacing,
       ),
     );
   }

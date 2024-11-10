@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
-import 'package:starter_pack_web/utils/app_constanta.dart';
 
 class HomeController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -42,11 +41,11 @@ class HomeController extends GetxController {
     groups.sort((a, b) => b.point.compareTo(a.point));
   }
 
-  Future insertDummy() async {
-    for (var groupData in groupList) {
-      await insertDataToFirestore(groupData);
-    }
-  }
+  // Future insertDummy() async {
+  //   for (var groupData in groupList) {
+  //     await insertDataToFirestore(groupData);
+  //   }
+  // }
 
   void onChangeFilter(int i) {
     indexFilter.value = i;

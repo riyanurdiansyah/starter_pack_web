@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
@@ -14,16 +13,27 @@ class PlayPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> menuItems = [
-      "Challenge",
-      "Leader Board",
-      "Setting",
-      "Product",
-      "Finance"
-    ];
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Stack(
+    return Scaffold(body: Obx(() {
+      if (_c.isLoading.value) {
+        return Container(
+          color: Colors.black,
+          width: double.infinity,
+          height: size.height,
+          child: Container(
+            width: 250,
+            height: 150,
+            alignment: Alignment.center,
+            child: Image.asset(
+              loadingGif,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
+              width: 250,
+            ),
+          ),
+        );
+      }
+      return Stack(
         children: [
           SizedBox(
             width: double.infinity,
@@ -43,20 +53,31 @@ class PlayPage extends StatelessWidget {
               child: Column(
                 children: [
                   25.ph,
-                  Image.asset(
-                    textImage,
-                    width: size.width / 2.5,
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 80),
+                    alignment: Alignment.centerLeft,
+                    child: Image.asset(
+                      textImage,
+                      width: size.width / 3.2,
+                    ),
                   ),
                   100.ph,
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 100),
-                    width: size.width / 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: menuItems
-                          .map((item) => HoverTextItem(text: item))
-                          .toList(),
+                  Obx(
+                    () => Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 100),
+                      width: size.width / 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _c.menus
+                            .map(
+                              (item) => HoverTextItem(
+                                text: item.title,
+                                route: item.route,
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
                   ),
                   const Spacer(),
@@ -89,8 +110,8 @@ class PlayPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
+    }));
   }
 }
 
@@ -114,8 +135,9 @@ class TrapezoidClipper extends CustomClipper<Path> {
 
 class HoverTextItem extends StatefulWidget {
   final String text;
+  final String route;
 
-  const HoverTextItem({super.key, required this.text});
+  const HoverTextItem({super.key, required this.text, required this.route});
 
   @override
   _HoverTextItemState createState() => _HoverTextItemState();
@@ -130,12 +152,7 @@ class _HoverTextItemState extends State<HoverTextItem> {
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onHover: (_) {
-        _c.playMusicCar();
-        if (!_c.isPlaying.value) {
-          _c.playMusic();
-        }
-      },
+      onHover: (_) {},
       onEnter: (_) {
         setState(() {
           isHovered = true;
@@ -148,19 +165,7 @@ class _HoverTextItemState extends State<HoverTextItem> {
       },
       child: InkWell(
         onTap: () {
-          if (widget.text == "Challenge") {
-            context.goNamed(AppRouteName.challenge);
-          }
-          if (widget.text == "Leader Board") {
-            context.goNamed(AppRouteName.board);
-          }
-
-          if (widget.text == "Setting") {
-            context.goNamed("/${AppRouteName.setting}");
-          }
-          if (widget.text == "Product") {
-            context.goNamed(AppRouteName.product);
-          }
+          context.goNamed(widget.route);
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),

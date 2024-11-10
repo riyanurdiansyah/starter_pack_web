@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +18,12 @@ import '../../../utils/app_dialog.dart';
 class LoginController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  final AudioPlayer audioPlayer = AudioPlayer();
+
   late SharedPreferences pref;
 
   Rx<bool> isLoading = false.obs;
+  Rx<bool> isPlaySound = false.obs;
 
   TextEditingController tcUsername = TextEditingController();
   TextEditingController tcPassword = TextEditingController();
@@ -41,7 +46,7 @@ class LoginController extends GetxController {
 
   bool compareHash(String inputPassword, String storedHash) {
     String inputHash = hashPassword(inputPassword);
-
+    log(inputHash);
     return inputHash == storedHash;
   }
 
@@ -66,6 +71,7 @@ class LoginController extends GetxController {
               pref.setString("user", json.encode(user.toJson()));
               saveSessionToCookie(user.id);
               isLoading.value = false;
+              playMusic();
               navigatorKey.currentContext!.goNamed(AppRouteName.play);
             } else {
               AppDialog.dialogSignin();
@@ -75,6 +81,13 @@ class LoginController extends GetxController {
           }
         },
       );
+    }
+  }
+
+  Future playMusic() async {
+    if (!isPlaySound.value) {
+      await audioPlayer.play(AssetSource("music/sound.mp3"));
+      isPlaySound.value = true;
     }
   }
 

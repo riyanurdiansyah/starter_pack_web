@@ -22,19 +22,22 @@ class GroupM {
   final String updatedDate;
   final int? rank;
   final int? rankOld;
+  final int page;
 
-  GroupM(
-      {required this.alias,
-      required this.country,
-      required this.groupId,
-      required this.id,
-      required this.image,
-      required this.name,
-      required this.point,
-      required this.pointBefore,
-      required this.updatedDate,
-      this.rank,
-      this.rankOld});
+  GroupM({
+    required this.alias,
+    required this.country,
+    required this.groupId,
+    required this.id,
+    required this.image,
+    required this.name,
+    required this.point,
+    required this.pointBefore,
+    required this.updatedDate,
+    this.rank,
+    this.rankOld,
+    required this.page,
+  });
 
   GroupM copyWith({
     String? alias,
@@ -48,6 +51,7 @@ class GroupM {
     String? updatedDate,
     int? rank,
     int? rankOld,
+    int? page,
   }) =>
       GroupM(
         alias: alias ?? this.alias,
@@ -61,6 +65,7 @@ class GroupM {
         updatedDate: updatedDate ?? this.updatedDate,
         rank: rank ?? this.rank,
         rankOld: rankOld ?? this.rankOld,
+        page: page ?? this.page,
       );
 
   factory GroupM.fromJson(Map<String, dynamic> json) => GroupM(
@@ -75,6 +80,7 @@ class GroupM {
         updatedDate: json["updated_date"],
         rank: 0,
         rankOld: 0,
+        page: 0,
       );
 
   Map<String, dynamic> toJson() => {

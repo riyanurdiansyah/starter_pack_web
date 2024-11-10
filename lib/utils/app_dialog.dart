@@ -33,9 +33,9 @@ class AppDialog {
   }) {
     final uC = Get.find<UserController>();
     final size = MediaQuery.of(navigatorKey.currentContext!).size;
-    // if (oldUser != null) {
-    //   uC.setProductsToVariable(oldUser);
-    // }
+    if (oldUser != null) {
+      uC.setUserToDialog(oldUser);
+    }
     return showDialog(
       context: navigatorKey.currentContext!,
       barrierDismissible: false,
@@ -45,7 +45,7 @@ class AppDialog {
           borderRadius: BorderRadius.circular(4),
         ),
         title: AppTextNormal.labelBold(
-          "Add User",
+          oldUser != null ? "Update User" : "Add User",
           16,
           Colors.black,
         ),
@@ -99,12 +99,15 @@ class AppDialog {
                   height: 12,
                 ),
                 TextFormField(
+                  readOnly: oldUser != null,
                   controller: uC.tcUsername,
                   validator: (val) => AppValidator.requiredField(val!),
                   style: GoogleFonts.poppins(
                     height: 1.4,
                   ),
                   decoration: InputDecoration(
+                    filled: oldUser != null,
+                    fillColor: oldUser != null ? Colors.grey.shade200 : null,
                     hintStyle: GoogleFonts.poppins(
                       fontSize: 14,
                       wordSpacing: 4,
@@ -255,7 +258,7 @@ class AppDialog {
                               ),
                             ),
                             onPressed: () {
-                              uC.addNewUser();
+                              uC.addNewUser(oldUser);
                             },
                             child: AppTextNormal.labelBold(
                               "SIMPAN",
@@ -272,6 +275,85 @@ class AppDialog {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  static dialogDelete({VoidCallback? callback}) {
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        title: AppTextNormal.labelBold(
+          "Delete Item",
+          16,
+          Colors.black,
+        ),
+        content: SizedBox(
+          width: size.width / 2.5,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppTextNormal.labelW700(
+                "Are you sure you want to delete this item?",
+                14,
+                Colors.grey.shade600,
+              ),
+              26.ph,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => navigatorKey.currentContext!.pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade500,
+                    ),
+                    child: AppTextNormal.labelW700(
+                      "No, Cancel",
+                      14,
+                      Colors.white,
+                    ),
+                  ),
+                  8.pw,
+                  ElevatedButton(
+                    onPressed: callback,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorPrimaryDark,
+                    ),
+                    child: AppTextNormal.labelW700(
+                      "Yes, Delete",
+                      14,
+                      Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogSnackbar(
+    String message,
+  ) {
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    return ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.black87,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+            bottom: 60, left: size.width / 4, right: size.width / 4),
       ),
     );
   }

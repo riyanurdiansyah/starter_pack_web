@@ -49,8 +49,11 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 0,
-              child: Image.asset(textImage),
+              top: 10,
+              child: Image.asset(
+                textImage,
+                width: size.width / 2.25,
+              ),
             ),
             // Positioned(
             //   top: 200,
