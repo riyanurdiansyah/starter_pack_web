@@ -1,10 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
-
-import '../../../middleware/app_route_name.dart';
 
 class DemographyPage extends StatefulWidget {
   const DemographyPage({super.key});
@@ -361,8 +358,8 @@ class _DemographyPageState extends State<DemographyPage>
                     onPressed: () {
                       _toggleWidget();
 
-                      context.goNamed(AppRouteName.cart,
-                          queryParameters: {"name": "area-1"});
+                      // context.goNamed(AppRouteName.pro,
+                      //     queryParameters: {"name": "area-1"});
                     },
                     child: const Text("Tutup"),
                   ),
@@ -401,9 +398,9 @@ class _DemographyPageState extends State<DemographyPage>
                     onPressed: () {
                       _toggleWidget2();
 
-                      context.goNamed(AppRouteName.cart, extra: {
-                        "name": "Area 2",
-                      });
+                      // context.goNamed(AppRouteName.cart, extra: {
+                      //   "name": "Area 2",
+                      // });
                     },
                     child: const Text("Tutup"),
                   ),
@@ -442,9 +439,9 @@ class _DemographyPageState extends State<DemographyPage>
                     onPressed: () {
                       _toggleWidget3();
 
-                      context.goNamed(AppRouteName.cart, extra: {
-                        "name": "Area 3",
-                      });
+                      // context.goNamed(AppRouteName.cart, extra: {
+                      //   "name": "Area 3",
+                      // });
                     },
                     child: const Text("Tutup"),
                   ),

@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
-import 'package:starter_pack_web/utils/app_extension.dart';
 
 import '../../../utils/app_color.dart';
 import '../../../utils/app_dialog.dart';
@@ -68,49 +69,120 @@ class ChallengesetPage extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               ),
                             ),
+                            // SizedBox(
+                            //   width: 25,
+                            //   height: 25,
+                            //   child: InkWell(
+                            //     onTap: () {},
+                            //     child: const Icon(
+                            //       Icons.mode_edit_rounded,
+                            //       size: 20,
+                            //       color: colorPrimaryDark,
+                            //     ),
+                            //   ),
+                            // ),
+                            // const SizedBox(
+                            //   width: 10,
+                            // ),
+                            // Container(
+                            //   width: 2,
+                            //   height: 30,
+                            //   color: Colors.grey.shade200,
+                            // ),
+                            // const SizedBox(
+                            //   width: 10,
+                            // ),
                             SizedBox(
-                              width: 100,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 26,
-                                    height: 26,
-                                    padding: const EdgeInsets.all(2.5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: const Icon(
-                                        Icons.edit_rounded,
-                                        size: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  8.pw,
-                                  Container(
-                                    width: 26,
-                                    height: 26,
-                                    padding: const EdgeInsets.all(2.5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: const Icon(
-                                        Icons.delete_rounded,
-                                        size: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              width: 25,
+                              height: 25,
+                              child: InkWell(
+                                onTap: () =>
+                                    AppDialog.dialogDelete(callback: () {
+                                  context.pop();
+                                  _c.deleteData(data);
+                                }),
+                                child: const Icon(
+                                  Icons.delete_rounded,
+                                  color: Colors.red,
+                                  size: 20,
+                                ),
                               ),
                             ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 2,
+                              height: 30,
+                              color: Colors.grey.shade200,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: InkWell(
+                                onTap: () => context.goNamed(
+                                    AppRouteName.update,
+                                    queryParameters: {
+                                      "id": data.id,
+                                    }),
+                                child: const Icon(
+                                  Icons.double_arrow_rounded,
+                                  color: colorPrimaryDark,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+
+                            // SizedBox(
+                            //   width: 100,
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Container(
+                            //         width: 26,
+                            //         height: 26,
+                            //         padding: const EdgeInsets.all(2.5),
+                            //         decoration: BoxDecoration(
+                            //           color: Colors.green,
+                            //           borderRadius: BorderRadius.circular(4),
+                            //         ),
+                            //         child: InkWell(
+                            //           onTap: () {},
+                            //           child: const Icon(
+                            //             Icons.edit_rounded,
+                            //             size: 16,
+                            //             color: Colors.white,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       8.pw,
+                            //       Container(
+                            //         width: 26,
+                            //         height: 26,
+                            //         padding: const EdgeInsets.all(2.5),
+                            //         decoration: BoxDecoration(
+                            //           color: Colors.red,
+                            //           borderRadius: BorderRadius.circular(4),
+                            //         ),
+                            //         child: InkWell(
+                            //           onTap: () =>
+                            //               AppDialog.dialogDelete(callback: () {
+                            //             context.pop();
+                            //             _c.deleteData(data);
+                            //           }),
+                            //           child: const Icon(
+                            //             Icons.delete_rounded,
+                            //             size: 16,
+                            //             color: Colors.white,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -128,7 +200,7 @@ class ChallengesetPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
-        onPressed: () => AppDialog.dialogUser(),
+        onPressed: () => AppDialog.dialogChallenge(),
         backgroundColor: Colors.blue,
         child: AppTextNormal.labelW600(
           "+",

@@ -58,19 +58,17 @@ class CartPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Obx(
-                    () => Container(
-                      alignment: Alignment.center,
-                      height: 45,
-                      child: Text(
-                        "Produk  -  ${_c.name.value}",
-                        style: const TextStyle(
-                          fontFamily: "Race",
-                          fontSize: 35,
-                          color: colorElectricViolet,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 4,
-                        ),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 45,
+                    child: const Text(
+                      "Production",
+                      style: TextStyle(
+                        fontFamily: "Race",
+                        fontSize: 35,
+                        color: colorElectricViolet,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 4,
                       ),
                     ),
                   ),

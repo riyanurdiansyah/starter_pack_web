@@ -18,6 +18,7 @@ class ChallengeM {
   final String image;
   final String name;
   final int page;
+  final String type;
 
   ChallengeM({
     required this.route,
@@ -27,6 +28,7 @@ class ChallengeM {
     required this.image,
     required this.name,
     required this.page,
+    required this.type,
   });
 
   ChallengeM copyWith({
@@ -37,6 +39,7 @@ class ChallengeM {
     String? image,
     String? name,
     int? page,
+    String? type,
   }) =>
       ChallengeM(
         route: route ?? this.route,
@@ -46,6 +49,7 @@ class ChallengeM {
         image: image ?? this.image,
         name: name ?? this.name,
         page: page ?? this.page,
+        type: type ?? this.type,
       );
 
   factory ChallengeM.fromJson(Map<String, dynamic> json) => ChallengeM(
@@ -55,6 +59,7 @@ class ChallengeM {
         id: json["id"],
         image: json["image"],
         name: json["name"],
+        type: json["type"] ?? "",
         page: 0,
       );
 
@@ -65,5 +70,6 @@ class ChallengeM {
         "id": id,
         "image": image,
         "name": name,
+        "type": type,
       };
 }

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
+import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
@@ -24,6 +27,251 @@ class AppDialog {
       barrierColor: Colors.grey.withOpacity(0.4),
       builder: (context) {
         return _AppDialogContent(size: size);
+      },
+    );
+  }
+
+  static dialogChallenge({
+    ChallengeM? oldChallenge,
+  }) {
+    final c = Get.find<ChallengesetController>();
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+    return showDialog(
+      barrierDismissible: false,
+      context: navigatorKey.currentContext!,
+      barrierColor: Colors.grey.withOpacity(0.4),
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          title: AppTextNormal.labelBold(
+            oldChallenge != null ? "Update Challenge" : "Add Challenge",
+            16,
+            Colors.black,
+          ),
+          content: SizedBox(
+            width: size.width / 2.5,
+            child: Form(
+              key: c.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppTextNormal.labelW700(
+                    "Nama",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcChallenge,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "Start Date",
+                    14,
+                    Colors.black,
+                  ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcDate,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    onTap: () async {},
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final date = await globalDate();
+                            c.selectedDate = date;
+                            if (date != null) {
+                              c.tcDate.text =
+                                  DateFormat("dd/MM/yyyy HH:mm").format(date);
+                            } else {
+                              c.tcDate.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose Date",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "Image",
+                    14,
+                    Colors.black,
+                  ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcImage,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    onTap: () async {},
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final result = await pickFile();
+
+                            c.filePickerResult = result;
+
+                            if (result != null) {
+                              c.tcImage.text = result.files.single.name;
+                            } else {
+                              c.tcImage.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose File",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  18.ph,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade400,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  )),
+                              onPressed: () => context.pop(),
+                              child: AppTextNormal.labelBold(
+                                "BATAL",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 18,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimaryDark,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              onPressed: () {
+                                context.pop();
+                                c.saveChallenge();
+                              },
+                              child: AppTextNormal.labelBold(
+                                "SIMPAN",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }

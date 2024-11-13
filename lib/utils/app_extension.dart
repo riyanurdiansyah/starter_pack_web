@@ -1,5 +1,8 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../middleware/app_route.dart';
 
 extension PaddingExtension on num {
   SizedBox get ph => SizedBox(height: toDouble());
@@ -8,4 +11,37 @@ extension PaddingExtension on num {
 
 String convertNumber(int num) {
   return NumberFormat.decimalPattern('id').format(num);
+}
+
+Future<DateTime?> globalDate() async {
+  final date = await showDatePicker(
+      context: navigatorKey.currentContext!,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().add(const Duration(days: -365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)));
+  if (date != null) {
+    final time = await showTimePicker(
+      context: navigatorKey.currentContext!,
+      initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+    );
+
+    if (time != null) {
+      return DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
+    }
+  }
+
+  return null;
+}
+
+Future<FilePickerResult?> pickFile() async {
+  final result = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+  );
+  return result;
 }

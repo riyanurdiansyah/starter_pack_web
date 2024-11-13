@@ -197,17 +197,30 @@ GoRouter router = GoRouter(
                   },
                 ),
                 GoRoute(
-                  path: AppRouteName.challengeset,
-                  name: AppRouteName.challengeset,
-                  onExit: (_, __) {
-                    Get.delete<ChallengesetController>();
-                    return true;
-                  },
-                  pageBuilder: (context, state) {
-                    Get.put(ChallengesetController());
-                    return NoTransitionPage(child: ChallengesetPage());
-                  },
-                ),
+                    path: AppRouteName.challengeset,
+                    name: AppRouteName.challengeset,
+                    onExit: (_, __) {
+                      Get.delete<ChallengesetController>();
+                      return true;
+                    },
+                    pageBuilder: (context, state) {
+                      Get.put(ChallengesetController());
+                      return NoTransitionPage(child: ChallengesetPage());
+                    },
+                    routes: [
+                      GoRoute(
+                        path: AppRouteName.update,
+                        name: AppRouteName.update,
+                        onExit: (_, __) {
+                          // Get.delete<ChallengesetController>();
+                          return true;
+                        },
+                        pageBuilder: (context, state) {
+                          // Get.put(ChallengesetController());
+                          return const NoTransitionPage(child: Scaffold());
+                        },
+                      ),
+                    ]),
                 GoRoute(
                   path: AppRouteName.profile,
                   name: AppRouteName.profile,
@@ -275,6 +288,18 @@ GoRouter router = GoRouter(
           ],
         ),
         GoRoute(
+          path: AppRouteName.production,
+          name: AppRouteName.production,
+          onExit: (_, __) {
+            Get.delete<CartController>();
+            return true;
+          },
+          pageBuilder: (context, state) {
+            Get.put(CartController());
+            return NoTransitionPage(child: CartPage());
+          },
+        ),
+        GoRoute(
           path: AppRouteName.demography,
           name: AppRouteName.demography,
           onExit: (_, __) {
@@ -285,23 +310,7 @@ GoRouter router = GoRouter(
             // Get.put(ChallengeController());
             return const NoTransitionPage(child: DemographyPage());
           },
-          routes: [
-            GoRoute(
-              path: AppRouteName.cart,
-              name: AppRouteName.cart,
-              onExit: (_, __) {
-                Get.delete<CartController>();
-                return true;
-              },
-              pageBuilder: (context, state) {
-                final name =
-                    (state.extra as Map<String, dynamic>?)?['name'] ?? '';
-                final c = Get.put(CartController());
-                c.name.value = name;
-                return NoTransitionPage(child: CartPage());
-              },
-            ),
-          ],
+          routes: const [],
         ),
       ],
     ),

@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 class ChallengesetController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -10,8 +15,19 @@ class ChallengesetController extends GetxController {
 
   final Rx<bool> isSearched = false.obs;
 
+  FilePickerResult? filePickerResult;
+
+  DateTime? selectedDate;
+
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 8.obs;
+
+  final formKey = GlobalKey<FormState>();
+
+  final tcDate = TextEditingController();
+  final tcChallenge = TextEditingController();
+  final tcType = TextEditingController();
+  final tcImage = TextEditingController();
 
   @override
   void onInit() async {
@@ -77,5 +93,65 @@ class ChallengesetController extends GetxController {
 
   void onChangepage(int newValue) {
     currentPage.value = newValue;
+  }
+
+  void saveChallenge() async {
+    try {
+      final fileBytes = filePickerResult?.files.single.bytes;
+      final fileName = filePickerResult?.files.single.name;
+      final storageRef =
+          FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
+
+      final uploadTask = storageRef.putData(fileBytes!);
+
+      final snapshot = await uploadTask.whenComplete(() {});
+
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      CollectionReference challengeCollection =
+          firestore.collection('challenge');
+      final id = const Uuid().v4();
+      ChallengeM challenge = ChallengeM(
+        id: id,
+        image: downloadUrl,
+        name: tcChallenge.text,
+        no: 0,
+        type: tcType.text,
+        route: "challenge",
+        start: selectedDate?.toIso8601String() ?? "",
+        page: 0,
+      );
+
+      challengeCollection.doc(id).set(challenge.toJson());
+      getChallenges();
+      AppDialog.dialogSnackbar("Data has been created");
+    } catch (e) {
+      AppDialog.dialogSnackbar("Error while creating : $e");
+    }
+  }
+
+  void clearAllData() {
+    tcChallenge.clear();
+    tcDate.clear();
+    tcImage.clear();
+    filePickerResult = null;
+    selectedDate = null;
+  }
+
+  void deleteData(ChallengeM data) async {
+    try {
+      final firebaseStorageRef =
+          FirebaseStorage.instance.refFromURL(data.image);
+
+      await firebaseStorageRef.delete();
+
+      final documentRef = firestore.collection('challenge').doc(data.id);
+
+      await documentRef.delete();
+      getChallenges();
+      AppDialog.dialogSnackbar("Data has been deleted");
+    } catch (e) {
+      AppDialog.dialogSnackbar("Error while deleting : $e");
+    }
   }
 }
