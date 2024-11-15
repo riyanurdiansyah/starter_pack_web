@@ -5,6 +5,7 @@ import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
+import 'package:starter_pack_web/utils/app_sound.dart';
 
 class PlayPage extends StatelessWidget {
   PlayPage({super.key});
@@ -155,6 +156,7 @@ class _HoverTextItemState extends State<HoverTextItem> {
       onHover: (_) {},
       onEnter: (_) {
         setState(() {
+          AppSound.playHover();
           isHovered = true;
         });
       },

@@ -527,7 +527,13 @@ class AppDialog {
     );
   }
 
-  static dialogDelete({VoidCallback? callback}) {
+  static dialogDelete({
+    VoidCallback? callback,
+    String? title,
+    String? subtitle,
+    String? cancelText,
+    String? confirmText,
+  }) {
     final size = MediaQuery.of(navigatorKey.currentContext!).size;
     return showDialog(
       context: navigatorKey.currentContext!,
@@ -538,7 +544,7 @@ class AppDialog {
           borderRadius: BorderRadius.circular(4),
         ),
         title: AppTextNormal.labelBold(
-          "Delete Item",
+          title ?? "Delete Item",
           16,
           Colors.black,
         ),
@@ -549,7 +555,7 @@ class AppDialog {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextNormal.labelW700(
-                "Are you sure you want to delete this item?",
+                subtitle ?? "Are you sure you want to delete this item?",
                 14,
                 Colors.grey.shade600,
               ),
@@ -564,7 +570,7 @@ class AppDialog {
                       backgroundColor: Colors.grey.shade500,
                     ),
                     child: AppTextNormal.labelW700(
-                      "No, Cancel",
+                      cancelText ?? "No, Cancel",
                       14,
                       Colors.white,
                     ),
@@ -576,7 +582,7 @@ class AppDialog {
                       backgroundColor: colorPrimaryDark,
                     ),
                     child: AppTextNormal.labelW700(
-                      "Yes, Delete",
+                      confirmText ?? "Yes, Delete",
                       14,
                       Colors.white,
                     ),

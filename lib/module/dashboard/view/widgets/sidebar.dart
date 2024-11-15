@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/dashboard/controller/dashboard_controller.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 
@@ -62,7 +63,7 @@ class Siderbar extends StatelessWidget {
       ),
       bottomNavigationBar: ListTile(
         tileColor: Colors.red,
-        onTap: () => context.pop(),
+        onTap: () => context.goNamed(AppRouteName.play),
         leading: const Icon(
           Icons.logout_rounded,
           color: Colors.white,

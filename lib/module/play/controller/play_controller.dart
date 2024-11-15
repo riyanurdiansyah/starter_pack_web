@@ -17,16 +17,17 @@ class PlayController extends GetxController {
   final Rx<bool> isLoading = true.obs;
 
   final Rx<UserM> user = UserM(
-          id: "",
-          nama: "",
-          username: "",
-          password: "",
-          roleId: 0,
-          role: "",
-          kelompok: "",
-          kelompokId: 0,
-          page: 0)
-      .obs;
+    id: "",
+    nama: "",
+    username: "",
+    password: "",
+    roleId: 0,
+    role: "",
+    kelompok: "",
+    kelompokId: 0,
+    page: 0,
+    groupId: "",
+  ).obs;
 
   late SharedPreferences pref;
 

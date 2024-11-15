@@ -44,7 +44,7 @@ class ProdukM {
         id: json["id"],
         harga: json["harga"],
         image: json["image"],
-        qty: 0,
+        qty: json["qty"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

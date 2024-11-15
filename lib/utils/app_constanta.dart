@@ -1,5 +1,19 @@
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 import 'package:starter_pack_web/module/user/model/role_m.dart';
+import 'package:starter_pack_web/module/user/model/user_m.dart';
+
+final userEmpty = UserM(
+  id: "",
+  nama: "",
+  username: "",
+  password: "",
+  roleId: 0,
+  role: "",
+  kelompok: "",
+  kelompokId: 0,
+  page: 0,
+  groupId: "",
+);
 
 final roleEmpty = RoleM(
   id: "",

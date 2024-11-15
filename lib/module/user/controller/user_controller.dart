@@ -166,9 +166,9 @@ class UserController extends GetxController {
         await documentRef.update(user.toJson());
       } else {
         CollectionReference userCollection = firestore.collection('user');
-
+        final id = const Uuid().v4();
         UserM newUser = UserM(
-          id: const Uuid().v4(),
+          id: id,
           nama: tcNama.text,
           username: tcUsername.text,
           roleId: selectedRole.value.roleId,
@@ -177,9 +177,10 @@ class UserController extends GetxController {
           kelompokId: selectedGroup.value.groupId,
           page: 0,
           password: hashPassword(tcUsername.text),
+          groupId: selectedGroup.value.id,
         );
 
-        userCollection.add(newUser.toJson());
+        userCollection.doc(id).set(newUser.toJson());
       }
 
       navigatorKey.currentContext!.pop();

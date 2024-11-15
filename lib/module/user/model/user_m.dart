@@ -18,6 +18,7 @@ class UserM {
   final String kelompok;
   final int kelompokId;
   final int page;
+  final String groupId;
 
   UserM({
     required this.id,
@@ -29,6 +30,7 @@ class UserM {
     required this.kelompok,
     required this.kelompokId,
     required this.page,
+    required this.groupId,
   });
 
   UserM copyWith({
@@ -41,6 +43,7 @@ class UserM {
     String? kelompok,
     int? kelompokId,
     int? page,
+    String? groupId,
   }) =>
       UserM(
         id: id ?? this.id,
@@ -52,6 +55,7 @@ class UserM {
         kelompok: kelompok ?? this.kelompok,
         kelompokId: kelompokId ?? this.kelompokId,
         page: page ?? this.page,
+        groupId: groupId ?? this.groupId,
       );
 
   factory UserM.fromJson(Map<String, dynamic> json) => UserM(
@@ -64,6 +68,7 @@ class UserM {
         kelompok: json["kelompok"],
         kelompokId: json["kelompok_id"] ?? 0,
         page: json["page"] ?? 0,
+        groupId: json["group_id"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -75,5 +80,6 @@ class UserM {
         "role": role,
         "kelompok": kelompok,
         "kelompok_id": kelompokId,
+        "group_id": groupId,
       };
 }
