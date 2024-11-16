@@ -82,8 +82,11 @@ class ChallengePage extends StatelessWidget {
                                   _c.isHoveredList[displayIndex] = false;
                                 },
                                 child: InkWell(
-                                  onTap: () =>
-                                      context.goNamed(AppRouteName.quiz),
+                                  onTap: () => context.goNamed(
+                                      AppRouteName.quiz,
+                                      pathParameters: {
+                                        "id": _c.challenges[index].id,
+                                      }),
                                   child: Stack(
                                     children: [
                                       ColorFiltered(

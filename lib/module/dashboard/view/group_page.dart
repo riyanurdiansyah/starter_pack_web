@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
@@ -29,7 +30,7 @@ class GroupPage extends StatelessWidget {
                 return Container(
                   color: Colors.white,
                   child: AppDataTable<GroupM>(
-                    headers: const ["Icon", "Name", "As", "Country", "Point"],
+                    headers: const ["Icon", "Name", "As", "Point"],
                     datas: _c.isUsingGroups(),
                     currentPage: _c.currentPage.value,
                     totalPage: _c.isTotalPage(),
@@ -71,14 +72,6 @@ class GroupPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: AppTextNormal.labelW500(
-                                  data.country,
-                                  16,
-                                  colorPrimaryDark,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Expanded(
-                                child: AppTextNormal.labelW500(
                                   "\$${data.point}",
                                   16,
                                   colorPrimaryDark,
@@ -99,7 +92,9 @@ class GroupPage extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: () => AppDialog.dialogGroup(
+                                          oldGroup: data,
+                                        ),
                                         child: const Icon(
                                           Icons.edit_rounded,
                                           size: 16,
@@ -117,7 +112,12 @@ class GroupPage extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          AppDialog.dialogDelete(callback: () {
+                                            context.pop();
+                                            _c.deleteGroup(data);
+                                          });
+                                        },
                                         child: const Icon(
                                           Icons.delete_rounded,
                                           size: 16,
@@ -149,7 +149,17 @@ class GroupPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              AppDialog.dialogDelete(
+                title: "Reset All Point",
+                subtitle: "Are you sure you want to reset?",
+                confirmText: "Yes, reset all points",
+                callback: () {
+                  context.pop();
+                  _c.resetAll();
+                },
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: colorPointRank,
               shape: RoundedRectangleBorder(
@@ -165,7 +175,9 @@ class GroupPage extends StatelessWidget {
           ),
           14.pw,
           FloatingActionButton.small(
-            onPressed: () => AppDialog.dialogUser(),
+            onPressed: () {
+              AppDialog.dialogGroup();
+            },
             backgroundColor: Colors.blue,
             child: AppTextNormal.labelW600(
               "+",

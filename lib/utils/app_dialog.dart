@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
@@ -232,7 +233,7 @@ class AppDialog {
                                   )),
                               onPressed: () => context.pop(),
                               child: AppTextNormal.labelBold(
-                                "BATAL",
+                                "CANCEL",
                                 14,
                                 Colors.white,
                               ),
@@ -257,7 +258,277 @@ class AppDialog {
                                 c.saveChallenge();
                               },
                               child: AppTextNormal.labelBold(
-                                "SIMPAN",
+                                "SAVE",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static dialogGroup({
+    GroupM? oldGroup,
+  }) {
+    final c = Get.find<GroupController>();
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+    if (oldGroup != null) {
+      c.setGroupDialog(oldGroup);
+    }
+    return showDialog(
+      barrierDismissible: false,
+      context: navigatorKey.currentContext!,
+      barrierColor: Colors.grey.withOpacity(0.4),
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          title: AppTextNormal.labelBold(
+            oldGroup != null ? "Update Group" : "Add Group",
+            16,
+            Colors.black,
+          ),
+          content: SizedBox(
+            width: size.width / 2.5,
+            child: Form(
+              key: c.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppTextNormal.labelW700(
+                    "Group Number",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcGroupName,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "Group Name",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcAlias,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  // AppTextNormal.labelW700(
+                  //   "Group Country",
+                  //   14,
+                  //   Colors.black,
+                  // ),
+                  // const SizedBox(
+                  //   height: 12,
+                  // ),
+                  // TextFormField(
+                  //   controller: c.tcGroupCountry,
+                  //   validator: (val) => AppValidator.requiredField(val!),
+                  //   style: TextStyle(
+                  //     fontFamily: 'Bigail',
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 14,
+                  //     color: Colors.grey.shade600,
+                  //   ),
+                  //   decoration: InputDecoration(
+                  //     contentPadding: const EdgeInsets.symmetric(
+                  //         vertical: 0, horizontal: 12),
+                  //     disabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey.shade300),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     border: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey.shade300),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey.shade300),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //   ),
+                  // ),
+                  // 16.ph,
+                  AppTextNormal.labelW700(
+                    "Group Image",
+                    14,
+                    Colors.black,
+                  ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcImage,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    onTap: () async {},
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final result = await pickFile();
+
+                            c.filePickerResult = result;
+
+                            if (result != null) {
+                              c.tcImage.text = result.files.single.name;
+                            } else {
+                              c.tcImage.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose File",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  18.ph,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade400,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  )),
+                              onPressed: () => context.pop(),
+                              child: AppTextNormal.labelBold(
+                                "CANCEL",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 18,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimaryDark,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              onPressed: () {
+                                AppDialog.dialogDelete(
+                                  title: "Create Group",
+                                  subtitle: "Are you sure you want to create?",
+                                  confirmText: "Yes, create",
+                                  callback: () {
+                                    context.pop();
+                                    context.pop();
+                                    if (oldGroup != null) {
+                                      c.updateGroup(oldGroup);
+                                    } else {
+                                      c.createGroup();
+                                    }
+                                  },
+                                );
+                              },
+                              child: AppTextNormal.labelBold(
+                                "SAVE",
                                 14,
                                 Colors.white,
                               ),
@@ -485,7 +756,7 @@ class AppDialog {
                                 )),
                             onPressed: () => context.pop(),
                             child: AppTextNormal.labelBold(
-                              "BATAL",
+                              "CANCEL",
                               14,
                               Colors.white,
                             ),
@@ -509,7 +780,7 @@ class AppDialog {
                               uC.addNewUser(oldUser);
                             },
                             child: AppTextNormal.labelBold(
-                              "SIMPAN",
+                              "SAVE",
                               14,
                               Colors.white,
                             ),

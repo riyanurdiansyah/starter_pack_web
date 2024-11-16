@@ -5,6 +5,7 @@ class AppRouteName {
   static const String board = 'board';
   static const String product = 'product';
   static const String demography = 'demography';
+  static const String demographset = 'demographyset';
   static const String production = 'production';
   static const String challenge = 'challenge';
   static const String setting = 'setting';

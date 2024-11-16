@@ -11,12 +11,15 @@ import 'package:starter_pack_web/module/challenge/controller/challenge_quiz_cont
 import 'package:starter_pack_web/module/challenge/view/challenge_page.dart';
 import 'package:starter_pack_web/module/challenge/view/challenge_quiz_page.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
+import 'package:starter_pack_web/module/dashboard/view/demographyset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/group_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/role_page.dart';
 import 'package:starter_pack_web/module/demography/controller/cart_controller.dart';
+import 'package:starter_pack_web/module/demography/controller/demography_controller.dart';
 import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
@@ -197,6 +200,18 @@ GoRouter router = GoRouter(
                   },
                 ),
                 GoRoute(
+                  path: AppRouteName.demography,
+                  name: AppRouteName.demographset,
+                  onExit: (_, __) {
+                    Get.delete<DemographysetController>();
+                    return true;
+                  },
+                  pageBuilder: (context, state) {
+                    Get.put(DemographysetController());
+                    return NoTransitionPage(child: DemographysetPage());
+                  },
+                ),
+                GoRoute(
                     path: AppRouteName.challengeset,
                     name: AppRouteName.challengeset,
                     onExit: (_, __) {
@@ -274,14 +289,17 @@ GoRouter router = GoRouter(
           },
           routes: [
             GoRoute(
-              path: AppRouteName.quiz,
+              path: "${AppRouteName.quiz}/:id",
               name: AppRouteName.quiz,
               onExit: (_, __) {
                 Get.delete<ChallengeQuizController>();
                 return true;
               },
               pageBuilder: (context, state) {
-                Get.put(ChallengeQuizController());
+                final id = state.pathParameters['id'];
+
+                final c = Get.put(ChallengeQuizController());
+                c.quizID.value = id ?? "";
                 return const NoTransitionPage(child: ChallengeQuizPage());
               },
             ),
@@ -303,11 +321,11 @@ GoRouter router = GoRouter(
           path: AppRouteName.demography,
           name: AppRouteName.demography,
           onExit: (_, __) {
-            // Get.delete<ChallengeController>();
+            Get.delete<DemographyController>();
             return true;
           },
           pageBuilder: (context, state) {
-            // Get.put(ChallengeController());
+            Get.put(DemographyController());
             return const NoTransitionPage(child: DemographyPage());
           },
           routes: const [],
