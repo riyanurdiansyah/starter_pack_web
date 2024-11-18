@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
+
+import '../../../utils/app_dialog.dart';
 
 class DemographysetController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -10,6 +13,11 @@ class DemographysetController extends GetxController {
 
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 5.obs;
+
+  final formKey = GlobalKey<FormState>();
+
+  final tcName = TextEditingController();
+  final tcData = TextEditingController();
 
   @override
   void onInit() async {
@@ -74,5 +82,30 @@ class DemographysetController extends GetxController {
 
   void onChangepage(int newValue) {
     currentPage.value = newValue;
+  }
+
+  void setDemographyToDialog(DemographyM oldDemography) {
+    tcName.text = oldDemography.name;
+    tcData.text = oldDemography.data;
+  }
+
+  void updateDemography(DemographyM? oldDemography) async {
+    try {
+      if (oldDemography != null) {
+        oldDemography = oldDemography.copyWith(
+          name: tcName.text,
+          data: tcData.text,
+        );
+
+        await firestore
+            .collection("demography")
+            .doc(oldDemography.id)
+            .update(oldDemography.toJson());
+      }
+      getDemographys();
+      AppDialog.dialogSnackbar("Data has been updated");
+    } catch (e) {
+      AppDialog.dialogSnackbar("Error while updating : $e");
+    }
   }
 }

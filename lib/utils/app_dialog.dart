@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
+import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
@@ -791,6 +793,163 @@ class AppDialog {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogDemography({
+    DemographyM? oldDemography,
+  }) {
+    final c = Get.find<DemographysetController>();
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    if (oldDemography != null) {
+      c.setDemographyToDialog(oldDemography);
+    }
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        title: AppTextNormal.labelBold(
+          oldDemography != null ? "Update Demography" : "Add Demography",
+          16,
+          Colors.black,
+        ),
+        content: SizedBox(
+          width: size.width / 2.5,
+          child: Form(
+            key: c.formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextNormal.labelW700(
+                    "Name",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcName,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AppTextNormal.labelW700(
+                    "Data Demography",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcData,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    minLines: 6,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 35,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade400,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  )),
+                              onPressed: () => context.pop(),
+                              child: AppTextNormal.labelBold(
+                                "CANCEL",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 18,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimaryDark,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              onPressed: () {
+                                context.pop();
+                                c.updateDemography(oldDemography);
+                              },
+                              child: AppTextNormal.labelBold(
+                                "SAVE",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

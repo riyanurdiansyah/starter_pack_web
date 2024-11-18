@@ -55,7 +55,7 @@ class _DemographyPageState extends State<DemographyPage>
                           isHovered: false,
                         )),
                     child: InkWell(
-                      onTap: _c.toggleWidget3,
+                      onTap: () => _c.toggleWidget(index),
                       child: Container(
                         color: Colors.transparent,
                         alignment: Alignment.center,
@@ -304,128 +304,128 @@ class _DemographyPageState extends State<DemographyPage>
             //     ),
             //   ),
             // ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              top: 0,
-              bottom: 0,
-              right: _c.isWidgetVisible.value
-                  ? 0
-                  : -size.width * 0.5, // Off-screen when hidden
-              width: size.width * 0.35,
-              child: Container(
-                height: 200,
-                width: double.infinity,
-                color: Colors.black.withOpacity(0.4),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Informasi Lokasi",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Detail lokasi dan informasi lainnya ditampilkan di sini.",
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _c.toggleWidget();
-
-                        // context.goNamed(AppRouteName.pro,
-                        //     queryParameters: {"name": "area-1"});
-                      },
-                      child: const Text("Tutup"),
-                    ),
-                  ],
+            Obx(
+              () => AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                top: 0,
+                bottom: 0,
+                right: _c.isWidgetVisible.value
+                    ? 0
+                    : -size.width * 0.5, // Off-screen when hidden
+                width: size.width * 0.35,
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  color: Colors.black.withOpacity(0.4),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Data Demography",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
+                      const SizedBox(height: 20),
+                      if (_c.selectedIndex.value != 99)
+                        Text(
+                          _c.demographys[_c.selectedIndex.value].data,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 16),
+                        ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _c.toggleWidget(99);
+                        },
+                        child: const Text("Tutup"),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              top: 0,
-              bottom: 0,
-              right: _c.isWidgetVisible2.value
-                  ? 0
-                  : -size.width * 0.5, // Off-screen when hidden
-              width: size.width * 0.35,
-              child: Container(
-                height: 200,
-                width: double.infinity,
-                color: Colors.black.withOpacity(0.4),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Informasi Lokasi",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Detail lokasi dan informasi lainnya ditampilkan di sini.",
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _c.toggleWidget2();
+            // AnimatedPositioned(
+            //   duration: const Duration(milliseconds: 300),
+            //   curve: Curves.easeInOut,
+            //   top: 0,
+            //   bottom: 0,
+            //   right: _c.isWidgetVisible2.value
+            //       ? 0
+            //       : -size.width * 0.5, // Off-screen when hidden
+            //   width: size.width * 0.35,
+            //   child: Container(
+            //     height: 200,
+            //     width: double.infinity,
+            //     color: Colors.black.withOpacity(0.4),
+            //     padding: const EdgeInsets.all(20),
+            //     child: Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         const Text(
+            //           "Informasi Lokasi",
+            //           style: TextStyle(color: Colors.white, fontSize: 24),
+            //         ),
+            //         const SizedBox(height: 20),
+            //         const Text(
+            //           "Detail lokasi dan informasi lainnya ditampilkan di sini.",
+            //           style: TextStyle(color: Colors.white70, fontSize: 16),
+            //         ),
+            //         ElevatedButton(
+            //           onPressed: () {
+            //             _c.toggleWidget2();
 
-                        // context.goNamed(AppRouteName.cart, extra: {
-                        //   "name": "Area 2",
-                        // });
-                      },
-                      child: const Text("Tutup"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              top: 0,
-              bottom: 0,
-              right: _c.isWidgetVisible3.value
-                  ? 0
-                  : -size.width * 0.5, // Off-screen when hidden
-              width: size.width * 0.35,
-              child: Container(
-                height: 200,
-                width: double.infinity,
-                color: Colors.black.withOpacity(0.4),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Informasi Lokasi",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Detail lokasi dan informasi lainnya ditampilkan di sini.",
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _c.toggleWidget3();
+            //             // context.goNamed(AppRouteName.cart, extra: {
+            //             //   "name": "Area 2",
+            //             // });
+            //           },
+            //           child: const Text("Tutup"),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // AnimatedPositioned(
+            //   duration: const Duration(milliseconds: 300),
+            //   curve: Curves.easeInOut,
+            //   top: 0,
+            //   bottom: 0,
+            //   right: _c.isWidgetVisible3.value
+            //       ? 0
+            //       : -size.width * 0.5, // Off-screen when hidden
+            //   width: size.width * 0.35,
+            //   child: Container(
+            //     height: 200,
+            //     width: double.infinity,
+            //     color: Colors.black.withOpacity(0.4),
+            //     padding: const EdgeInsets.all(20),
+            //     child: Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         const Text(
+            //           "Informasi Lokasi",
+            //           style: TextStyle(color: Colors.white, fontSize: 24),
+            //         ),
+            //         const SizedBox(height: 20),
+            //         const Text(
+            //           "Detail lokasi dan informasi lainnya ditampilkan di sini.",
+            //           style: TextStyle(color: Colors.white70, fontSize: 16),
+            //         ),
+            //         ElevatedButton(
+            //           onPressed: () {
+            //             _c.toggleWidget3();
 
-                        // context.goNamed(AppRouteName.cart, extra: {
-                        //   "name": "Area 3",
-                        // });
-                      },
-                      child: const Text("Tutup"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            //             // context.goNamed(AppRouteName.cart, extra: {
+            //             //   "name": "Area 3",
+            //             // });
+            //           },
+            //           child: const Text("Tutup"),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

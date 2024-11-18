@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 
 import '../../../utils/app_color.dart';
 import '../../../utils/app_text.dart';
@@ -69,7 +70,8 @@ class DemographysetPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () => AppDialog.dialogDemography(
+                                          oldDemography: data),
                                       child: const Icon(
                                         Icons.edit_rounded,
                                         size: 16,

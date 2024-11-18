@@ -24,5 +24,5 @@ const quizPlayImage = "assets/images/bg_quiz.png";
 const bgDemography = "assets/images/demography.png";
 
 const gbSigninGif =
-    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin.gif?alt=media";
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";
 const loadingGif = "assets/gif/loading.gif";

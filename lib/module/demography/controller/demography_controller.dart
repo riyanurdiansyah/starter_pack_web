@@ -18,8 +18,10 @@ class DemographyController extends GetxController
   final Rx<bool> isHovered2 = false.obs;
   final Rx<bool> isHovered3 = false.obs;
   final Rx<bool> isWidgetVisible = false.obs;
-  final Rx<bool> isWidgetVisible2 = false.obs;
-  final Rx<bool> isWidgetVisible3 = false.obs;
+
+  final Rx<int> selectedIndex = 99.obs;
+  // final Rx<bool> isWidgetVisible2 = false.obs;
+  // final Rx<bool> isWidgetVisible3 = false.obs;
   @override
   void onInit() async {
     animationController = AnimationController(
@@ -40,17 +42,26 @@ class DemographyController extends GetxController
     super.onClose();
   }
 
-  void toggleWidget() {
+  void toggleWidget(int index) {
     isWidgetVisible.value = !isWidgetVisible.value;
+    Future.delayed(const Duration(milliseconds: 250), () {
+      if (index != 99 &&
+          !isWidgetVisible.value &&
+          selectedIndex.value != index) {
+        selectedIndex.value = index;
+        isWidgetVisible.value = !isWidgetVisible.value;
+      }
+      selectedIndex.value = index;
+    });
   }
 
-  void toggleWidget2() {
-    isWidgetVisible2.value = !isWidgetVisible2.value;
-  }
+  // void toggleWidget2() {
+  //   isWidgetVisible2.value = !isWidgetVisible2.value;
+  // }
 
-  void toggleWidget3() {
-    isWidgetVisible3.value = !isWidgetVisible3.value;
-  }
+  // void toggleWidget3() {
+  //   isWidgetVisible3.value = !isWidgetVisible3.value;
+  // }
 
   Future<List<DemographyM>> getDemographys() async {
     final response = await firestore.collection("demography").get();
