@@ -243,6 +243,8 @@ class HomePage extends StatelessWidget {
                                               ),
                                               Container(
                                                 width: 70,
+                                                padding:
+                                                    const EdgeInsets.all(6),
                                                 margin: const EdgeInsets.all(6),
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
@@ -251,10 +253,13 @@ class HomePage extends StatelessWidget {
                                                           Radius.circular(8)),
                                                   color: colorPointRank,
                                                 ),
-                                                child: AppTextNormal.labelBold(
-                                                  "\$ ${data.point}",
-                                                  14,
-                                                  Colors.white,
+                                                child: FittedBox(
+                                                  child:
+                                                      AppTextNormal.labelBold(
+                                                    "\$ ${formatToThousandK(data.point)}",
+                                                    14,
+                                                    Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                               25.pw,

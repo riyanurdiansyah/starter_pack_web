@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/challenge/controller/challenge_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
@@ -70,6 +69,7 @@ class ChallengePage extends StatelessWidget {
                         (index) {
                           int displayIndex = (_c.currentIndex.value + index) %
                               _c.challenges.length;
+
                           return Expanded(
                             child: ClipPath(
                               clipper: MyClipper(),
@@ -82,16 +82,16 @@ class ChallengePage extends StatelessWidget {
                                   _c.isHoveredList[displayIndex] = false;
                                 },
                                 child: InkWell(
-                                  onTap: () => context.goNamed(
-                                      AppRouteName.quiz,
-                                      pathParameters: {
-                                        "id": _c.challenges[index].id,
-                                      }),
+                                  onTap: () => _c.handleTap(index),
                                   child: Stack(
                                     children: [
                                       ColorFiltered(
                                         colorFilter: ColorFilter.mode(
-                                          _c.isHoveredList[displayIndex]
+                                          _c.isHoveredList[displayIndex] &&
+                                                  DateTime.parse(_c
+                                                          .challenges[index]
+                                                          .start)
+                                                      .isBefore(DateTime.now())
                                               ? Colors.transparent
                                               : Colors.grey,
                                           BlendMode.saturation,
@@ -105,6 +105,7 @@ class ChallengePage extends StatelessWidget {
                                               ? size.height / 1.4
                                               : size.height / 1.5,
                                           decoration: BoxDecoration(
+                                            color: Colors.red,
                                             border:
                                                 Border.all(color: Colors.white),
                                           ),
@@ -139,10 +140,15 @@ class ChallengePage extends StatelessWidget {
                                             style: TextStyle(
                                               fontFamily: "Race",
                                               fontSize: 26,
-                                              color:
-                                                  _c.isHoveredList[displayIndex]
-                                                      ? colorElectricViolet
-                                                      : Colors.white,
+                                              color: _c.isHoveredList[
+                                                          displayIndex] &&
+                                                      DateTime.parse(_c
+                                                              .challenges[index]
+                                                              .start)
+                                                          .isBefore(
+                                                              DateTime.now())
+                                                  ? colorElectricViolet
+                                                  : Colors.grey,
                                               fontWeight: FontWeight.bold,
                                               letterSpacing: 4,
                                               shadows: !_c.isHoveredList[

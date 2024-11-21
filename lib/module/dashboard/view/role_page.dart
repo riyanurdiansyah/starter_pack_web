@@ -71,7 +71,8 @@ class RolePage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () =>
+                                          AppDialog.dialogRole(oldRole: data),
                                       child: const Icon(
                                         Icons.edit_rounded,
                                         size: 16,
@@ -117,7 +118,7 @@ class RolePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
-        onPressed: () => AppDialog.dialogUser(),
+        onPressed: () => AppDialog.dialogRole(),
         backgroundColor: Colors.blue,
         child: AppTextNormal.labelW600(
           "+",

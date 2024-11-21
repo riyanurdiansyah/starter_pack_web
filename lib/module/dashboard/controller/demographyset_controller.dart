@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +20,9 @@ class DemographysetController extends GetxController {
 
   final tcName = TextEditingController();
   final tcData = TextEditingController();
+  final tcInfant = TextEditingController();
+  final tcPregnant = TextEditingController();
+  final tcSeniors = TextEditingController();
 
   @override
   void onInit() async {
@@ -87,6 +92,9 @@ class DemographysetController extends GetxController {
   void setDemographyToDialog(DemographyM oldDemography) {
     tcName.text = oldDemography.name;
     tcData.text = oldDemography.data;
+    tcInfant.text = oldDemography.infant;
+    tcPregnant.text = oldDemography.pregnant;
+    tcSeniors.text = oldDemography.seniors;
   }
 
   void updateDemography(DemographyM? oldDemography) async {
@@ -95,8 +103,11 @@ class DemographysetController extends GetxController {
         oldDemography = oldDemography.copyWith(
           name: tcName.text,
           data: tcData.text,
+          seniors: tcSeniors.text,
+          infant: tcInfant.text,
+          pregnant: tcPregnant.text,
         );
-
+        log("CEK DATA : ${oldDemography.toJson()}");
         await firestore
             .collection("demography")
             .doc(oldDemography.id)

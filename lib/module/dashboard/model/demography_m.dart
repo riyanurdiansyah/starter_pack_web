@@ -8,6 +8,9 @@ String demographyMToJson(DemographyM data) => json.encode(data.toJson());
 class DemographyM {
   final String id;
   final String data;
+  final String infant;
+  final String seniors;
+  final String pregnant;
   final double right;
   final double left;
   final double top;
@@ -19,6 +22,9 @@ class DemographyM {
   DemographyM({
     required this.id,
     required this.data,
+    required this.infant,
+    required this.seniors,
+    required this.pregnant,
     required this.right,
     required this.left,
     required this.top,
@@ -31,6 +37,9 @@ class DemographyM {
   DemographyM copyWith({
     String? id,
     String? data,
+    String? infant,
+    String? seniors,
+    String? pregnant,
     double? right,
     double? left,
     double? top,
@@ -42,6 +51,9 @@ class DemographyM {
       DemographyM(
         id: id ?? this.id,
         data: data ?? this.data,
+        infant: infant ?? this.infant,
+        seniors: seniors ?? this.seniors,
+        pregnant: pregnant ?? this.pregnant,
         right: right ?? this.right,
         left: left ?? this.left,
         top: top ?? this.top,
@@ -53,11 +65,14 @@ class DemographyM {
 
   factory DemographyM.fromJson(Map<String, dynamic> json) => DemographyM(
         id: json["id"],
-        data: json["data"],
-        right: json["right"]?.toDouble(),
-        left: json["left"]?.toDouble(),
-        top: json["top"]?.toDouble(),
-        bottom: json["bottom"]?.toDouble(),
+        data: json["data"] ?? "",
+        infant: json["infant"] ?? "",
+        seniors: json["seniors"] ?? "",
+        pregnant: json["pregnant"] ?? "",
+        right: json["right"]?.toDouble() ?? 0,
+        left: json["left"]?.toDouble() ?? 0,
+        top: json["top"]?.toDouble() ?? 0,
+        bottom: json["bottom"]?.toDouble() ?? 0,
         name: json["name"],
         page: 0,
         isHovered: false,
@@ -71,5 +86,8 @@ class DemographyM {
         "top": top,
         "bottom": bottom,
         "name": name,
+        "infant": infant,
+        "pregnant": pregnant,
+        "seniors": seniors,
       };
 }

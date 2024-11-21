@@ -30,7 +30,7 @@ class ChallengesetPage extends StatelessWidget {
               () => Container(
                 color: Colors.white,
                 child: AppDataTable<ChallengeM>(
-                  headers: const ["Image", "Challenge", "Start"],
+                  headers: const ["Image", "Challenge", "Type", "Start", "End"],
                   datas: _c.isUsingChallenges(),
                   currentPage: _c.currentPage.value,
                   totalPage: _c.isTotalPage(),
@@ -63,35 +63,54 @@ class ChallengesetPage extends StatelessWidget {
                             ),
                             Expanded(
                               child: AppTextNormal.labelW500(
+                                data.type,
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
                                 "${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(data.start))} WIB",
                                 16,
                                 colorPrimaryDark,
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                            // SizedBox(
-                            //   width: 25,
-                            //   height: 25,
-                            //   child: InkWell(
-                            //     onTap: () {},
-                            //     child: const Icon(
-                            //       Icons.mode_edit_rounded,
-                            //       size: 20,
-                            //       color: colorPrimaryDark,
-                            //     ),
-                            //   ),
-                            // ),
-                            // const SizedBox(
-                            //   width: 10,
-                            // ),
-                            // Container(
-                            //   width: 2,
-                            //   height: 30,
-                            //   color: Colors.grey.shade200,
-                            // ),
-                            // const SizedBox(
-                            //   width: 10,
-                            // ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                data.end.isEmpty
+                                    ? "-"
+                                    : "${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(data.end))} WIB",
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: InkWell(
+                                onTap: () => AppDialog.dialogChallenge(
+                                    oldChallenge: data),
+                                child: const Icon(
+                                  Icons.mode_edit_rounded,
+                                  color: colorPointRank,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 2,
+                              height: 30,
+                              color: Colors.grey.shade200,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
                             SizedBox(
                               width: 25,
                               height: 25,
@@ -135,54 +154,6 @@ class ChallengesetPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-
-                            // SizedBox(
-                            //   width: 100,
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       Container(
-                            //         width: 26,
-                            //         height: 26,
-                            //         padding: const EdgeInsets.all(2.5),
-                            //         decoration: BoxDecoration(
-                            //           color: Colors.green,
-                            //           borderRadius: BorderRadius.circular(4),
-                            //         ),
-                            //         child: InkWell(
-                            //           onTap: () {},
-                            //           child: const Icon(
-                            //             Icons.edit_rounded,
-                            //             size: 16,
-                            //             color: Colors.white,
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       8.pw,
-                            //       Container(
-                            //         width: 26,
-                            //         height: 26,
-                            //         padding: const EdgeInsets.all(2.5),
-                            //         decoration: BoxDecoration(
-                            //           color: Colors.red,
-                            //           borderRadius: BorderRadius.circular(4),
-                            //         ),
-                            //         child: InkWell(
-                            //           onTap: () =>
-                            //               AppDialog.dialogDelete(callback: () {
-                            //             context.pop();
-                            //             _c.deleteData(data);
-                            //           }),
-                            //           child: const Icon(
-                            //             Icons.delete_rounded,
-                            //             size: 16,
-                            //             color: Colors.white,
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

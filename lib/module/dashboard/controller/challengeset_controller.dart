@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:uuid/uuid.dart';
@@ -19,12 +20,15 @@ class ChallengesetController extends GetxController {
 
   DateTime? selectedDate;
 
+  DateTime? selectedEndDate;
+
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 8.obs;
 
   final formKey = GlobalKey<FormState>();
 
   final tcDate = TextEditingController();
+  final tcEndDate = TextEditingController();
   final tcChallenge = TextEditingController();
   final tcType = TextEditingController();
   final tcImage = TextEditingController();
@@ -95,47 +99,57 @@ class ChallengesetController extends GetxController {
     currentPage.value = newValue;
   }
 
-  void saveChallenge() async {
+  void saveChallenge({ChallengeM? oldChallenge}) async {
     try {
-      final fileBytes = filePickerResult?.files.single.bytes;
-      final fileName = filePickerResult?.files.single.name;
-      final storageRef =
-          FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
+      String downlodUrl = "";
+      if (oldChallenge == null) {
+        final fileBytes = filePickerResult?.files.single.bytes;
+        final fileName = filePickerResult?.files.single.name;
+        final storageRef =
+            FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
 
-      final uploadTask = storageRef.putData(fileBytes!);
+        final uploadTask = storageRef.putData(fileBytes!);
 
-      final snapshot = await uploadTask.whenComplete(() {});
+        final snapshot = await uploadTask.whenComplete(() {});
 
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-
+        downlodUrl = await snapshot.ref.getDownloadURL();
+      }
       CollectionReference challengeCollection =
           firestore.collection('challenge');
       final id = const Uuid().v4();
       ChallengeM challenge = ChallengeM(
-        id: id,
-        image: downloadUrl,
+        id: oldChallenge != null ? oldChallenge.id : id,
+        image: oldChallenge != null ? oldChallenge.image : downlodUrl,
         name: tcChallenge.text,
         no: 0,
         type: tcType.text,
         route: "challenge",
         start: selectedDate?.toIso8601String() ?? "",
+        end: selectedEndDate?.toIso8601String() ?? "",
         page: 0,
       );
-
-      challengeCollection.doc(id).set(challenge.toJson());
+      if (oldChallenge != null) {
+        challengeCollection.doc(oldChallenge.id).update(challenge.toJson());
+        AppDialog.dialogSnackbar("Data has been updated");
+      } else {
+        challengeCollection.doc(id).set(challenge.toJson());
+        AppDialog.dialogSnackbar("Data has been created");
+      }
+      clearAllData();
       getChallenges();
-      AppDialog.dialogSnackbar("Data has been created");
     } catch (e) {
-      AppDialog.dialogSnackbar("Error while creating : $e");
+      AppDialog.dialogSnackbar("Error while saving : $e");
     }
   }
 
   void clearAllData() {
     tcChallenge.clear();
     tcDate.clear();
+    tcEndDate.clear();
     tcImage.clear();
     filePickerResult = null;
     selectedDate = null;
+    selectedEndDate = null;
   }
 
   void deleteData(ChallengeM data) async {
@@ -152,6 +166,19 @@ class ChallengesetController extends GetxController {
       AppDialog.dialogSnackbar("Data has been deleted");
     } catch (e) {
       AppDialog.dialogSnackbar("Error while deleting : $e");
+    }
+  }
+
+  void setChallengeToDialog(ChallengeM oldChallenge) {
+    tcChallenge.text = oldChallenge.name;
+    tcType.text = oldChallenge.type;
+    tcDate.text =
+        "${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(oldChallenge.start))} WIB";
+    selectedDate = DateTime.parse(oldChallenge.start);
+    if (oldChallenge.end.isNotEmpty) {
+      selectedEndDate = DateTime.parse(oldChallenge.end);
+      tcEndDate.text =
+          "${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(oldChallenge.end))} WIB";
     }
   }
 }

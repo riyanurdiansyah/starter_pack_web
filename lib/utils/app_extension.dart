@@ -13,6 +13,14 @@ String convertNumber(int num) {
   return NumberFormat.decimalPattern('id').format(num);
 }
 
+String formatToThousandK(int value) {
+  // Membagi angka menjadi ribuan
+  double thousandValue = value / 1000;
+  // Format angka dengan pemisah ribuan
+  String formattedValue = NumberFormat("#,###", "id_ID").format(thousandValue);
+  return "${formattedValue}K";
+}
+
 Future<DateTime?> globalDate() async {
   final date = await showDatePicker(
       context: navigatorKey.currentContext!,

@@ -8,6 +8,7 @@ import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
@@ -39,6 +40,9 @@ class AppDialog {
   }) {
     final c = Get.find<ChallengesetController>();
     final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+    if (oldChallenge != null) {
+      c.setChallengeToDialog(oldChallenge);
+    }
     return showDialog(
       barrierDismissible: false,
       context: navigatorKey.currentContext!,
@@ -123,7 +127,7 @@ class AppDialog {
                             c.selectedDate = date;
                             if (date != null) {
                               c.tcDate.text =
-                                  DateFormat("dd/MM/yyyy HH:mm").format(date);
+                                  "${DateFormat("dd/MM/yyyy HH:mm").format(date)} WIB";
                             } else {
                               c.tcDate.clear();
                             }
@@ -156,6 +160,112 @@ class AppDialog {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "End Date",
+                    14,
+                    Colors.black,
+                  ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcEndDate,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    onTap: () async {},
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final date = await globalDate();
+                            c.selectedEndDate = date;
+                            if (date != null) {
+                              c.tcEndDate.text =
+                                  "${DateFormat("dd/MM/yyyy HH:mm").format(date)} WIB";
+                            } else {
+                              c.tcEndDate.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose Date",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "Type",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  DropdownSearch<String>(
+                    popupProps: PopupProps.menu(
+                      fit: FlexFit.loose,
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        controller: c.tcType,
+                        decoration: InputDecoration(
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 14,
+                            wordSpacing: 4,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: colorPrimaryDark),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                    items: (_, __) => ["OPTION", "TRUE/FALSE", "UPLOAD"],
+                    compareFn: (_, __) {
+                      return false;
+                    },
+                    itemAsString: (u) => u,
+                    selectedItem: c.tcType.text,
+                    onChanged: (data) => c.tcType.text = data ?? "",
                   ),
                   16.ph,
                   AppTextNormal.labelW700(
@@ -233,7 +343,10 @@ class AppDialog {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6),
                                   )),
-                              onPressed: () => context.pop(),
+                              onPressed: () {
+                                c.clearAllData();
+                                context.pop();
+                              },
                               child: AppTextNormal.labelBold(
                                 "CANCEL",
                                 14,
@@ -257,7 +370,7 @@ class AppDialog {
                               ),
                               onPressed: () {
                                 context.pop();
-                                c.saveChallenge();
+                                c.saveChallenge(oldChallenge: oldChallenge);
                               },
                               child: AppTextNormal.labelBold(
                                 "SAVE",
@@ -800,6 +913,129 @@ class AppDialog {
     );
   }
 
+  static dialogRole({
+    RoleM? oldRole,
+  }) {
+    final uC = Get.find<RoleController>();
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    if (oldRole != null) {
+      uC.tcRole.text = oldRole.role;
+    }
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        title: AppTextNormal.labelBold(
+          oldRole != null ? "Update Role" : "Add Role",
+          16,
+          Colors.black,
+        ),
+        content: SizedBox(
+          width: size.width / 2.5,
+          child: Form(
+            key: uC.formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppTextNormal.labelW700(
+                  "Role",
+                  14,
+                  Colors.black,
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextFormField(
+                  controller: uC.tcRole,
+                  validator: (val) => AppValidator.requiredField(val!),
+                  style: GoogleFonts.poppins(
+                    height: 1.4,
+                  ),
+                  decoration: InputDecoration(
+                    hintStyle: GoogleFonts.poppins(
+                      fontSize: 14,
+                      wordSpacing: 4,
+                    ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade500),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade400,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                )),
+                            onPressed: () {
+                              uC.tcRole.clear();
+                              context.pop();
+                            },
+                            child: AppTextNormal.labelBold(
+                              "CANCEL",
+                              14,
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 18,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorPrimaryDark,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            onPressed: () {
+                              context.pop();
+                              uC.saveRole(oldRole: oldRole);
+                            },
+                            child: AppTextNormal.labelBold(
+                              "SAVE",
+                              14,
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   static dialogDemography({
     DemographyM? oldDemography,
   }) {
@@ -864,7 +1100,7 @@ class AppDialog {
                     height: 16,
                   ),
                   AppTextNormal.labelW700(
-                    "Data Demography",
+                    "Infant",
                     14,
                     Colors.black,
                   ),
@@ -872,12 +1108,82 @@ class AppDialog {
                     height: 12,
                   ),
                   TextFormField(
-                    controller: c.tcData,
+                    controller: c.tcInfant,
                     validator: (val) => AppValidator.requiredField(val!),
                     style: GoogleFonts.poppins(
                       height: 1.4,
                     ),
-                    minLines: 6,
+                    minLines: 4,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AppTextNormal.labelW700(
+                    "Pregnant",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcPregnant,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    minLines: 4,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AppTextNormal.labelW700(
+                    "Seniors",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcSeniors,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    minLines: 4,
                     maxLines: 50,
                     decoration: InputDecoration(
                       hintStyle: GoogleFonts.poppins(
