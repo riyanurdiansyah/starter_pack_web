@@ -104,6 +104,9 @@ class CartController extends GetxController {
     products.value = response.docs.map((e) {
       return ProdukM.fromJson(e.data());
     }).toList();
+    products.value = products
+        .where((e) => e.groups.contains(userSession.value.groupId))
+        .toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
     quantityControllers = List.generate(products.length, (index) {
       return TextEditingController(text: products[index].qty.toString());

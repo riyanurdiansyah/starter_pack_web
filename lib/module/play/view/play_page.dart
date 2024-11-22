@@ -71,12 +71,12 @@ class PlayPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: _c.menus
-                            .map(
-                              (item) => HoverTextItem(
-                                text: item.title,
-                                route: item.route,
-                              ),
-                            )
+                            .map((item) => FittedBox(
+                                  child: HoverTextItem(
+                                    text: item.title,
+                                    route: item.route,
+                                  ),
+                                ))
                             .toList(),
                       ),
                     ),

@@ -6,6 +6,7 @@ class HomeController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Rx<int> indexFilter = 0.obs;
+  Rx<int> indexTab = 0.obs;
 
   RxList<GroupM> groups = <GroupM>[].obs;
   RxList<GroupM> oldGroups = <GroupM>[].obs;

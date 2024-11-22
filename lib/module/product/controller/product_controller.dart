@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/product/model/product_m.dart';
+import 'package:starter_pack_web/module/user/model/user_m.dart';
+import 'package:starter_pack_web/utils/app_constanta.dart';
 
 class ProductController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -21,11 +26,23 @@ class ProductController extends GetxController {
 
   RxList<InformasiProductM> informasiSelected = <InformasiProductM>[].obs;
 
+  Rx<UserM> user = userEmpty.obs;
+
+  late SharedPreferences pref;
   @override
   void onInit() async {
+    await setup();
     await getProducts();
     await onChangeLoading(false);
     super.onInit();
+  }
+
+  Future setup() async {
+    pref = await SharedPreferences.getInstance();
+    final userJson = pref.getString("user");
+    if (userJson != null) {
+      user.value = UserM.fromJson(jsonDecode(userJson));
+    }
   }
 
   Future onChangeLoading(bool val) async {

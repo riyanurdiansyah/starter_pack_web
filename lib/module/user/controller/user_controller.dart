@@ -162,7 +162,6 @@ class UserController extends GetxController {
           page: 0,
           password: user.password,
         );
-
         await documentRef.update(user.toJson());
       } else {
         CollectionReference userCollection = firestore.collection('user');
