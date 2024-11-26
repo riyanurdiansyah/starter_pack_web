@@ -13,6 +13,7 @@ class AppRouteName {
   static const String play = 'play';
   static const String user = 'user';
   static const String role = 'role';
+  static const String assign = 'assign';
   static const String group = 'group';
   static const String challengeset = 'challengeset';
   static const String update = 'update';

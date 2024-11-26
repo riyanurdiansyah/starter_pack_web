@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,10 +16,12 @@ import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../middleware/app_route.dart';
 import '../module/user/model/group_m.dart';
 import '../module/user/model/role_m.dart';
+import 'app_constanta.dart';
 import 'app_decoration.dart';
 import 'app_text.dart';
 import 'app_validator.dart';
@@ -33,6 +36,90 @@ class AppDialog {
         return _AppDialogContent(size: size);
       },
     );
+  }
+
+  static dialogNews() {
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+
+    showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), // Rounded corners
+          ),
+          child: Container(
+            color: Colors.white,
+            width: size.width / 1.6,
+            height: size.height / 1.51,
+            child: Stack(
+              children: [
+                Image.asset(
+                  newsImage,
+                  fit: BoxFit.fill,
+                  filterQuality: FilterQuality.high,
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Positioned(
+                    top: 200,
+                    left: 50,
+                    bottom: 0,
+                    child: SizedBox(
+                      width: size.width / 2.5,
+                      height: 40,
+                      child: AnimatedTextKit(
+                        repeatForever: false,
+                        totalRepeatCount: 0,
+                        isRepeatingAnimation: false,
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            loremIpsum,
+                            textStyle: const TextStyle(
+                              fontFamily: 'Bigail',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white,
+                              letterSpacing: 1.4,
+                              height: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Image.asset(
+                    driverImage,
+                    filterQuality: FilterQuality.high,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    // return showDialog(
+    //   context: navigatorKey.currentContext!,
+    //   barrierColor: Colors.grey.withOpacity(0.4),
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       backgroundColor: Colors.transparent,
+    //       content:
+    //     );
+    //   },
+    // );
   }
 
   static dialogChallenge({

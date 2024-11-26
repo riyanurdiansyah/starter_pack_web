@@ -31,6 +31,8 @@ import 'package:starter_pack_web/module/product/view/product_page.dart';
 import 'package:starter_pack_web/module/profile/controller/profile_controller.dart';
 import 'package:starter_pack_web/module/rnd/controller/rnd_controller.dart';
 import 'package:starter_pack_web/module/rnd/view/rnd_page.dart';
+import 'package:starter_pack_web/module/role/controller/assign_controller.dart';
+import 'package:starter_pack_web/module/role/view/assign_page.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/view/user_page.dart';
 import 'package:universal_html/html.dart' as html;
@@ -306,6 +308,18 @@ GoRouter router = GoRouter(
               },
             ),
           ],
+        ),
+        GoRoute(
+          path: AppRouteName.assign,
+          name: AppRouteName.assign,
+          onExit: (_, __) {
+            Get.delete<AssignController>();
+            return true;
+          },
+          pageBuilder: (context, state) {
+            Get.put(AssignController());
+            return NoTransitionPage(child: AssignPage());
+          },
         ),
         GoRoute(
           path: AppRouteName.rnd,

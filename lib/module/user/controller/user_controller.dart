@@ -6,13 +6,13 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_constanta.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../middleware/app_route.dart';
 import '../model/role_m.dart';
 
 class UserController extends GetxController {
@@ -148,6 +148,7 @@ class UserController extends GetxController {
   Future<void> addNewUser(
     UserM? user,
   ) async {
+    navigatorKey.currentContext!.pop();
     try {
       if (user != null) {
         final documentRef = firestore.collection('user').doc(user.id);
@@ -159,6 +160,7 @@ class UserController extends GetxController {
           role: selectedRole.value.role,
           kelompok: selectedGroup.value.name,
           kelompokId: selectedGroup.value.groupId,
+          groupId: selectedGroup.value.id,
           page: 0,
           password: user.password,
         );
@@ -181,9 +183,9 @@ class UserController extends GetxController {
 
         userCollection.doc(id).set(newUser.toJson());
       }
-
-      navigatorKey.currentContext!.pop();
       getUsers();
+      AppDialog.dialogSnackbar("Data has been saved");
+
       clearAllField();
     } catch (e) {
       AppDialog.dialogSnackbar("Error while adding : $e");

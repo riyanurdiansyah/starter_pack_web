@@ -23,6 +23,8 @@ const garageImage = "assets/images/garage.png";
 const quizPlayImage = "assets/images/bg_quiz.png";
 const bgDemography = "assets/images/demography.png";
 const lockedImage = "assets/images/locked.png";
+const newsImage = "assets/images/news.png";
+const driverImage = "assets/images/driver.png";
 
 const gbSigninGif =
     "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";

@@ -93,15 +93,18 @@ class PlayPage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         10.pw,
-                        const AnimatedDefaultTextStyle(
-                          duration: Duration(milliseconds: 300),
-                          style: TextStyle(
-                            fontFamily: 'Race',
-                            letterSpacing: 10,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white,
+                        const Padding(
+                          padding: EdgeInsets.only(top: 5.0),
+                          child: AnimatedDefaultTextStyle(
+                            duration: Duration(milliseconds: 300),
+                            style: TextStyle(
+                              fontFamily: 'Race',
+                              letterSpacing: 10,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                            child: Text("Tim Rakor MNF & IDC"),
                           ),
-                          child: Text("Tim Rakor MFG"),
                         ),
                       ],
                     ),
@@ -167,6 +170,10 @@ class _HoverTextItemState extends State<HoverTextItem> {
       },
       child: InkWell(
         onTap: () {
+          if (widget.text.toLowerCase() == "logout") {
+            _c.logout();
+            return;
+          }
           context.goNamed(widget.route);
         },
         child: AnimatedContainer(
