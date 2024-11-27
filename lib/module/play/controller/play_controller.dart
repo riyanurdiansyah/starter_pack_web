@@ -21,6 +21,8 @@ class PlayController extends GetxController {
 
   final Rx<bool> isLoading = true.obs;
 
+  final Rx<bool> isShow = false.obs;
+
   final Rx<UserM> user = UserM(
     id: "",
     nama: "",
@@ -78,5 +80,13 @@ class PlayController extends GetxController {
     html.document.cookie = "WebRakorMFG=; path=/; max-age=0;";
     pref.clear();
     navigatorKey.currentContext!.goNamed(AppRouteName.signin);
+  }
+
+  void playTyping(bool isPlay) async {
+    if (!isPlay) {
+      await audioPlayer.play(AssetSource("music/typing.mp3"));
+    } else {
+      await audioPlayer.stop();
+    }
   }
 }

@@ -12,6 +12,7 @@ import 'package:starter_pack_web/module/dashboard/controller/group_controller.da
 import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
+import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
@@ -41,6 +42,8 @@ class AppDialog {
   static dialogNews() {
     final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
 
+    final c = Get.find<PlayController>();
+    c.playTyping(false);
     showDialog(
       context: navigatorKey.currentContext!,
       builder: (BuildContext context) {
@@ -71,31 +74,58 @@ class AppDialog {
                   ),
                 ),
                 Positioned(
-                    top: 200,
-                    left: 50,
-                    bottom: 0,
-                    child: SizedBox(
-                      width: size.width / 2.5,
-                      height: 40,
-                      child: AnimatedTextKit(
-                        repeatForever: false,
-                        totalRepeatCount: 0,
-                        isRepeatingAnimation: false,
-                        animatedTexts: [
-                          TypewriterAnimatedText(
-                            loremIpsum,
-                            textStyle: const TextStyle(
-                              fontFamily: 'Bigail',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
-                              letterSpacing: 1.4,
-                              height: 2,
+                  top: 200,
+                  left: 50,
+                  bottom: 0,
+                  child: SizedBox(
+                    width: size.width / 2.5,
+                    child: Column(
+                      children: [
+                        AnimatedTextKit(
+                          repeatForever: false,
+                          isRepeatingAnimation: false,
+                          onFinished: () {
+                            c.playTyping(true);
+                            c.isShow.value = true;
+                          },
+                          animatedTexts: [
+                            TypewriterAnimatedText(
+                              loremIpsum,
+                              textStyle: const TextStyle(
+                                fontFamily: 'Bigail',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.white,
+                                letterSpacing: 1.4,
+                                height: 2,
+                              ),
+                              speed: const Duration(milliseconds: 30),
                             ),
-                          ),
-                        ],
-                      ),
-                    )),
+                          ],
+                        ),
+                        Obx(
+                          () {
+                            if (c.isShow.value) {
+                              return IconButton(
+                                icon: const Icon(Icons.check,
+                                    color: Colors.green),
+                                onPressed: () {
+                                  // Aksi ketika tombol ditekan
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Button Pressed!")),
+                                  );
+                                },
+                              );
+                            }
+
+                            return const SizedBox();
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
                 Positioned(
                   right: 0,
                   bottom: 0,
