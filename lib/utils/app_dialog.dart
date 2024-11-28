@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -585,7 +586,6 @@ class AppDialog {
                       fit: FlexFit.loose,
                       showSearchBox: true,
                       searchFieldProps: TextFieldProps(
-                        controller: c.tcType,
                         decoration: InputDecoration(
                           hintStyle: GoogleFonts.poppins(
                             fontSize: 14,
@@ -608,7 +608,12 @@ class AppDialog {
                         ),
                       ),
                     ),
-                    items: (_, __) => ["OPTION", "TRUE/FALSE", "UPLOAD"],
+                    items: (_, __) => [
+                      "MULTIPLE CHOICE",
+                      "TRUE/FALSE",
+                      "WELLNESS",
+                      "WELLNESS GROUP"
+                    ],
                     compareFn: (_, __) {
                       return false;
                     },
@@ -677,6 +682,157 @@ class AppDialog {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                  ),
+                  16.ph,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppTextNormal.labelW700(
+                              "Time",
+                              14,
+                              Colors.black,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            TextFormField(
+                              controller: c.tcTime,
+                              validator: (val) =>
+                                  AppValidator.requiredField(val!),
+                              style: TextStyle(
+                                fontFamily: 'Bigail',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 12),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      12.pw,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppTextNormal.labelW700(
+                              "Max Question",
+                              14,
+                              Colors.black,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            TextFormField(
+                              controller: c.tcMaxQuestion,
+                              validator: (val) =>
+                                  AppValidator.requiredField(val!),
+                              style: TextStyle(
+                                fontFamily: 'Bigail',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 12),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      12.pw,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppTextNormal.labelW700(
+                              "Max Point",
+                              14,
+                              Colors.black,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            TextFormField(
+                              controller: c.tcMaxPoint,
+                              validator: (val) =>
+                                  AppValidator.requiredField(val!),
+                              style: TextStyle(
+                                fontFamily: 'Bigail',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 12),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   18.ph,
                   SizedBox(

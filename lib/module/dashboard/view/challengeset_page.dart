@@ -30,7 +30,16 @@ class ChallengesetPage extends StatelessWidget {
               () => Container(
                 color: Colors.white,
                 child: AppDataTable<ChallengeM>(
-                  headers: const ["Image", "Challenge", "Type", "Start", "End"],
+                  headers: const [
+                    "Image",
+                    "Challenge",
+                    "Type",
+                    "Time",
+                    "Max Question",
+                    "Max Point",
+                    "Start",
+                    "End"
+                  ],
                   datas: _c.isUsingChallenges(),
                   currentPage: _c.currentPage.value,
                   totalPage: _c.isTotalPage(),
@@ -64,6 +73,30 @@ class ChallengesetPage extends StatelessWidget {
                             Expanded(
                               child: AppTextNormal.labelW500(
                                 data.type,
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                data.time.toString(),
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                data.maxQuestion.toString(),
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                data.maxPoint.toString(),
                                 16,
                                 colorPrimaryDark,
                                 textAlign: TextAlign.center,

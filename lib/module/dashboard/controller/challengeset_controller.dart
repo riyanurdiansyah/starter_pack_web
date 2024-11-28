@@ -30,6 +30,9 @@ class ChallengesetController extends GetxController {
   final tcDate = TextEditingController();
   final tcEndDate = TextEditingController();
   final tcChallenge = TextEditingController();
+  final tcTime = TextEditingController();
+  final tcMaxQuestion = TextEditingController();
+  final tcMaxPoint = TextEditingController();
   final tcType = TextEditingController();
   final tcImage = TextEditingController();
 
@@ -127,6 +130,9 @@ class ChallengesetController extends GetxController {
         start: selectedDate?.toIso8601String() ?? "",
         end: selectedEndDate?.toIso8601String() ?? "",
         page: 0,
+        time: int.parse(tcTime.text),
+        maxPoint: int.parse(tcMaxPoint.text),
+        maxQuestion: int.parse(tcMaxQuestion.text),
       );
       if (oldChallenge != null) {
         challengeCollection.doc(oldChallenge.id).update(challenge.toJson());

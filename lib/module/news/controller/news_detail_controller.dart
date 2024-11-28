@@ -12,6 +12,8 @@ class NewsDetailController extends GetxController {
 
   Rx<bool> isLoading = true.obs;
 
+  Rx<bool> isHovered = true.obs;
+
   Rx<NewsM> news = newsEmpty.obs;
 
   quill.QuillController controller = () {

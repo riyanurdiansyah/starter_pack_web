@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       routeInformationProvider: router.routeInformationProvider,
       routerDelegate: router.routerDelegate,
       debugShowCheckedModeBanner: false,
-      title: "Default Web",
+      title: "Great Transformation",
     );
   }
 }
