@@ -8,6 +8,9 @@ class AppRouteName {
   static const String demographset = 'demographyset';
   static const String production = 'production';
   static const String rnd = 'rnd';
+  static const String news = 'news';
+  static const String newset = 'newset';
+  static const String newsDetail = 'newsdetail';
   static const String challenge = 'challenge';
   static const String setting = 'setting';
   static const String play = 'play';

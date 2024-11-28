@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,9 +10,11 @@ import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
+import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
@@ -140,16 +143,245 @@ class AppDialog {
         );
       },
     );
-    // return showDialog(
-    //   context: navigatorKey.currentContext!,
-    //   barrierColor: Colors.grey.withOpacity(0.4),
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       backgroundColor: Colors.transparent,
-    //       content:
-    //     );
-    //   },
-    // );
+  }
+
+  static dialogAddNews({
+    NewsM? oldNews,
+  }) {
+    final c = Get.find<NewsetController>();
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    if (oldNews != null) {
+      c.setDataToDialog(oldNews);
+    }
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        title: AppTextNormal.labelBold(
+          oldNews != null ? "Update News" : "Add News",
+          16,
+          Colors.black,
+        ),
+        content: SizedBox(
+          width: size.width / 2.5,
+          child: Form(
+            // key: uC.formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextNormal.labelW700(
+                    "Title",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcTitle,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "Image",
+                    14,
+                    Colors.black,
+                  ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcImage,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    onTap: () async {},
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final result = await pickFile();
+
+                            c.filePickerResult = result;
+
+                            if (result != null) {
+                              c.tcImage.text = result.files.single.name;
+                            } else {
+                              c.tcImage.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose File",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  18.ph,
+                  AppTextNormal.labelW700(
+                    "Content",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        width: 0.2,
+                        color: Colors.black,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4),
+                        topRight: Radius.circular(4),
+                      ),
+                    ),
+                    child: QuillSimpleToolbar(
+                      controller: c.controller,
+                      configurations: const QuillSimpleToolbarConfigurations(
+                        showClipboardCopy: false,
+                        showCodeBlock: false,
+                        showInlineCode: false,
+                        showClearFormat: false,
+                        showSearchButton: false,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          width: 0.2,
+                          color: Colors.black,
+                        )),
+                    child: QuillEditor(
+                      focusNode: c.editorFocusNode,
+                      scrollController: c.editorScrollController,
+                      controller: c.controller,
+                      configurations: const QuillEditorConfigurations(
+                        placeholder: 'Start writing your notes...',
+                        padding: EdgeInsets.all(16),
+                        embedBuilders: [],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 35,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade400,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  )),
+                              onPressed: () {
+                                c.clearAllData();
+                                context.pop();
+                              },
+                              child: AppTextNormal.labelBold(
+                                "CANCEL",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 18,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimaryDark,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              onPressed: () {
+                                context.pop();
+                                c.saveNews(oldNews: oldNews);
+                              },
+                              child: AppTextNormal.labelBold(
+                                "SAVE",
+                                14,
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   static dialogChallenge({

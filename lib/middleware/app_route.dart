@@ -13,10 +13,12 @@ import 'package:starter_pack_web/module/challenge/view/challenge_quiz_page.dart'
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/demographyset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/group_page.dart';
+import 'package:starter_pack_web/module/dashboard/view/newset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/role_page.dart';
 import 'package:starter_pack_web/module/demography/controller/cart_controller.dart';
 import 'package:starter_pack_web/module/demography/controller/demography_controller.dart';
@@ -24,6 +26,9 @@ import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/login/view/login_page.dart';
+import 'package:starter_pack_web/module/news/controller/news_controller.dart';
+import 'package:starter_pack_web/module/news/controller/news_detail_controller.dart';
+import 'package:starter_pack_web/module/news/view/news_page.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/module/play/view/play_page.dart';
 import 'package:starter_pack_web/module/product/controller/product_controller.dart';
@@ -41,6 +46,7 @@ import '../module/dashboard/controller/dashboard_controller.dart';
 import '../module/dashboard/controller/role_controller.dart';
 import '../module/home/controller/home_controller.dart';
 import '../module/home/view/home_page.dart';
+import '../module/news/view/news_detail_page.dart';
 import '../module/profile/view/profile_page.dart';
 import '../module/user/model/user_m.dart';
 
@@ -216,6 +222,18 @@ GoRouter router = GoRouter(
                   },
                 ),
                 GoRoute(
+                  path: AppRouteName.newset,
+                  name: AppRouteName.newset,
+                  onExit: (_, __) {
+                    Get.delete<NewsetController>();
+                    return true;
+                  },
+                  pageBuilder: (context, state) {
+                    Get.put(NewsetController());
+                    return NoTransitionPage(child: NewsetPage());
+                  },
+                ),
+                GoRoute(
                     path: AppRouteName.challengeset,
                     name: AppRouteName.challengeset,
                     onExit: (_, __) {
@@ -333,6 +351,34 @@ GoRouter router = GoRouter(
             return NoTransitionPage(child: RndPage());
           },
         ),
+        GoRoute(
+            path: AppRouteName.news,
+            name: AppRouteName.news,
+            onExit: (_, __) {
+              Get.delete<NewsController>();
+              return true;
+            },
+            pageBuilder: (context, state) {
+              Get.put(NewsController());
+              return NoTransitionPage(child: NewsPage());
+            },
+            routes: [
+              GoRoute(
+                path: ':id', // Child route untuk detail berita
+                name: AppRouteName.newsDetail,
+                onExit: (_, __) {
+                  Get.delete<NewsDetailController>();
+                  return true;
+                },
+                pageBuilder: (context, state) {
+                  final id = state.pathParameters['id'];
+                  Get.put(NewsDetailController()).id.value = id ?? "";
+                  return NoTransitionPage(
+                      child: NewsDetailPage(
+                          id: id ?? "")); // Halaman detail berita
+                },
+              ),
+            ]),
         GoRoute(
           path: AppRouteName.production,
           name: AppRouteName.production,

@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
-import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../dashboard/model/sidebar_m.dart';
@@ -47,9 +46,9 @@ class PlayController extends GetxController {
     await getMenus();
     Future.delayed(const Duration(seconds: 1), () async {
       await changeLoading(false);
-      Future.delayed(const Duration(seconds: 1), () {
-        AppDialog.dialogNews();
-      });
+      // Future.delayed(const Duration(seconds: 1), () {
+      //   AppDialog.dialogNews();
+      // });
     });
     super.onInit();
   }
