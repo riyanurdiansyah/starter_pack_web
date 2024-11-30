@@ -324,9 +324,8 @@ GoRouter router = GoRouter(
               pageBuilder: (context, state) {
                 final id = state.pathParameters['id'];
 
-                final c = Get.put(ChallengeQuizController());
-                c.quizID.value = id ?? "";
-                return const NoTransitionPage(child: ChallengeQuizPage());
+                Get.put(ChallengeQuizController()).id.value = id ?? "";
+                return NoTransitionPage(child: ChallengeQuizPage());
               },
             ),
           ],

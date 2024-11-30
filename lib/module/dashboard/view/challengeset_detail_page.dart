@@ -91,6 +91,7 @@ class ChallengesetDetailPage extends StatelessWidget {
                 if (_c.indexSelected.value == 999) {
                   return const SizedBox();
                 }
+
                 return Container(
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),

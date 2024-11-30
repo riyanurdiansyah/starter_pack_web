@@ -178,6 +178,9 @@ class ChallengesetController extends GetxController {
   void setChallengeToDialog(ChallengeM oldChallenge) {
     tcChallenge.text = oldChallenge.name;
     tcType.text = oldChallenge.type;
+    tcMaxPoint.text = oldChallenge.maxPoint.toString();
+    tcTime.text = oldChallenge.time.toString();
+    tcMaxQuestion.text = oldChallenge.maxQuestion.toString();
     tcDate.text =
         "${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.parse(oldChallenge.start))} WIB";
     selectedDate = DateTime.parse(oldChallenge.start);
