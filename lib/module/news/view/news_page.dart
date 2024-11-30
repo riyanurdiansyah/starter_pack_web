@@ -29,7 +29,10 @@ class NewsPage extends StatelessWidget {
                 }
                 return SingleChildScrollView(
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () => context
+                        .goNamed(AppRouteName.newsDetail, pathParameters: {
+                      "id": _c.news[0].id,
+                    }),
                     hoverColor: Colors.grey.shade200,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

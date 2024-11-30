@@ -177,7 +177,7 @@ class ChallengesetPage extends StatelessWidget {
                               child: InkWell(
                                 onTap: () => context.goNamed(
                                     AppRouteName.update,
-                                    queryParameters: {
+                                    pathParameters: {
                                       "id": data.id,
                                     }),
                                 child: const Icon(

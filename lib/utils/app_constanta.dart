@@ -1,3 +1,4 @@
+import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 import 'package:starter_pack_web/module/user/model/role_m.dart';
@@ -34,6 +35,21 @@ final groupEmpty = GroupM(
   pointBefore: 0,
   page: 0,
   updatedDate: DateTime.now().toIso8601String(),
+);
+
+final challengeEmpty = ChallengeM(
+  route: "",
+  start: "",
+  end: "",
+  no: 0,
+  id: "",
+  image: "",
+  name: "",
+  page: 0,
+  type: "",
+  time: 0,
+  maxQuestion: 0,
+  maxPoint: 0,
 );
 
 final newsEmpty = NewsM(

@@ -11,9 +11,11 @@ import 'package:starter_pack_web/module/challenge/controller/challenge_quiz_cont
 import 'package:starter_pack_web/module/challenge/view/challenge_page.dart';
 import 'package:starter_pack_web/module/challenge/view/challenge_quiz_page.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/challengeset_detail_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/view/challengeset_detail_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/demographyset_page.dart';
@@ -246,15 +248,17 @@ GoRouter router = GoRouter(
                     },
                     routes: [
                       GoRoute(
-                        path: AppRouteName.update,
+                        path: ":id",
                         name: AppRouteName.update,
                         onExit: (_, __) {
-                          // Get.delete<ChallengesetController>();
+                          Get.delete<ChallengesetDetailController>();
                           return true;
                         },
                         pageBuilder: (context, state) {
-                          // Get.put(ChallengesetController());
-                          return const NoTransitionPage(child: Scaffold());
+                          final id = state.pathParameters["id"] ?? "";
+                          Get.put(ChallengesetDetailController()).id.value = id;
+                          return NoTransitionPage(
+                              child: ChallengesetDetailPage());
                         },
                       ),
                     ]),

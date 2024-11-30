@@ -48,25 +48,18 @@ class PlayPage extends StatelessWidget {
           ClipPath(
             clipper: TrapezoidClipper(),
             child: Container(
+              alignment: Alignment.center,
               width: size.width / 2,
               height: size.height,
               color: Colors.black.withOpacity(0.8),
-              child: Column(
-                children: [
-                  25.ph,
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 80),
-                    alignment: Alignment.centerLeft,
-                    child: Image.asset(
-                      textImage,
-                      width: size.width / 3.2,
-                    ),
-                  ),
-                  100.ph,
-                  Obx(
-                    () => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 100),
-                      width: size.width / 2,
+              child: SingleChildScrollView(
+                child: Obx(
+                  () => Container(
+                    margin: const EdgeInsets.only(top: 80),
+                    padding: const EdgeInsets.symmetric(horizontal: 100),
+                    width: size.width / 2,
+                    height: size.height / 1.5,
+                    child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -81,32 +74,51 @@ class PlayPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 80, vertical: 18),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          cImage,
-                          width: 20,
-                          color: Colors.white,
-                        ),
-                        10.pw,
-                        const Padding(
-                          padding: EdgeInsets.only(top: 5.0),
-                          child: AnimatedDefaultTextStyle(
-                            duration: Duration(milliseconds: 300),
-                            style: TextStyle(
-                              fontFamily: 'Race',
-                              letterSpacing: 10,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                            ),
-                            child: Text("Tim Rakor MNF & IDC"),
-                          ),
-                        ),
-                      ],
+                ),
+                // child: Column(
+                //   children: [
+
+                // const Spacer(),
+
+                //   ],
+                // ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 25,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 80),
+              alignment: Alignment.centerLeft,
+              child: Image.asset(
+                textImage,
+                width: size.width / 3.2,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 18),
+              child: Row(
+                children: [
+                  Image.asset(
+                    cImage,
+                    width: 20,
+                    color: Colors.white,
+                  ),
+                  10.pw,
+                  const Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: AnimatedDefaultTextStyle(
+                      duration: Duration(milliseconds: 300),
+                      style: TextStyle(
+                        fontFamily: 'Race',
+                        letterSpacing: 10,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                      child: Text("Tim Rakor MNF & IDC"),
                     ),
                   ),
                 ],

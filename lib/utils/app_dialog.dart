@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/challengeset_detail_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
@@ -24,6 +25,7 @@ import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../middleware/app_route.dart';
+import '../module/dashboard/model/multiple_choice_m.dart';
 import '../module/user/model/group_m.dart';
 import '../module/user/model/role_m.dart';
 import 'app_constanta.dart';
@@ -999,41 +1001,6 @@ class AppDialog {
                     ),
                   ),
                   16.ph,
-                  // AppTextNormal.labelW700(
-                  //   "Group Country",
-                  //   14,
-                  //   Colors.black,
-                  // ),
-                  // const SizedBox(
-                  //   height: 12,
-                  // ),
-                  // TextFormField(
-                  //   controller: c.tcGroupCountry,
-                  //   validator: (val) => AppValidator.requiredField(val!),
-                  //   style: TextStyle(
-                  //     fontFamily: 'Bigail',
-                  //     fontWeight: FontWeight.bold,
-                  //     fontSize: 14,
-                  //     color: Colors.grey.shade600,
-                  //   ),
-                  //   decoration: InputDecoration(
-                  //     contentPadding: const EdgeInsets.symmetric(
-                  //         vertical: 0, horizontal: 12),
-                  //     disabledBorder: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.grey.shade300),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     border: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.grey.shade300),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     enabledBorder: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.grey.shade300),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //   ),
-                  // ),
-                  // 16.ph,
                   AppTextNormal.labelW700(
                     "Group Image",
                     14,
@@ -1849,6 +1816,225 @@ class AppDialog {
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.only(
             bottom: 60, left: size.width / 4, right: size.width / 4),
+      ),
+    );
+  }
+
+  static dialogMultipleQuestion({
+    MultipleChoiceM? oldMultipleChoice,
+  }) {
+    final c = Get.find<ChallengesetDetailController>();
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    c.options.clear();
+    for (int i = 0; i < c.tcOptions.length; i++) {
+      c.tcOptions[i].clear();
+    }
+    if (oldMultipleChoice != null) {
+      c.tcQuestion.text = oldMultipleChoice.question; // Isi pertanyaan
+      for (int i = 0; i < oldMultipleChoice.options.length; i++) {
+        c.tcOptions[i].text = oldMultipleChoice.options[i].answer;
+        c.options.add(Option(
+            answer: oldMultipleChoice.options[i].answer,
+            correct: oldMultipleChoice.options[i].correct)); // Salin opsi
+      }
+      // c.options.value = oldMultipleChoice.options.map((option) {
+      //   return Option(answer: option.answer, correct: option.correct);
+      // }).toList(); // Salin daftar opsi
+    } else {
+      c.tcQuestion.clear(); // Reset pertanyaan jika mode tambah
+      c.options.clear(); // Reset opsi jika mode tambah
+    }
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        title: AppTextNormal.labelBold(
+          oldMultipleChoice != null ? "Update Question" : "Add Question",
+          16,
+          Colors.black,
+        ),
+        content: SizedBox(
+          width: size.width / 2.5,
+          child: Form(
+            key: c.formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppTextNormal.labelW700(
+                  "Question",
+                  14,
+                  Colors.black,
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextFormField(
+                  controller: c.tcQuestion,
+                  validator: (val) => AppValidator.requiredField(val!),
+                  style: GoogleFonts.poppins(
+                    height: 1.4,
+                  ),
+                  decoration: InputDecoration(
+                    hintStyle: GoogleFonts.poppins(
+                      fontSize: 14,
+                      wordSpacing: 4,
+                    ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade500),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                16.ph,
+                AppTextNormal.labelW700(
+                  "Option",
+                  14,
+                  Colors.black,
+                ),
+                const SizedBox(height: 8),
+                Obx(
+                  () => Column(
+                    children: List.generate(
+                      c.options.length < 4
+                          ? c.options.length + 1
+                          : 4, // Maksimal 4 opsi
+                      (index) {
+                        String optionLabel =
+                            String.fromCharCode(65 + index); // A, B, C, ...
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Row(
+                            children: [
+                              Text(
+                                "$optionLabel.",
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 8),
+                              // Input Field
+                              Expanded(
+                                child: TextField(
+                                  controller: c.tcOptions[index],
+                                  decoration: InputDecoration(
+                                    hintText: "Tulis opsi $optionLabel",
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  onChanged: (value) {
+                                    if (index < c.options.length) {
+                                      // Update opsi jika sudah ada
+                                      c.options[index] =
+                                          c.options[index].copyWith(
+                                        answer: value,
+                                      );
+                                    } else {
+                                      // Tambahkan opsi baru
+                                      c.options.add(Option(
+                                          answer: value, correct: false));
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Obx(() => Checkbox(
+                                    value: index < c.options.length
+                                        ? c.options[index].correct
+                                        : false,
+                                    onChanged: (value) {
+                                      if (value == true) {
+                                        // Pastikan hanya satu opsi yang benar
+                                        for (var i = 0;
+                                            i < c.options.length;
+                                            i++) {
+                                          c.options[i] = c.options[i]
+                                              .copyWith(correct: i == index);
+                                        }
+                                      }
+                                      c.options.refresh(); // Perbarui UI
+                                    },
+                                  )),
+                              // Tombol Hapus Opsi
+                              if (index < c.options.length)
+                                IconButton(
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    c.options.removeAt(index);
+                                  },
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                35.ph,
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade400,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                )),
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: AppTextNormal.labelBold(
+                              "CANCEL",
+                              14,
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 18,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorPrimaryDark,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            onPressed: () {
+                              context.pop();
+                              c.saveMultipleChoice(oldMultipleChoice);
+                            },
+                            child: AppTextNormal.labelBold(
+                              "SAVE",
+                              14,
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
