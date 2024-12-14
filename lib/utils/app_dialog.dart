@@ -1572,7 +1572,7 @@ class AppDialog {
                     height: 16,
                   ),
                   AppTextNormal.labelW700(
-                    "Infant",
+                    "Infant Core Lifestyle",
                     14,
                     Colors.black,
                   ),
@@ -1607,7 +1607,7 @@ class AppDialog {
                     height: 16,
                   ),
                   AppTextNormal.labelW700(
-                    "Pregnant",
+                    "Pregnant Core Lifestyle",
                     14,
                     Colors.black,
                   ),
@@ -1642,7 +1642,7 @@ class AppDialog {
                     height: 16,
                   ),
                   AppTextNormal.labelW700(
-                    "Seniors",
+                    "Seniors Core Lifestyle",
                     14,
                     Colors.black,
                   ),
@@ -1651,6 +1651,111 @@ class AppDialog {
                   ),
                   TextFormField(
                     controller: c.tcSeniors,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    minLines: 4,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AppTextNormal.labelW700(
+                    "Infant Elevated Class",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcInfantElevated,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    minLines: 4,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AppTextNormal.labelW700(
+                    "Pregnant Elevated Class",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcPregnantElevated,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
+                    ),
+                    minLines: 4,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AppTextNormal.labelW700(
+                    "Seniors Elevated Class",
+                    14,
+                    Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextFormField(
+                    controller: c.tcSeniorsElevated,
                     validator: (val) => AppValidator.requiredField(val!),
                     style: GoogleFonts.poppins(
                       height: 1.4,

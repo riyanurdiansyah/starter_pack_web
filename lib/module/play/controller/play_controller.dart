@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,7 +60,6 @@ class PlayController extends GetxController {
     final userCache = pref.getString("user") ?? "";
     final userData = json.decode(userCache);
     user.value = UserM.fromJson(userData);
-    log(user.value.toJson().toString());
   }
 
   Future getMenus() async {

@@ -3,6 +3,7 @@ import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 import 'package:starter_pack_web/module/user/model/role_m.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 final userEmpty = UserM(
   id: "",
@@ -51,6 +52,13 @@ final challengeEmpty = ChallengeM(
   maxQuestion: 0,
   maxPoint: 0,
 );
+
+final imageBOD = [
+  andyImg,
+  putuImg,
+  totokImg,
+  desyImg,
+];
 
 final newsEmpty = NewsM(
     id: "", content: "", title: "", image: "", date: "", page: 0, users: []);

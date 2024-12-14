@@ -28,4 +28,10 @@ const driverImage = "assets/images/driver.png";
 
 const gbSigninGif =
     "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";
+
+const andyImg = "assets/images/andy.png";
+const totokImg = "assets/images/totok.png";
+const putuImg = "assets/images/putu.png";
+const desyImg = "assets/images/desy.png";
+
 const loadingGif = "assets/gif/loading.gif";

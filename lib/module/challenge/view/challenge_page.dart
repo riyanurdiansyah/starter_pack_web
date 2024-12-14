@@ -105,7 +105,7 @@ class ChallengePage extends StatelessWidget {
                                               ? size.height / 1.4
                                               : size.height / 1.5,
                                           decoration: BoxDecoration(
-                                            color: Colors.red,
+                                            color: Colors.grey,
                                             border:
                                                 Border.all(color: Colors.white),
                                           ),
@@ -114,7 +114,7 @@ class ChallengePage extends StatelessWidget {
                                                 .challenges[displayIndex].image,
                                             placeholder: (context, url) =>
                                                 Shimmer.fromColors(
-                                              baseColor: Colors.red,
+                                              baseColor: Colors.grey,
                                               highlightColor: Colors.yellow,
                                               child: const SizedBox(
                                                 width: 200.0,

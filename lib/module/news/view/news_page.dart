@@ -17,6 +17,7 @@ class NewsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,7 +51,7 @@ class NewsPage extends StatelessWidget {
                           AppTextNormal.labelBold(
                             _c.news[0].title,
                             35,
-                            Colors.black,
+                            Colors.white,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             letterSpacing: 2,
@@ -75,7 +76,7 @@ class NewsPage extends StatelessWidget {
                   AppTextNormal.labelBold(
                     "Recent News",
                     18.5,
-                    Colors.black,
+                    Colors.white,
                     letterSpacing: 2,
                   ),
                   Container(
@@ -96,7 +97,7 @@ class NewsPage extends StatelessWidget {
                                   pathParameters: {
                                     "id": _c.news[index].id,
                                   }),
-                              hoverColor: Colors.grey.shade300,
+                              hoverColor: Colors.black45,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -116,7 +117,7 @@ class NewsPage extends StatelessWidget {
                                         AppTextNormal.labelBold(
                                           _c.news[index].title,
                                           16,
-                                          Colors.black,
+                                          Colors.white,
                                           maxLines: 3,
                                           letterSpacing: 1.6,
                                           height: 1.4,
@@ -125,7 +126,7 @@ class NewsPage extends StatelessWidget {
                                         AppTextNormal.labelW600(
                                           "published : ${DateFormat("dd MMM yyyy").format(DateTime.parse(_c.news[index].date))}",
                                           14,
-                                          Colors.grey.shade600,
+                                          Colors.white,
                                         ),
                                       ],
                                     ),

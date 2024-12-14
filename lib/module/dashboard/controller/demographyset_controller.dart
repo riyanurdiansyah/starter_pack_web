@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,10 +18,16 @@ class DemographysetController extends GetxController {
 
   final tcName = TextEditingController();
   final tcData = TextEditingController();
+
   final tcInfant = TextEditingController();
   final tcPregnant = TextEditingController();
   final tcSeniors = TextEditingController();
 
+  final tcInfantElevated = TextEditingController();
+  final tcPregnantElevated = TextEditingController();
+  final tcSeniorsElevated = TextEditingController();
+  //Core Lifestyle
+  //Elevated Class
   @override
   void onInit() async {
     await getDemographys();
@@ -106,8 +110,10 @@ class DemographysetController extends GetxController {
           seniors: tcSeniors.text,
           infant: tcInfant.text,
           pregnant: tcPregnant.text,
+          infantElevated: tcInfantElevated.text,
+          pregnantElevated: tcPregnantElevated.text,
+          seniorsElevated: tcSeniorsElevated.text,
         );
-        log("CEK DATA : ${oldDemography.toJson()}");
         await firestore
             .collection("demography")
             .doc(oldDemography.id)

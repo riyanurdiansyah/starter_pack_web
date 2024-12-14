@@ -11,6 +11,9 @@ class DemographyM {
   final String infant;
   final String seniors;
   final String pregnant;
+  final String infantElevated;
+  final String seniorsElevated;
+  final String pregnantElevated;
   final double right;
   final double left;
   final double top;
@@ -25,6 +28,9 @@ class DemographyM {
     required this.infant,
     required this.seniors,
     required this.pregnant,
+    required this.infantElevated,
+    required this.seniorsElevated,
+    required this.pregnantElevated,
     required this.right,
     required this.left,
     required this.top,
@@ -40,6 +46,9 @@ class DemographyM {
     String? infant,
     String? seniors,
     String? pregnant,
+    String? infantElevated,
+    String? seniorsElevated,
+    String? pregnantElevated,
     double? right,
     double? left,
     double? top,
@@ -54,6 +63,9 @@ class DemographyM {
         infant: infant ?? this.infant,
         seniors: seniors ?? this.seniors,
         pregnant: pregnant ?? this.pregnant,
+        infantElevated: infantElevated ?? this.infantElevated,
+        seniorsElevated: seniorsElevated ?? this.seniorsElevated,
+        pregnantElevated: pregnantElevated ?? this.pregnantElevated,
         right: right ?? this.right,
         left: left ?? this.left,
         top: top ?? this.top,
@@ -66,9 +78,12 @@ class DemographyM {
   factory DemographyM.fromJson(Map<String, dynamic> json) => DemographyM(
         id: json["id"],
         data: json["data"] ?? "",
-        infant: json["infant"] ?? "",
-        seniors: json["seniors"] ?? "",
-        pregnant: json["pregnant"] ?? "",
+        infant: json["infant_core_lifestyle"] ?? "",
+        seniors: json["seniors_core_lifestyle"] ?? "",
+        pregnant: json["pregnant_core_lifestyle"] ?? "",
+        infantElevated: json["infant_elevated_class"] ?? "",
+        seniorsElevated: json["seniors_elevated_class"] ?? "",
+        pregnantElevated: json["pregnant_elevated_class"] ?? "",
         right: json["right"]?.toDouble() ?? 0,
         left: json["left"]?.toDouble() ?? 0,
         top: json["top"]?.toDouble() ?? 0,
@@ -86,8 +101,11 @@ class DemographyM {
         "top": top,
         "bottom": bottom,
         "name": name,
-        "infant": infant,
-        "pregnant": pregnant,
-        "seniors": seniors,
+        "infant_core_lifestyle": infant,
+        "pregnant_core_lifestyle": pregnant,
+        "seniors_core_lifestyle": seniors,
+        "infant_elevated_class": infantElevated,
+        "pregnant_elevated_class": pregnantElevated,
+        "seniors_elevated_class": seniorsElevated,
       };
 }
