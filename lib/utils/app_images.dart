@@ -26,6 +26,9 @@ const lockedImage = "assets/images/locked.png";
 const newsImage = "assets/images/news.png";
 const driverImage = "assets/images/driver.png";
 
+const bgProd = "assets/images/bg_prod.png";
+const bgProdName = "assets/images/bg_prod_name.png";
+
 const gbSigninGif =
     "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";
 

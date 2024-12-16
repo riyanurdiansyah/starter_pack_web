@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  animated_item
   audioplayers_windows
   cloud_firestore
   firebase_core

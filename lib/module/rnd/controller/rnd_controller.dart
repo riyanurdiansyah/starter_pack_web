@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
@@ -23,11 +24,37 @@ class RndController extends GetxController {
 
   RxList<String> checkedProducts = <String>[].obs;
 
+  Rx<int> indexImg = 0.obs;
+
+  RxList<int> indexSelecteds = <int>[].obs;
+
+  final verticalTranslateController = PageController(viewportFraction: 0.8);
+
   @override
   void onInit() async {
+    verticalTranslateController.addListener(() {
+      indexImg.value = verticalTranslateController.page?.round() ?? 0;
+    });
     await setup();
     await getProducts();
     super.onInit();
+  }
+
+  void nextPage() {
+    verticalTranslateController.animateToPage(
+      (indexImg.value + 1) % products.length, // Loop ke awal jika di akhir
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void previousPage() {
+    verticalTranslateController.animateToPage(
+      (indexImg.value - 1 + products.length) %
+          products.length, // Loop ke akhir jika di awal
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
   }
 
   Future setup() async {
@@ -89,6 +116,15 @@ class RndController extends GetxController {
     } catch (e) {
       // Jika ada kesalahan, transaksi akan dibatalkan
       AppDialog.dialogSnackbar("Error while saving: $e");
+    }
+  }
+
+  void onSelect() {
+    onCheckProduct(products[indexImg.value].id);
+    if (indexSelecteds.contains(indexImg.value)) {
+      indexSelecteds.remove(indexImg.value);
+    } else {
+      indexSelecteds.add(indexImg.value);
     }
   }
 }

@@ -361,7 +361,9 @@ class ChallengeQuizPage extends StatelessWidget {
                       return DropzoneView(
                         onCreated: (controller) =>
                             _c.dropzoneController = controller,
-                        onDropFile: (data) {},
+                        onDropFile: (file) async {
+                          _c.fileName.value = file.name;
+                        },
                         onError: (e) => debugPrint('Error: $e'),
                       );
                     },
@@ -381,7 +383,7 @@ class ChallengeQuizPage extends StatelessWidget {
                       ElevatedButton.icon(
                         onPressed: _c.pickImage,
                         icon: const Icon(Icons.file_upload),
-                        label: const Text("Pick Image"),
+                        label: Text("Pick Image ${_c.fileName.value}"),
                       ),
                       const SizedBox(height: 20),
                       Obx(() {

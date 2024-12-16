@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.45"
+  animated_item:
+    dependency: "direct main"
+    description:
+      name: animated_item
+      sha256: "147b32d7f8ec6c3f76bb33d58a760fff5fe67dc6553b43a6a433c4f9cf96a9d3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   animated_text_kit:
     dependency: "direct main"
     description:
@@ -382,6 +390,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.0"
+  flutter_arc_text:
+    dependency: "direct main"
+    description:
+      name: flutter_arc_text
+      sha256: "1140498cde517ece13f79df90544f10ec3291821b084edde2b0d9ba27f3f060e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   flutter_cache_manager:
     dependency: transitive
     description:

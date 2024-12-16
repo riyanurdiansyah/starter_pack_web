@@ -367,11 +367,10 @@ class ChallengeQuizController extends GetxController {
 
   void pickImage() async {
     final result = await pickFile();
-
     filePickerResult = result;
 
     if (result != null) {
-      tcImage.text = result.files.single.name;
+      fileName.value = result.files.single.name;
     } else {
       tcImage.clear();
     }

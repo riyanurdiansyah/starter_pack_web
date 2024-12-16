@@ -24,7 +24,8 @@ class CartController extends GetxController {
 
   final AudioPlayer audioPlayer = AudioPlayer();
 
-  List<TextEditingController> quantityControllers = [];
+  RxList<TextEditingController> quantityControllers =
+      <TextEditingController>[].obs;
 
   late SharedPreferences pref;
 
@@ -32,8 +33,15 @@ class CartController extends GetxController {
 
   Rx<GroupM> groupData = groupEmpty.obs;
 
+  Rx<int> indexImg = 0.obs;
+
+  RxList<int> indexSelecteds = <int>[].obs;
+
+  final verticalTranslateController = PageController(viewportFraction: 0.8);
+
   @override
   void dispose() {
+    verticalTranslateController.dispose();
     for (var controller in quantityControllers) {
       controller.dispose();
     }
@@ -42,9 +50,29 @@ class CartController extends GetxController {
 
   @override
   void onInit() async {
+    verticalTranslateController.addListener(() {
+      indexImg.value = verticalTranslateController.page?.round() ?? 0;
+    });
     await setup();
     await getProducts();
     super.onInit();
+  }
+
+  void nextPage() {
+    verticalTranslateController.animateToPage(
+      (indexImg.value + 1) % products.length, // Loop ke awal jika di akhir
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void previousPage() {
+    verticalTranslateController.animateToPage(
+      (indexImg.value - 1 + products.length) %
+          products.length, // Loop ke akhir jika di awal
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
   }
 
   Future setup() async {
@@ -108,10 +136,10 @@ class CartController extends GetxController {
         .where((e) => e.groups.contains(userSession.value.groupId))
         .toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
-    quantityControllers = List.generate(products.length, (index) {
+    quantityControllers.value = List.generate(products.length, (index) {
       return TextEditingController(text: products[index].qty.toString());
     });
-
+    log("CEK DATA : ${quantityControllers.length}");
     final responseStock = await firestore
         .collection("group")
         .doc(userSession.value.groupId)
