@@ -94,10 +94,6 @@ class CartPage extends StatelessWidget {
                         return const SizedBox();
                       }
 
-                      if (_c.products.isEmpty) {
-                        return const SizedBox();
-                      }
-
                       return StreamBuilder<GroupM>(
                         // Memanggil stream dari controller yang sudah dikonversi ke model
                         stream: _c.groupStream(),
@@ -145,7 +141,7 @@ class CartPage extends StatelessWidget {
                   return Container(
                     alignment: Alignment.center,
                     width: double.infinity,
-                    height: MediaQuery.sizeOf(context).height / 1.5,
+                    height: MediaQuery.sizeOf(context).height,
                     child: AppTextNormal.labelBold(
                       "Your team member has not created the product yet.",
                       26,
@@ -158,11 +154,8 @@ class CartPage extends StatelessWidget {
               Stack(
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Obx(() {
-                    if (_c.products.isEmpty) {
-                      return const SizedBox();
-                    }
-                    return Column(
+                  Obx(
+                    () => Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Stack(
@@ -354,8 +347,8 @@ class CartPage extends StatelessWidget {
                           ],
                         ),
                       ],
-                    );
-                  }),
+                    ),
+                  ),
                   Obx(() {
                     if (_c.products
                         .where((x) => x.qty > 0)
@@ -373,6 +366,8 @@ class CartPage extends StatelessWidget {
                               () => Column(
                                 children: [
                                   Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 6),
                                     padding: const EdgeInsets.all(18.0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(6),

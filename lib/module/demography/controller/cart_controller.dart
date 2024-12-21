@@ -139,7 +139,6 @@ class CartController extends GetxController {
     quantityControllers.value = List.generate(products.length, (index) {
       return TextEditingController(text: products[index].qty.toString());
     });
-    log("CEK DATA : ${quantityControllers.length}");
     final responseStock = await firestore
         .collection("group")
         .doc(userSession.value.groupId)

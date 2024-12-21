@@ -65,7 +65,7 @@ class ChallengePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Row(
                       children: List.generate(
-                        _c.challenges.length,
+                        _c.visibleChallenges.length,
                         (index) {
                           int displayIndex = (_c.currentIndex.value + index) %
                               _c.challenges.length;

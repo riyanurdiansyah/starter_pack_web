@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -18,6 +19,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_color.dart';
 import '../../../utils/app_constanta.dart';
+import '../../../utils/app_dialog.dart';
 import '../../../utils/app_extension.dart';
 import '../../dashboard/model/multiple_choice_m.dart';
 import '../../user/model/user_m.dart';
@@ -50,9 +52,15 @@ class ChallengeQuizController extends GetxController {
 
   Rx<double> timeQuiz = 0.0.obs;
 
+  Rx<double> timeToStart = 0.0.obs;
+
   Rx<int> timeElapsed = 0.obs;
 
+  Rx<int> timeElapsedCountdown = 0.obs;
+
   late Timer _timer;
+
+  late Timer _timerCountdown;
 
   late SharedPreferences pref;
 
@@ -65,9 +73,12 @@ class ChallengeQuizController extends GetxController {
   FilePickerResult? filePickerResult;
 
   final tcImage = TextEditingController();
+  final tcRemark = TextEditingController();
 
   Rx<Uint8List?> imageBytes = null.obs;
   Rx<String> fileName = "".obs;
+
+  Rx<Duration> remainingTime = Duration.zero.obs;
 
   @override
   void onInit() async {
@@ -94,6 +105,13 @@ class ChallengeQuizController extends GetxController {
     int minutes = timeQuiz.value ~/ 60;
     int remainingSeconds = (timeQuiz.value % 60).toInt();
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  Widget formatTimeCountdown() {
+    int minutes = timeToStart.value ~/ 60;
+    int remainingSeconds = (timeToStart.value % 60).toInt();
+    return Text(
+        '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}');
   }
 
   Future getSessionQuiz() async {
@@ -126,23 +144,36 @@ class ChallengeQuizController extends GetxController {
     timeElapsed.value = 0;
     listAnswer.value = session.answers;
     isFinished.value = session.isFinished;
-    if (!session.isFinished) {
-      startTimer();
-    }
+    point.value = session.point;
+    startTimer();
   }
 
   void startTimer() {
     isStarting.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timeQuiz.value > 0) {
+      if (DateTime.now().isAfter(DateTime.parse(challenge.value.end))) {
+        saveSessionQuiz(true);
+        _timer.cancel();
+      } else if (timeQuiz.value > 0) {
         timeQuiz.value--;
         timeElapsed.value++;
         if (timeElapsed.value % 10 == 0) {
-          // saveSessionQuiz(false);
+          saveSessionQuiz(false);
         }
       } else {
         saveSessionQuiz(true);
         _timer.cancel();
+      }
+    });
+  }
+
+  void startTimerCountdown() {
+    _timerCountdown = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timeToStart.value > 0) {
+        timeToStart.value--;
+        timeElapsedCountdown.value++;
+      } else {
+        _timerCountdown.cancel();
       }
     });
   }
@@ -154,10 +185,17 @@ class ChallengeQuizController extends GetxController {
       multipleChoices: multipleChoices,
       quizId: challenge.value.id,
       sessionId: uuid,
+      groupId: user.value.groupId,
       answers: listAnswer,
       time: isFinished ? 0 : timeQuiz.value / 60,
       point: point.value,
       isFinished: isFinished,
+      isRated: true,
+      type: challenge.value.type,
+      username: user.value.username,
+      page: 0,
+      image: "",
+      createdAt: DateTime.now().toIso8601String(),
     );
 
     final response = await firestore.collection("quiz_session").get();
@@ -198,12 +236,177 @@ class ChallengeQuizController extends GetxController {
     isLoading.value = val;
   }
 
+  void startCountdown() {
+    DateTime targetTime = DateTime.parse("2024-11-22T16:04:00.000");
+    DateTime now = DateTime.now();
+  }
+
+  Widget formatDuration() {
+    int days = remainingTime.value.inDays; // Hitung jumlah hari
+    int hours = remainingTime.value.inHours % 24; // Sisa jam setelah hari
+    int minutes = remainingTime.value.inMinutes % 60; // Sisa menit
+    int seconds = remainingTime.value.inSeconds % 60; // Sisa detik
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: 80,
+              height: 90,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+                border: Border.all(
+                  width: 0.6,
+                  color: Colors.black54,
+                ),
+              ),
+              child: AppTextNormal.labelBold(
+                days.toString().padLeft(2, '0'),
+                25,
+                Colors.grey.shade600,
+                letterSpacing: 4,
+              ),
+            ),
+            25.ph,
+            AppTextNormal.labelBold(
+              "Days",
+              14,
+              Colors.grey.shade800,
+              letterSpacing: 2,
+            ),
+          ],
+        ),
+        25.pw,
+        Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: 80,
+              height: 90,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+                border: Border.all(
+                  width: 0.6,
+                  color: Colors.black54,
+                ),
+              ),
+              child: AppTextNormal.labelBold(
+                hours.toString().padLeft(2, '0'),
+                25,
+                Colors.grey.shade600,
+                letterSpacing: 4,
+              ),
+            ),
+            25.ph,
+            AppTextNormal.labelBold(
+              "Hours",
+              14,
+              Colors.grey.shade800,
+              letterSpacing: 2,
+            ),
+          ],
+        ),
+        25.pw,
+        Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: 80,
+              height: 90,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+                border: Border.all(
+                  width: 0.6,
+                  color: Colors.black54,
+                ),
+              ),
+              child: AppTextNormal.labelBold(
+                minutes.toString().padLeft(2, '0'),
+                25,
+                Colors.grey.shade600,
+                letterSpacing: 4,
+              ),
+            ),
+            25.ph,
+            AppTextNormal.labelBold(
+              "Minutes",
+              14,
+              Colors.grey.shade800,
+              letterSpacing: 2,
+            ),
+          ],
+        ),
+        25.pw,
+        Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: 80,
+              height: 90,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+                border: Border.all(
+                  width: 0.6,
+                  color: Colors.black54,
+                ),
+              ),
+              child: AppTextNormal.labelBold(
+                seconds.toString().padLeft(2, '0'),
+                25,
+                Colors.grey.shade600,
+                letterSpacing: 4,
+              ),
+            ),
+            25.ph,
+            AppTextNormal.labelBold(
+              "Seconds",
+              14,
+              Colors.grey.shade800,
+              letterSpacing: 2,
+            ),
+          ],
+        ),
+      ],
+    );
+
+    // return Text("${hours.toString().padLeft(2, '0')}:"
+    //     "${minutes.toString().padLeft(2, '0')}:"
+    //     "${seconds.toString().padLeft(2, '0')}");
+  }
+
   Future getChallenge() async {
     final response =
         await firestore.collection("challenge").doc(id.value).get();
     if (response.exists) {
       challenge.value = ChallengeM.fromJson(response.data()!);
-      timeQuiz.value = challenge.value.time * 60;
+      if (DateTime.now().isBefore(DateTime.parse(challenge.value.start))) {
+        remainingTime.value =
+            DateTime.parse(challenge.value.start).difference(DateTime.now());
+        if (remainingTime.value.isNegative) {
+          remainingTime.value = Duration.zero;
+        } else {
+          _timerCountdown = Timer.periodic(const Duration(seconds: 1), (timer) {
+            if (remainingTime.value.inSeconds <= 0) {
+              timer.cancel();
+              getChallenge();
+            } else {
+              remainingTime.value =
+                  remainingTime.value - const Duration(seconds: 1);
+            }
+          });
+        }
+      }
+      timeQuiz.value = DateTime.parse(challenge.value.end)
+              .difference(DateTime.parse(challenge.value.start))
+              .inMinutes *
+          60;
       final responseDetails = await firestore
           .collection("questions")
           .where("challenge_id", isEqualTo: id.value)
@@ -240,9 +443,14 @@ class ChallengeQuizController extends GetxController {
     listAnswer[indexNow.value] = AnswerM(
         indexAnswer: index,
         isCorrect: multipleChoices[indexNow.value].options[index].correct);
-    if ((indexNow.value + 1) != multipleChoices.length) {
-      indexNow.value++;
-    }
+    // if ((indexNow.value + 1) != multipleChoices.length) {
+    //   indexNow.value++;
+    // }
+  }
+
+  void submitChallenge() {
+    isQuestFinished.value = true;
+    showBottomSheet(navigatorKey.currentContext!);
   }
 
   void showBottomSheet(BuildContext context) {
@@ -332,9 +540,9 @@ class ChallengeQuizController extends GetxController {
                                 ),
                                 onPressed: () async {
                                   timeQuiz.value = 0;
-                                  saveSessionQuiz(true);
-                                  getSessionQuiz();
                                   context.pop();
+                                  await saveSessionQuiz(true);
+                                  await getSessionQuiz();
                                 },
                                 child: AppTextNormal.labelBold(
                                   "SUBMIT",
@@ -381,5 +589,88 @@ class ChallengeQuizController extends GetxController {
     final name = await dropzoneController.getFilename(event);
     imageBytes.value = bytes;
     fileName.value = name;
+  }
+
+  void saveChallengeWellfit() async {
+    try {
+      final id = const Uuid().v4();
+      String downlodUrl = "";
+      final fileBytes = filePickerResult?.files.single.bytes;
+      final fileName = filePickerResult?.files.single.name;
+      final storageRef =
+          FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
+
+      final uploadTask = storageRef.putData(fileBytes!);
+
+      final snapshot = await uploadTask.whenComplete(() {});
+
+      downlodUrl = await snapshot.ref.getDownloadURL();
+
+      var data = QuizSessionM(
+        userId: user.value.id,
+        multipleChoices: multipleChoices,
+        groupId: user.value.groupId,
+        quizId: challenge.value.id,
+        sessionId: const Uuid().v4(),
+        answers: listAnswer,
+        time: 0,
+        point: point.value,
+        page: 0,
+        username: user.value.username,
+        isFinished: true,
+        isRated: false,
+        type: challenge.value.type,
+        image: downlodUrl,
+        createdAt: DateTime.now().toIso8601String(),
+      );
+
+      // firestore.collection("challenge_result").doc(id).set(body);
+      // await firestore
+      //     .collection("quiz_session")
+      //     .doc(data.sessionId)
+      //     .set(data.toJson());
+
+      final response = await firestore.collection("quiz_session").get();
+      if (response.docs.isEmpty) {
+        await firestore
+            .collection("quiz_session")
+            .doc(data.sessionId)
+            .set(data.toJson());
+        await getSessionQuiz();
+      } else {
+        final sessions = response.docs
+            .map((doc) => QuizSessionM.fromJson(doc.data()))
+            .toList();
+        final sessionData = sessions
+            .where((e) =>
+                e.userId == user.value.id && e.quizId == challenge.value.id)
+            .toList();
+        if (sessionData.isEmpty) {
+          await firestore
+              .collection("quiz_session")
+              .doc(data.sessionId)
+              .set(data.toJson());
+          await getSessionQuiz();
+        } else {
+          data = data.copyWith(
+            sessionId: sessionData.first.sessionId,
+            multipleChoices: multipleChoices,
+            answers: listAnswer,
+            time: 0,
+            image: downlodUrl,
+            isFinished: true,
+            isRated: false,
+          );
+          await firestore
+              .collection("quiz_session")
+              .doc(data.sessionId)
+              .update(data.toJson());
+          await getSessionQuiz();
+        }
+      }
+      AppDialog.dialogSnackbar("Success");
+    } catch (e) {
+      AppDialog.dialogSnackbar("Error while saving : $e");
+    }
   }
 }

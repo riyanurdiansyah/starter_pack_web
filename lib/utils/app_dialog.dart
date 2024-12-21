@@ -8,9 +8,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/challenge_m.dart';
+import 'package:starter_pack_web/module/challenge/model/quiz_session_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_detail_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/game_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
@@ -2138,6 +2140,119 @@ class AppDialog {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogMarkChallenge(QuizSessionM oldQuiz) {
+    final c = Get.find<GameController>();
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        content: SizedBox(
+          width: size.width / 2.5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(
+                oldQuiz.image,
+                width: 125,
+              ),
+              16.ph,
+              AppTextNormal.labelW700(
+                "Point",
+                14,
+                Colors.black,
+              ),
+              8.ph,
+              TextFormField(
+                controller: c.tcPoint,
+                validator: (val) => AppValidator.requiredField(val!),
+                style: GoogleFonts.poppins(
+                  height: 1.4,
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: InputDecoration(
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    wordSpacing: 4,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade500),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              35.ph,
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              )),
+                          onPressed: () {
+                            context.pop();
+                          },
+                          child: AppTextNormal.labelBold(
+                            "CANCEL",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 18,
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: colorPrimaryDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          onPressed: () {
+                            context.pop();
+                            c.updateGame(oldQuiz);
+                          },
+                          child: AppTextNormal.labelBold(
+                            "SAVE",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

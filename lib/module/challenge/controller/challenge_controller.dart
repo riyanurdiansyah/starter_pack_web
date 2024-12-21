@@ -16,7 +16,7 @@ class ChallengeController extends GetxController
   late Animation<double> scaleAnimation;
 
   // final PageController pageController = PageController(viewportFraction: 0.8);
-  RxList<bool> isHoveredList = List.generate(4, (index) => false).obs;
+  RxList<bool> isHoveredList = <bool>[].obs;
   Rx<bool> isHovered = false.obs;
 
   Rx<int> currentIndex = 0.obs;
@@ -64,6 +64,7 @@ class ChallengeController extends GetxController
     }).toList();
 
     challenges.sort((a, b) => a.no.compareTo(b.no));
+    isHoveredList.value = List.generate(challenges.length, (index) => false);
   }
 
   void handleTap(int index) {
@@ -78,6 +79,13 @@ class ChallengeController extends GetxController
     navigatorKey.currentContext!.goNamed(
       AppRouteName.quiz,
       pathParameters: {"id": challenges[index].id},
+    );
+  }
+
+  List<ChallengeM> get visibleChallenges {
+    return List.generate(
+      4,
+      (i) => challenges[(currentIndex.value + i) % challenges.length],
     );
   }
 }

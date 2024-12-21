@@ -10,6 +10,8 @@ class AppRouteName {
   static const String rnd = 'rnd';
   static const String news = 'news';
   static const String newset = 'newset';
+  static const String wellness = 'wellness';
+  static const String wellnessGroup = 'wellness-group';
   static const String newsDetail = 'newsdetail';
   static const String challenge = 'challenge';
   static const String setting = 'setting';

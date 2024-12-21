@@ -124,7 +124,18 @@ class RndController extends GetxController {
     if (indexSelecteds.contains(indexImg.value)) {
       indexSelecteds.remove(indexImg.value);
     } else {
-      indexSelecteds.add(indexImg.value);
+      if (indexSelecteds.length < 3) {
+        indexSelecteds.add(indexImg.value);
+      }
+    }
+  }
+
+  void onRemove(int index) {
+    onCheckProduct(products[index].id);
+    if (indexSelecteds.contains(index)) {
+      indexSelecteds.remove(index);
+    } else {
+      indexSelecteds.add(index);
     }
   }
 }

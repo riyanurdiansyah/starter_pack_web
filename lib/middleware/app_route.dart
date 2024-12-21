@@ -13,12 +13,14 @@ import 'package:starter_pack_web/module/challenge/view/challenge_quiz_page.dart'
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_detail_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/game_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_detail_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/demographyset_page.dart';
+import 'package:starter_pack_web/module/dashboard/view/game_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/group_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/newset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/role_page.dart';
@@ -233,6 +235,18 @@ GoRouter router = GoRouter(
                   pageBuilder: (context, state) {
                     Get.put(NewsetController());
                     return NoTransitionPage(child: NewsetPage());
+                  },
+                ),
+                GoRoute(
+                  path: AppRouteName.wellness,
+                  name: AppRouteName.wellness,
+                  onExit: (_, __) {
+                    Get.delete<GameController>();
+                    return true;
+                  },
+                  pageBuilder: (context, state) {
+                    Get.put(GameController());
+                    return NoTransitionPage(child: GamePage());
                   },
                 ),
                 GoRoute(

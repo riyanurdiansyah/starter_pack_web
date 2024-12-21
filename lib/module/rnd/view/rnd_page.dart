@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/module/rnd/controller/rnd_controller.dart';
-import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../../../utils/app_color.dart';
+import '../../../utils/app_dialog.dart';
 import '../../../utils/app_sound.dart';
 import '../../../utils/app_text.dart';
 
@@ -20,9 +21,17 @@ class RndPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
+          SizedBox(
+            width: double.infinity,
+            height: size.height,
+            child: Image.asset(
+              bgProd,
+              filterQuality: FilterQuality.high,
+              fit: BoxFit.fill,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -47,7 +56,6 @@ class RndPage extends StatelessWidget {
                             onTap: () => context.pop(),
                             child: Container(
                               alignment: Alignment.center,
-                              color: Colors.white,
                               height: 45,
                               width: 100,
                               child: Padding(
@@ -115,7 +123,31 @@ class RndPage extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                              top: 250,
+                              top: 200,
+                              left: 490,
+                              child: Image.asset(
+                                bgProdName,
+                              ),
+                            ),
+                            if (_c.products.isNotEmpty)
+                              Positioned(
+                                top: 370,
+                                left: 650,
+                                child: SizedBox(
+                                  width: 350,
+                                  height: 50,
+                                  child: FittedBox(
+                                    child: AppTextNormal.labelBold(
+                                      _c.products[_c.indexImg.value].nama,
+                                      18,
+                                      Colors.white,
+                                      letterSpacing: 8,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            Positioned(
+                              top: 200,
                               left: 550,
                               child: IconButton(
                                 onPressed: _c.previousPage,
@@ -127,7 +159,7 @@ class RndPage extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                              top: 250,
+                              top: 200,
                               right: 550,
                               child: IconButton(
                                 onPressed: _c.nextPage,
@@ -138,67 +170,33 @@ class RndPage extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            Positioned(
+                              top: 470,
+                              right: 775,
+                              child: OutlinedButton(
+                                onPressed: _c.onSelect,
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  backgroundColor: _c.indexSelecteds
+                                          .contains(_c.indexImg.value)
+                                      ? Colors.amber
+                                      : Colors.white,
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  "SELECT",
+                                  16,
+                                  Colors.black,
+                                ),
+                              ),
+                            ),
                           ],
-                        ),
-                        OutlinedButton(
-                          onPressed: _c.onSelect,
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor:
-                                _c.indexSelecteds.contains(_c.indexImg.value)
-                                    ? Colors.amber
-                                    : null,
-                          ),
-                          child: AppTextNormal.labelBold(
-                            "SELECT",
-                            16,
-                            Colors.black,
-                          ),
                         ),
                       ],
                     );
                   }),
                 ),
-                Obx(() {
-                  if (_c.isDone.value) {
-                    return const SizedBox();
-                  }
-                  return MouseRegion(
-                    onEnter: (_) => AppSound.playHover(),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 45,
-                      child: ElevatedButton(
-                        onPressed: _c.checkedProducts.length > 3 ||
-                                _c.checkedProducts.isEmpty
-                            ? null
-                            : () {
-                                AppDialog.dialogDelete(
-                                  title: "Save Product",
-                                  subtitle:
-                                      "Are you sure you want to save this product?\nThe data cannot be changed later.",
-                                  callback: () {
-                                    context.pop();
-                                    _c.saveProduct();
-                                  },
-                                  confirmText: "Yes, save",
-                                );
-                              },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: AppTextNormal.labelBold(
-                          "SAVE",
-                          22,
-                          Colors.white,
-                          letterSpacing: 1.8,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
               ],
             ),
           ),
@@ -211,44 +209,115 @@ class RndPage extends StatelessWidget {
               right: 25,
               top: 25,
               child: Container(
-                width: 250,
-                padding: const EdgeInsets.all(10.0),
+                width: 450,
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                padding: const EdgeInsets.all(18.0),
                 decoration: BoxDecoration(
-                  color: Colors.red.shade200,
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(6),
+                  color: Colors.grey.shade100,
+                  border: Border.all(
+                    width: 0.25,
+                    color: Colors.grey.shade500,
+                  ),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    AppTextNormal.labelBold(
+                      "Summary",
+                      22,
+                      Colors.black,
+                      letterSpacing: 1.5,
+                    ),
+                    14.ph,
                     Column(
                       children: List.generate(
                         _c.indexSelecteds.length,
                         (index) {
-                          return Text(
-                            "${_c.products[_c.indexSelecteds[index]].nama} ${_c.products[_c.indexSelecteds[index]].tipe}",
+                          final data = _c.products[_c.indexSelecteds[index]];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      AppTextNormal.labelBold(
+                                        "${data.nama}  -  ${data.tipe}",
+                                        16,
+                                        Colors.grey.shade600,
+                                        letterSpacing: 1.8,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    _c.onRemove(_c.indexSelecteds[index]);
+                                  },
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                                )
+                              ],
+                            ),
                           );
                         },
                       ),
                     ),
-                    14.ph,
-                    ElevatedButton(
-                      onPressed: _c.saveProduct,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: AppTextNormal.labelBold(
-                        "SAVE",
-                        14,
-                        Colors.white,
-                      ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Obx(() {
+                        if (_c.isDone.value) {
+                          return const SizedBox();
+                        }
+                        return MouseRegion(
+                          onEnter: (_) => AppSound.playHover(),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 45,
+                            child: ElevatedButton(
+                              onPressed: _c.checkedProducts.length > 3 ||
+                                      _c.checkedProducts.isEmpty
+                                  ? null
+                                  : () {
+                                      AppDialog.dialogDelete(
+                                        title: "Save Product",
+                                        subtitle:
+                                            "Are you sure you want to save this product?\nThe data cannot be changed later.",
+                                        callback: () {
+                                          context.pop();
+                                          _c.saveProduct();
+                                        },
+                                        confirmText: "Yes, save",
+                                      );
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: AppTextNormal.labelBold(
+                                "SAVE",
+                                22,
+                                Colors.white,
+                                letterSpacing: 1.8,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),
               ),
             );
-          })
+          }),
         ],
       ),
     );
