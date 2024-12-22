@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -21,6 +20,7 @@ class SimbisController extends GetxController {
   final RxList<ResultSimbisM> resultSimbis = <ResultSimbisM>[].obs;
   final Rx<String> result = "...".obs;
   final Rx<bool> isLoading = false.obs;
+  final Rx<String> apiKey = "".obs;
 
   late SharedPreferences pref;
 
@@ -35,6 +35,7 @@ class SimbisController extends GetxController {
   @override
   void onInit() async {
     await setup();
+    await getConfig();
     await getDemographys();
     await getDistribute();
     super.onInit();
@@ -55,6 +56,14 @@ class SimbisController extends GetxController {
     }).toList();
     demographys.sort((a, b) => a.name.compareTo(b.name));
     return demographys;
+  }
+
+  Future getConfig() async {
+    final response =
+        await firestore.collection("config").doc("wEhYq9rOXtSQpURMLUwF").get();
+    if (response.exists) {
+      apiKey.value = response.data()!["apiKey"];
+    }
   }
 
   Future<List<DistributeM>> getDistribute() async {
@@ -146,8 +155,7 @@ class SimbisController extends GetxController {
         "https://api.openai.com/v1/chat/completions",
         data: data,
         options: Options(headers: {
-          "Authorization":
-              "Bearer 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",
+          "Authorization": "Bearer ${apiKey.value}",
         }),
       );
       // final dataJSON = json
@@ -162,7 +170,6 @@ class SimbisController extends GetxController {
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
-      log("CEK RES ERROR: $e");
       AppDialog.dialogSnackbar("Failed generate simbis : $e");
     }
   }
