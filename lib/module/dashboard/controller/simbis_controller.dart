@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/dashboard/model/result_simbis_m.dart';
@@ -143,12 +142,12 @@ class SimbisController extends GetxController {
         ]
       };
       Dio dio = Dio();
-      var aiKey = dotenv.env['API_KEY'];
       final response = await dio.post(
         "https://api.openai.com/v1/chat/completions",
         data: data,
         options: Options(headers: {
-          "Authorization": "Bearer $aiKey",
+          "Authorization":
+              "Bearer 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",
         }),
       );
       // final dataJSON = json
