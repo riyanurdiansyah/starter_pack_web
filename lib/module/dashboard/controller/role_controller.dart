@@ -109,10 +109,13 @@ class RoleController extends GetxController {
         firestore.collection("role").doc(oldRole.id).update(oldRole.toJson());
       } else {
         RoleM newRole = RoleM(
-            id: const Uuid().v4(),
-            role: tcRole.text,
-            roleId: newRoleId,
-            page: 0);
+          id: const Uuid().v4(),
+          role: tcRole.text,
+          roleId: newRoleId,
+          page: 0,
+          max: 1,
+          image: "",
+        );
         firestore.collection("role").doc(newRole.id).set(newRole.toJson());
       }
       tcRole.clear();

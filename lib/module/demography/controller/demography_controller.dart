@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -69,7 +67,6 @@ class DemographyController extends GetxController
       return DemographyM.fromJson(e.data());
     }).toList();
     demographys.sort((a, b) => a.name.compareTo(b.name));
-    log("CEK DATA : ${demographys.map((e) => e.toJson())}");
     return demographys;
   }
 }

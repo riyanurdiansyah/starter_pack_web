@@ -67,6 +67,7 @@ class UserController extends GetxController {
       return RoleM.fromJson(e.data());
     }).toList();
     list.sort((a, b) => a.role.compareTo(b.role));
+
     return list;
   }
 
@@ -219,6 +220,8 @@ class UserController extends GetxController {
       role: oldUser.role,
       roleId: oldUser.roleId,
       page: 0,
+      max: 1,
+      image: "",
     );
   }
 

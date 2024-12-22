@@ -56,6 +56,9 @@ class ChallengePage extends StatelessWidget {
             ],
           ),
           Obx(() {
+            if (_c.challenges.isEmpty) {
+              return const SizedBox();
+            }
             return Container(
               height: size.height / 1.1,
               alignment: Alignment.center,

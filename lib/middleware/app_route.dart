@@ -16,6 +16,7 @@ import 'package:starter_pack_web/module/dashboard/controller/demographyset_contr
 import 'package:starter_pack_web/module/dashboard/controller/game_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/group_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
+import 'package:starter_pack_web/module/dashboard/controller/simbis_controller.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_detail_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/challengeset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/dashboard_page.dart';
@@ -24,8 +25,10 @@ import 'package:starter_pack_web/module/dashboard/view/game_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/group_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/newset_page.dart';
 import 'package:starter_pack_web/module/dashboard/view/role_page.dart';
+import 'package:starter_pack_web/module/dashboard/view/simbis_page.dart';
 import 'package:starter_pack_web/module/demography/controller/cart_controller.dart';
 import 'package:starter_pack_web/module/demography/controller/demography_controller.dart';
+import 'package:starter_pack_web/module/demography/controller/distribute_controller.dart';
 import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
@@ -48,6 +51,7 @@ import 'package:universal_html/html.dart' as html;
 
 import '../module/dashboard/controller/dashboard_controller.dart';
 import '../module/dashboard/controller/role_controller.dart';
+import '../module/demography/view/distribute_page.dart';
 import '../module/home/controller/home_controller.dart';
 import '../module/home/view/home_page.dart';
 import '../module/news/view/news_detail_page.dart';
@@ -250,6 +254,18 @@ GoRouter router = GoRouter(
                   },
                 ),
                 GoRoute(
+                  path: AppRouteName.simbis,
+                  name: AppRouteName.simbis,
+                  onExit: (_, __) {
+                    Get.delete<SimbisController>();
+                    return true;
+                  },
+                  pageBuilder: (context, state) {
+                    Get.put(SimbisController());
+                    return NoTransitionPage(child: SimbisPage());
+                  },
+                ),
+                GoRoute(
                     path: AppRouteName.challengeset,
                     name: AppRouteName.challengeset,
                     onExit: (_, __) {
@@ -419,7 +435,21 @@ GoRouter router = GoRouter(
             Get.put(DemographyController());
             return const NoTransitionPage(child: DemographyPage());
           },
-          routes: const [],
+          routes: [
+            GoRoute(
+              path: AppRouteName.distribute,
+              name: AppRouteName.distribute,
+              onExit: (_, __) {
+                Get.delete<DistributeController>();
+                return true;
+              },
+              pageBuilder: (context, state) {
+                Get.put(DistributeController());
+                return NoTransitionPage(child: DistributePage());
+              },
+              routes: const [],
+            ),
+          ],
         ),
       ],
     ),

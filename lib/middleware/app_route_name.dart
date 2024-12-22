@@ -5,12 +5,14 @@ class AppRouteName {
   static const String board = 'board';
   static const String product = 'product';
   static const String demography = 'demography';
+  static const String distribute = 'distribute';
   static const String demographset = 'demographyset';
   static const String production = 'production';
   static const String rnd = 'rnd';
   static const String news = 'news';
   static const String newset = 'newset';
   static const String wellness = 'wellness';
+  static const String simbis = 'simbis';
   static const String wellnessGroup = 'wellness-group';
   static const String newsDetail = 'newsdetail';
   static const String challenge = 'challenge';

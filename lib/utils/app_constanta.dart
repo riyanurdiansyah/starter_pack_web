@@ -23,6 +23,8 @@ final roleEmpty = RoleM(
   role: "",
   roleId: 0,
   page: 0,
+  max: 1,
+  image: "",
 );
 
 final groupEmpty = GroupM(

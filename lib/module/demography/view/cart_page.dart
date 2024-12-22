@@ -177,9 +177,11 @@ class CartPage extends StatelessWidget {
                                       margin:
                                           const EdgeInsets.only(bottom: 20.0),
                                       width: 60,
+                                      height: 60,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         image: DecorationImage(
+                                          scale: 0.2,
                                           image: NetworkImage(
                                             _c.products[index].image,
                                           ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -154,7 +153,6 @@ class CartController extends GetxController {
     int currentQty = int.parse(quantityControllers[index].text);
     quantityControllers[index].text = (currentQty + 1).toString();
     products[index] = products[index].copyWith(qty: currentQty + 1);
-    log(products[index].toJson().toString());
   }
 
   void decrementQuantity(int index) {
