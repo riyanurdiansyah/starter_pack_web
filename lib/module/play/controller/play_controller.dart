@@ -26,6 +26,7 @@ class PlayController extends GetxController {
     nama: "",
     username: "",
     password: "",
+    point: 0,
     roleId: 0,
     role: "",
     kelompok: "",

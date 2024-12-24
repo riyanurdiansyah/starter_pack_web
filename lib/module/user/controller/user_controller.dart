@@ -178,6 +178,7 @@ class UserController extends GetxController {
           kelompok: selectedGroup.value.name,
           kelompokId: selectedGroup.value.groupId,
           page: 0,
+          point: 0,
           password: hashPassword(tcUsername.text),
           groupId: selectedGroup.value.id,
         );

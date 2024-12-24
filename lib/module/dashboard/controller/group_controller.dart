@@ -101,7 +101,7 @@ class GroupController extends GetxController {
   Future resetAll() async {
     try {
       for (var item in groups) {
-        item = item.copyWith(point: 0);
+        item = item.copyWith(point: 0, pointBefore: 0);
 
         firestore.collection("group").doc(item.id).update(item.toJson());
       }

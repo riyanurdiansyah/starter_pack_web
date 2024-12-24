@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/home/controller/home_controller.dart';
+import 'package:starter_pack_web/module/home/view/widget/individu_page.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
@@ -48,63 +49,66 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     20.ph,
-                    Container(
-                      margin: const EdgeInsets.only(left: 50),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: size.width / 1.6,
-                      height: 40,
-                      color: colorElectricViolet,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 50,
-                            child: AppTextNormal.labelBold(
-                              "RANK",
-                              14,
-                              Colors.white,
+                    Obx(
+                      () => Container(
+                        margin: const EdgeInsets.only(left: 50),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        width: size.width / 1.6,
+                        height: 40,
+                        color: colorElectricViolet,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 50,
+                              child: AppTextNormal.labelBold(
+                                "RANK",
+                                14,
+                                Colors.white,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: AppTextNormal.labelBold(
-                              "",
-                              14,
-                              Colors.white,
+                            SizedBox(
+                              width: 100,
+                              child: AppTextNormal.labelBold(
+                                "",
+                                14,
+                                Colors.white,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 80,
-                            child: AppTextNormal.labelBold(
-                              "",
-                              14,
-                              Colors.white,
+                            if (_c.indexTab.value == 0)
+                              SizedBox(
+                                width: 80,
+                                child: AppTextNormal.labelBold(
+                                  "",
+                                  14,
+                                  Colors.white,
+                                ),
+                              ),
+                            Expanded(
+                              flex: 2,
+                              child: AppTextNormal.labelBold(
+                                _c.indexTab.value == 0 ? "TEAM" : "NAME",
+                                14,
+                                Colors.white,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: AppTextNormal.labelBold(
-                              "TEAM",
-                              14,
-                              Colors.white,
+                            Expanded(
+                              flex: 2,
+                              child: AppTextNormal.labelBold(
+                                "RESULT",
+                                14,
+                                Colors.white,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: AppTextNormal.labelBold(
-                              "RESULT",
-                              14,
-                              Colors.white,
+                            SizedBox(
+                              width: 70,
+                              child: AppTextNormal.labelBold(
+                                "PROFIT",
+                                14,
+                                Colors.white,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 70,
-                            child: AppTextNormal.labelBold(
-                              "PROFIT",
-                              14,
-                              Colors.white,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     20.ph,
@@ -113,7 +117,7 @@ class HomePage extends StatelessWidget {
                         return TeamPage();
                       }
 
-                      return const SizedBox();
+                      return IndividuPage();
                     })
                   ],
                 ),

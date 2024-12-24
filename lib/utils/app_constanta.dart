@@ -16,6 +16,7 @@ final userEmpty = UserM(
   kelompokId: 0,
   page: 0,
   groupId: "",
+  point: 0,
 );
 
 final roleEmpty = RoleM(

@@ -64,8 +64,11 @@ class TeamPage extends StatelessWidget {
                           clipper: CustomClipRank(),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: const BoxDecoration(
-                              color: colorCardRank,
+                            decoration: BoxDecoration(
+                              color: _c.userSession.value.groupId ==
+                                      _c.groups[index].id
+                                  ? colorGold
+                                  : colorCardRank,
                             ),
                             margin: const EdgeInsets.only(bottom: 10, left: 20),
                             alignment: Alignment.center,
@@ -116,6 +119,7 @@ class TeamPage extends StatelessWidget {
                                           data.alias.toUpperCase(),
                                           14,
                                           Colors.black,
+                                          letterSpacing: 3.5,
                                         ),
                                         // 5.ph,
                                         // Row(
@@ -159,7 +163,7 @@ class TeamPage extends StatelessWidget {
                                     ),
                                     child: FittedBox(
                                       child: AppTextNormal.labelBold(
-                                        "\$ ${formatToThousandK(data.point)}",
+                                        "R\$ ${formatToThousandK(data.point)}",
                                         14,
                                         Colors.white,
                                       ),
