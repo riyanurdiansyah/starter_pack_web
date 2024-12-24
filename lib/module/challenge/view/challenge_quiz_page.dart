@@ -114,7 +114,8 @@ class ChallengeQuizPage extends StatelessWidget {
           }
 
           if (_c.isFinished.value &&
-              _c.challenge.value.type == "MULTIPLE CHOICE") {
+              (_c.challenge.value.type == "MULTIPLE CHOICE" ||
+                  _c.challenge.value.type == "TRUE/FALSE")) {
             return Stack(
               children: [
                 SizedBox(
@@ -271,7 +272,7 @@ class ChallengeQuizPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               AppTextNormal.labelBold(
-                                "Max Point : ${convertNumber(_c.challenge.value.maxPoint)}",
+                                "Max Point : ${convertNumber(_c.point.value)}",
                                 16,
                                 Colors.white,
                               ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -22,6 +23,7 @@ import '../../../utils/app_constanta.dart';
 import '../../../utils/app_dialog.dart';
 import '../../../utils/app_extension.dart';
 import '../../dashboard/model/multiple_choice_m.dart';
+import '../../user/model/group_m.dart';
 import '../../user/model/user_m.dart';
 import '../model/challenge_m.dart';
 
@@ -80,6 +82,9 @@ class ChallengeQuizController extends GetxController {
 
   Rx<Duration> remainingTime = Duration.zero.obs;
 
+  final Rx<GroupM> group = groupEmpty.obs;
+  final RxList<int> listCorrect = <int>[].obs;
+  // final RxList<int> listIncorrect = <int>[].obs;
   @override
   void onInit() async {
     pref = await SharedPreferences.getInstance();
@@ -95,6 +100,12 @@ class ChallengeQuizController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    _timer.cancel();
+    super.onClose();
+  }
+
   Future getUser() async {
     final userCache = pref.getString("user") ?? "";
     final userData = json.decode(userCache);
@@ -102,9 +113,11 @@ class ChallengeQuizController extends GetxController {
   }
 
   String formatTime() {
-    int minutes = timeQuiz.value ~/ 60;
+    int hours = timeQuiz.value ~/ 3600; // Menghitung jumlah jam
+    int minutes =
+        (timeQuiz.value % 3600) ~/ 60; // Menghitung sisa menit setelah jam
     int remainingSeconds = (timeQuiz.value % 60).toInt();
-    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   Widget formatTimeCountdown() {
@@ -136,7 +149,11 @@ class ChallengeQuizController extends GetxController {
     if (sessionData.isEmpty) {
       return;
     }
-
+    for (var i = 0; i < sessionData.first.answers.length; i++) {
+      if (sessionData.first.answers[i].isCorrect) {
+        listCorrect.add(i);
+      }
+    }
     final session = sessionData.first;
     isHaveSession.value = true;
     id.value = session.sessionId;
@@ -197,6 +214,25 @@ class ChallengeQuizController extends GetxController {
       image: "",
       createdAt: DateTime.now().toIso8601String(),
     );
+
+    if (isFinished) {
+      var responseGroup =
+          await firestore.collection('group').doc(user.value.groupId).get();
+      if (!responseGroup.exists) {
+        AppDialog.dialogSnackbar("User group is not found");
+        return;
+      }
+      group.value = GroupM.fromJson(responseGroup.data()!);
+
+      group.value = group.value.copyWith(
+        pointBefore: group.value.point,
+        point: group.value.point + point.value,
+      );
+      await firestore
+          .collection("group")
+          .doc(group.value.id)
+          .update(group.toJson());
+    }
 
     final response = await firestore.collection("quiz_session").get();
     if (response.docs.isEmpty) {
@@ -429,10 +465,27 @@ class ChallengeQuizController extends GetxController {
 
   void onSelectOption(int index) {
     if (multipleChoices[indexNow.value].options[index].correct) {
-      point.value += challenge.value.maxPoint ~/ challenge.value.maxQuestion;
+      // listIncorrect.remove(index);
+      if (!listCorrect.contains(indexNow.value)) {
+        if (multipleChoices.length >= challenge.value.maxQuestion) {
+          point.value +=
+              challenge.value.maxPoint ~/ challenge.value.maxQuestion;
+        } else {
+          point.value += challenge.value.maxPoint ~/ multipleChoices.length;
+        }
+      }
+      listCorrect.add(indexNow.value);
     } else {
-      if (point.value > 0 && listAnswer[indexNow.value].isCorrect) {
-        point.value -= challenge.value.maxPoint ~/ challenge.value.maxQuestion;
+      log("CEK CORRECT : $listCorrect");
+      log("CEK CORRECT 2 : ${indexNow.value}");
+      if (listCorrect.contains(indexNow.value)) {
+        if (multipleChoices.length >= challenge.value.maxQuestion) {
+          point.value -=
+              challenge.value.maxPoint ~/ challenge.value.maxQuestion;
+        } else {
+          point.value -= challenge.value.maxPoint ~/ multipleChoices.length;
+        }
+        listCorrect.remove(indexNow.value);
       }
     }
 
@@ -539,6 +592,7 @@ class ChallengeQuizController extends GetxController {
                                   ),
                                 ),
                                 onPressed: () async {
+                                  _timer.cancel();
                                   timeQuiz.value = 0;
                                   context.pop();
                                   await saveSessionQuiz(true);
