@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
 
 import '../../../utils/app_constanta.dart';
+import '../../../utils/app_sound.dart';
 import '../../demography/model/produk_m.dart';
 import '../../user/model/user_m.dart';
 
@@ -41,20 +42,21 @@ class RndController extends GetxController {
   }
 
   void nextPage() {
-    verticalTranslateController.animateToPage(
-      (indexImg.value + 1) % products.length, // Loop ke awal jika di akhir
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+    if ((products.length - 1) > indexImg.value) {
+      AppSound.playHover();
+      indexImg.value++;
+    } else {
+      indexImg.value = 0;
+    }
   }
 
   void previousPage() {
-    verticalTranslateController.animateToPage(
-      (indexImg.value - 1 + products.length) %
-          products.length, // Loop ke akhir jika di awal
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+    if (indexImg.value > 0) {
+      AppSound.playHover();
+      indexImg.value--;
+    } else {
+      indexImg.value = products.length - 1;
+    }
   }
 
   Future setup() async {
