@@ -596,7 +596,7 @@ class CartPage extends StatelessWidget {
                                                 ),
                                               ),
                                               child: AppTextNormal.labelBold(
-                                                "PRODUCTION",
+                                                "SAVE",
                                                 22,
                                                 Colors.white,
                                                 letterSpacing: 1.8,

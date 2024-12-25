@@ -6,6 +6,7 @@ import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
+import '../../../utils/app_images.dart';
 import 'widget/team_page.dart';
 
 class CustomClipRank extends CustomClipper<Path> {
@@ -34,163 +35,184 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Container(
-            alignment: Alignment.topCenter,
-            width: size.width,
-            color: Colors.grey.shade200.withOpacity(0.2),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    20.ph,
-                    Obx(
-                      () => Container(
-                        margin: const EdgeInsets.only(left: 50),
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        width: size.width / 1.6,
-                        height: 40,
-                        color: colorElectricViolet,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 50,
-                              child: AppTextNormal.labelBold(
-                                "RANK",
-                                14,
-                                Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 100,
-                              child: AppTextNormal.labelBold(
-                                "",
-                                14,
-                                Colors.white,
-                              ),
-                            ),
-                            if (_c.indexTab.value == 0)
+    return Obx(() {
+      if (_c.isLoading.value) {
+        return Container(
+          color: Colors.black,
+          width: double.infinity,
+          height: size.height,
+          child: Container(
+            width: 250,
+            height: 150,
+            alignment: Alignment.center,
+            child: Image.asset(
+              loadingGif,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
+              width: 250,
+            ),
+          ),
+        );
+      }
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            Container(
+              alignment: Alignment.topCenter,
+              width: size.width,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      20.ph,
+                      Obx(
+                        () => Container(
+                          margin: const EdgeInsets.only(left: 50),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          width: size.width / 1.6,
+                          height: 40,
+                          color: colorElectricViolet,
+                          child: Row(
+                            children: [
                               SizedBox(
-                                width: 80,
+                                width: 50,
+                                child: AppTextNormal.labelBold(
+                                  "RANK",
+                                  14,
+                                  Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 100,
                                 child: AppTextNormal.labelBold(
                                   "",
                                   14,
                                   Colors.white,
                                 ),
                               ),
-                            Expanded(
-                              flex: 2,
-                              child: AppTextNormal.labelBold(
-                                _c.indexTab.value == 0 ? "TEAM" : "NAME",
-                                14,
-                                Colors.white,
+                              if (_c.indexTab.value == 0)
+                                SizedBox(
+                                  width: 80,
+                                  child: AppTextNormal.labelBold(
+                                    "",
+                                    14,
+                                    Colors.white,
+                                  ),
+                                ),
+                              Expanded(
+                                flex: 2,
+                                child: AppTextNormal.labelBold(
+                                  _c.indexTab.value == 0 ? "TEAM" : "NAME",
+                                  14,
+                                  Colors.white,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: AppTextNormal.labelBold(
-                                "RESULT",
-                                14,
-                                Colors.white,
+                              Expanded(
+                                flex: 2,
+                                child: AppTextNormal.labelBold(
+                                  "RESULT",
+                                  14,
+                                  Colors.white,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 70,
-                              child: AppTextNormal.labelBold(
-                                "PROFIT",
-                                14,
-                                Colors.white,
+                              SizedBox(
+                                width: 70,
+                                child: AppTextNormal.labelBold(
+                                  "PROFIT",
+                                  14,
+                                  Colors.white,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    20.ph,
-                    Obx(() {
-                      if (_c.indexTab.value == 0) {
-                        return TeamPage();
-                      }
+                      20.ph,
+                      Obx(() {
+                        if (_c.indexTab.value == 0) {
+                          return TeamPage();
+                        }
 
-                      return IndividuPage();
-                    })
-                  ],
+                        return IndividuPage();
+                      })
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 180,
-            top: 0,
-            bottom: 0,
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (_) {
-                // _c.isHovered.value = true;
-              },
-              onExit: (_) {
-                // _c.isHovered.value = false;
-              },
-              child: Obx(
-                () => SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: GestureDetector(
-                    onTap: _c.indexTab.value == 0
-                        ? null
-                        : () {
-                            _c.indexTab.value--;
-                          },
-                    child: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: _c.indexTab.value == 0 ? Colors.grey : Colors.red,
-                      size: 35,
+            Positioned(
+              left: 180,
+              top: 0,
+              bottom: 0,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: (_) {
+                  // _c.isHovered.value = true;
+                },
+                onExit: (_) {
+                  // _c.isHovered.value = false;
+                },
+                child: Obx(
+                  () => SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: GestureDetector(
+                      onTap: _c.indexTab.value == 0
+                          ? null
+                          : () {
+                              _c.indexTab.value--;
+                            },
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color:
+                            _c.indexTab.value == 0 ? Colors.grey : Colors.red,
+                        size: 35,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            right: 180,
-            top: 0,
-            bottom: 0,
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (_) {
-                // _c.isHovered.value = true;
-              },
-              onExit: (_) {
-                // _c.isHovered.value = false;
-              },
-              child: Obx(
-                () => SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: GestureDetector(
-                    onTap: _c.indexTab.value == 1
-                        ? null
-                        : () {
-                            _c.indexTab.value++;
-                          },
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: _c.indexTab.value == 1 ? Colors.grey : Colors.red,
-                      size: 35,
+            Positioned(
+              right: 180,
+              top: 0,
+              bottom: 0,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: (_) {
+                  // _c.isHovered.value = true;
+                },
+                onExit: (_) {
+                  // _c.isHovered.value = false;
+                },
+                child: Obx(
+                  () => SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: GestureDetector(
+                      onTap: _c.indexTab.value == 1
+                          ? null
+                          : () {
+                              _c.indexTab.value++;
+                            },
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color:
+                            _c.indexTab.value == 1 ? Colors.grey : Colors.red,
+                        size: 35,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 

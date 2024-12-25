@@ -1207,15 +1207,14 @@ class AppDialog {
                   height: 12,
                 ),
                 TextFormField(
-                  readOnly: oldUser != null,
                   controller: uC.tcUsername,
                   validator: (val) => AppValidator.requiredField(val!),
                   style: GoogleFonts.poppins(
                     height: 1.4,
                   ),
                   decoration: InputDecoration(
-                    filled: oldUser != null,
-                    fillColor: oldUser != null ? Colors.grey.shade200 : null,
+                    // filled: oldUser != null,
+                    // fillColor: oldUser != null ? Colors.grey.shade200 : null,
                     hintStyle: GoogleFonts.poppins(
                       fontSize: 14,
                       wordSpacing: 4,

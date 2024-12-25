@@ -55,8 +55,8 @@ class PlayPage extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Obx(
                   () => Container(
-                    margin: const EdgeInsets.only(top: 100),
-                    padding: const EdgeInsets.symmetric(horizontal: 100),
+                    margin: const EdgeInsets.only(top: 100, right: 75),
+                    padding: const EdgeInsets.only(left: 55, right: 80),
                     width: size.width / 2,
                     height: size.height / 1.6,
                     child: SingleChildScrollView(

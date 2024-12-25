@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
+  
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the

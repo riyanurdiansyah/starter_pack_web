@@ -93,7 +93,7 @@ class _DemographyPageState extends State<DemographyPage>
                             ),
                             Positioned(
                               top: 0,
-                              bottom: 0,
+                              bottom: 90,
                               right: 0,
                               left: 0,
                               child: AnimatedOpacity(
@@ -127,7 +127,8 @@ class _DemographyPageState extends State<DemographyPage>
                                       ),
                                     ],
                                   ),
-                                  child: Text(_c.demographys[index].name),
+                                  child: FittedBox(
+                                      child: Text(_c.demographys[index].name)),
                                 ),
                               ),
                             ),

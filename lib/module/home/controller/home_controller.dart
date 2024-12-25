@@ -30,14 +30,21 @@ class HomeController extends GetxController {
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 12.obs;
   Rx<bool> isSearched = false.obs;
+  Rx<bool> isLoading = false.obs;
 
   @override
   void onInit() async {
+    changeLoading(true);
     await setup();
     await getGroups();
     await getSessionQuiz();
     await getUsers();
+    await changeLoading(false);
     super.onInit();
+  }
+
+  Future changeLoading(bool val) async {
+    isLoading.value = val;
   }
 
   Future setup() async {
