@@ -56,6 +56,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<double> timeToStart = 0.0.obs;
 
+  Rx<double> uploadProgress = 0.0.obs;
+
   Rx<int> timeElapsed = 0.obs;
 
   Rx<int> timeElapsedCountdown = 0.obs;
@@ -169,16 +171,22 @@ class ChallengeQuizController extends GetxController {
     isStarting.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (DateTime.now().isAfter(DateTime.parse(challenge.value.end))) {
-        saveSessionQuiz(true);
+        if (isFinished.value == false) {
+          saveSessionQuiz(true);
+        }
         _timer.cancel();
       } else if (timeQuiz.value > 0) {
         timeQuiz.value--;
         timeElapsed.value++;
         if (timeElapsed.value % 10 == 0) {
-          saveSessionQuiz(false);
+          if (isFinished.value == false) {
+            saveSessionQuiz(false);
+          }
         }
       } else {
-        saveSessionQuiz(true);
+        if (isFinished.value == false) {
+          saveSessionQuiz(true);
+        }
         _timer.cancel();
       }
     });
@@ -647,83 +655,124 @@ class ChallengeQuizController extends GetxController {
 
   void saveChallengeWellfit() async {
     try {
-      final id = const Uuid().v4();
-      String downlodUrl = "";
+      showDialog(
+        context: navigatorKey.currentContext!,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(
+                  color: colorPrimaryDark,
+                ),
+                18.ph,
+                Obx(
+                  () => AppTextNormal.labelW700(
+                    "Uploading on progress ${uploadProgress.value.toInt()}",
+                    14,
+                    Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      String downloadUrl = "";
       final fileBytes = filePickerResult?.files.single.bytes;
       final fileName = filePickerResult?.files.single.name;
       final storageRef =
           FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
 
+      // Membuat task upload
       final uploadTask = storageRef.putData(fileBytes!);
 
-      final snapshot = await uploadTask.whenComplete(() {});
+      // Menggunakan snapshotEvents untuk memantau progress
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) async {
+        final progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        uploadProgress.value = progress;
+        if (progress.toInt() == 100 && isFinished.value == false) {
+          navigatorKey.currentContext!.pop();
+          _timer.cancel();
+          isFinished.value = true;
+          downloadUrl = await snapshot.ref.getDownloadURL();
 
-      downlodUrl = await snapshot.ref.getDownloadURL();
-
-      var data = QuizSessionM(
-        userId: user.value.id,
-        multipleChoices: multipleChoices,
-        groupId: user.value.groupId,
-        quizId: challenge.value.id,
-        sessionId: const Uuid().v4(),
-        answers: listAnswer,
-        time: 0,
-        point: point.value,
-        page: 0,
-        username: user.value.username,
-        isFinished: true,
-        isRated: false,
-        type: challenge.value.type,
-        image: downlodUrl,
-        createdAt: DateTime.now().toIso8601String(),
-      );
-
-      // firestore.collection("challenge_result").doc(id).set(body);
-      // await firestore
-      //     .collection("quiz_session")
-      //     .doc(data.sessionId)
-      //     .set(data.toJson());
-
-      final response = await firestore.collection("quiz_session").get();
-      if (response.docs.isEmpty) {
-        await firestore
-            .collection("quiz_session")
-            .doc(data.sessionId)
-            .set(data.toJson());
-        await getSessionQuiz();
-      } else {
-        final sessions = response.docs
-            .map((doc) => QuizSessionM.fromJson(doc.data()))
-            .toList();
-        final sessionData = sessions
-            .where((e) =>
-                e.userId == user.value.id && e.quizId == challenge.value.id)
-            .toList();
-        if (sessionData.isEmpty) {
-          await firestore
-              .collection("quiz_session")
-              .doc(data.sessionId)
-              .set(data.toJson());
-          await getSessionQuiz();
-        } else {
-          data = data.copyWith(
-            sessionId: sessionData.first.sessionId,
+          var data = QuizSessionM(
+            userId: user.value.id,
             multipleChoices: multipleChoices,
+            groupId: user.value.groupId,
+            quizId: challenge.value.id,
+            sessionId: id.value,
             answers: listAnswer,
             time: 0,
-            image: downlodUrl,
+            point: point.value,
+            page: 0,
+            username: user.value.username,
             isFinished: true,
             isRated: false,
+            type: challenge.value.type,
+            image: downloadUrl,
+            createdAt: DateTime.now().toIso8601String(),
           );
           await firestore
               .collection("quiz_session")
               .doc(data.sessionId)
               .update(data.toJson());
-          await getSessionQuiz();
+          // // Memeriksa apakah data session ada di Firestore
+          // final response = await firestore.collection("quiz_session").get();
+          // if (response.docs.isEmpty) {
+          //   await firestore
+          //       .collection("quiz_session")
+          //       .doc(data.sessionId)
+          //       .set(data.toJson());
+          //   await getSessionQuiz();
+          // } else {
+          //   final sessions = response.docs
+          //       .map((doc) => QuizSessionM.fromJson(doc.data()))
+          //       .toList();
+          //   final sessionData = sessions
+          //       .where((e) =>
+          //           e.userId == user.value.id && e.quizId == challenge.value.id)
+          //       .toList();
+          //   if (sessionData.isEmpty) {
+          //     await firestore
+          //         .collection("quiz_session")
+          //         .doc(data.sessionId)
+          //         .set(data.toJson());
+          //     await getSessionQuiz();
+          //   } else {
+          //     data = data.copyWith(
+          //       sessionId: sessionData.first.sessionId,
+          //       multipleChoices: multipleChoices,
+          //       answers: listAnswer,
+          //       time: 0,
+          //       image: downloadUrl,
+          //       isFinished: true,
+          //       isRated: false,
+          //     );
+          //     await firestore
+          //         .collection("quiz_session")
+          //         .doc(data.sessionId)
+          //         .update(data.toJson());
+          //     await getSessionQuiz();
+          //   }
+          // }
+
+          AppDialog.dialogSnackbar("Success");
         }
-      }
-      AppDialog.dialogSnackbar("Success");
+      });
+
+      // Mendapatkan URL download
     } catch (e) {
+      navigatorKey.currentContext!.pop();
       AppDialog.dialogSnackbar("Error while saving : $e");
     }
   }

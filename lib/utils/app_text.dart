@@ -181,6 +181,7 @@ class AppTextNormal {
     int? maxLines,
     double? height,
     double? letterSpacing,
+    List<Shadow>? shadows,
   }) {
     return Text(
       title,
@@ -193,6 +194,7 @@ class AppTextNormal {
         color: colors,
         height: height ?? 1.0,
         letterSpacing: letterSpacing,
+        shadows: shadows,
       ),
     );
   }

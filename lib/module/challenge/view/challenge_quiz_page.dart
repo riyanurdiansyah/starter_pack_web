@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/module/challenge/controller/challenge_quiz_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
@@ -98,7 +100,11 @@ class ChallengeQuizPage extends StatelessWidget {
                   ),
                   25.ph,
                   ElevatedButton(
-                    onPressed: _c.startTimer,
+                    onPressed: () async {
+                      _c.startTimer();
+                      await _c.saveSessionQuiz(false);
+                      await _c.getSessionQuiz();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colorGold,
                     ),
@@ -464,7 +470,7 @@ class ChallengeQuizPage extends StatelessWidget {
                       20.ph,
                       Center(
                         child: Container(
-                          height: 200,
+                          height: 225,
                           width: size.width / 2.4,
                           decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.2),
@@ -475,13 +481,43 @@ class ChallengeQuizPage extends StatelessWidget {
                           ),
                           child: Stack(
                             children: [
+                              if (_c.fileName.value.isNotEmpty)
+                                Container(
+                                  height: 225,
+                                  width: size.width / 2.4,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Image.memory(
+                                    _c.filePickerResult!.files.first.bytes!,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
                               Builder(
                                 builder: (context) {
                                   return DropzoneView(
                                     onCreated: (controller) =>
                                         _c.dropzoneController = controller,
                                     onDropFile: (file) async {
-                                      _c.fileName.value = file.name;
+                                      if (file.type.contains("image")) {
+                                        _c.fileName.value = file.name;
+                                        final byteData = await _c
+                                            .dropzoneController
+                                            .getFileData(file);
+                                        final files = [
+                                          PlatformFile(
+                                            name: file.name,
+                                            size: byteData.lengthInBytes,
+                                            bytes: byteData,
+                                          ),
+                                        ];
+
+                                        _c.filePickerResult =
+                                            FilePickerResult(files);
+                                      } else {
+                                        AppDialog.dialogSnackbar(
+                                            "Only image files are allowed!");
+                                      }
                                     },
                                     onError: (e) => debugPrint('Error: $e'),
                                   );
@@ -493,14 +529,58 @@ class ChallengeQuizPage extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(Icons.cloud_upload,
-                                          size: 50, color: Colors.grey),
+                                      const Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          // Ikon dengan warna outline (lebih besar)
+                                          Icon(
+                                            Icons.cloud_upload,
+                                            size:
+                                                54, // Lebih besar untuk efek outline
+                                            color:
+                                                Colors.black, // Warna outline
+                                          ),
+                                          // Ikon utama
+                                          Icon(
+                                            Icons.cloud_upload,
+                                            size: 50, // Ukuran asli
+                                            color:
+                                                Colors.grey, // Warna ikon utama
+                                          ),
+                                        ],
+                                      ),
                                       14.ph,
                                       AppTextNormal.labelBold(
                                         "Drag & Drop or Click to Upload",
                                         14,
                                         Colors.white,
                                         letterSpacing: 2.5,
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(-1.5,
+                                                -1.5), // Bayangan ke kiri atas
+                                            color: Colors.black,
+                                            blurRadius: 1.0,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.5,
+                                                -1.5), // Bayangan ke kanan atas
+                                            color: Colors.black,
+                                            blurRadius: 1.0,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(1.5,
+                                                1.5), // Bayangan ke kanan bawah
+                                            color: Colors.black,
+                                            blurRadius: 1.0,
+                                          ),
+                                          Shadow(
+                                            offset: Offset(-1.5,
+                                                1.5), // Bayangan ke kiri bawah
+                                            color: Colors.black,
+                                            blurRadius: 1.0,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -531,6 +611,8 @@ class ChallengeQuizPage extends StatelessWidget {
                                 vertical: 0, horizontal: 12),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade500),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderSide:
@@ -545,12 +627,16 @@ class ChallengeQuizPage extends StatelessWidget {
                         width: size.width / 2.4,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: _c.saveChallengeWellfit,
+                          onPressed: _c.fileName.value.isEmpty
+                              ? () {}
+                              : _c.saveChallengeWellfit,
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            backgroundColor: colorPointRank,
+                            backgroundColor: _c.fileName.value.isEmpty
+                                ? Colors.grey
+                                : colorPointRank,
                           ),
                           child: AppTextNormal.labelBold(
                             "SUBMIT",

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_constanta.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_dialog.dart';
 import '../../user/model/role_m.dart';
@@ -25,14 +26,37 @@ class AssignController extends GetxController {
   final RxList<Map<String, dynamic>> selectedUser =
       <Map<String, dynamic>>[].obs;
 
+  final Rx<bool> isDone = false.obs;
+
+  final Rx<bool> isLoading = false.obs;
+
   @override
   void onInit() async {
+    changeLoading(true);
     roleSelected.clear();
     pref = await SharedPreferences.getInstance();
     await getRoles();
     await getUser();
     await getUsers();
+    await getLogAssign();
+    await changeLoading(false);
+
     super.onInit();
+  }
+
+  Future changeLoading(bool val) async {
+    isLoading.value = val;
+  }
+
+  Future getLogAssign() async {
+    final logAssign = await firestore
+        .collection("log")
+        .where("type", isEqualTo: "assign")
+        .where("groupId", isEqualTo: user.value.groupId)
+        .get();
+    if (logAssign.docs.isNotEmpty) {
+      isDone.value = true;
+    }
   }
 
   Future getUser() async {
@@ -53,17 +77,6 @@ class AssignController extends GetxController {
             e.username != user.value.username &&
             e.roleId != 109)
         .toList();
-    // for (int i = 0; i < users.length; i++) {
-    //   final roleU = roles.where((e) => e.roleId == users[i].roleId).toList();
-    //   if (roleU.isNotEmpty) {
-    //     selectedItems[i] = roleU[0];
-    //     if (roleU[0].roleId != 109 &&
-    //         roleU[0].roleId != 106 &&
-    //         roleU[0].roleId != 108) {
-    //       roleSelected.add(roleU[0].id);
-    //     }
-    //   }
-    // }
     return users;
   }
 
@@ -110,6 +123,7 @@ class AssignController extends GetxController {
   }
 
   void saveUser() {
+    var id = const Uuid().v4();
     try {
       firestore.runTransaction(
         (trx) async {
@@ -119,6 +133,12 @@ class AssignController extends GetxController {
                 .doc(item.id)
                 .update(item.toJson());
           }
+          await firestore.collection("log").doc(id).set({
+            "logId": id,
+            "groupId": user.value.groupId,
+            "type": "assign",
+            "createdAt": DateTime.now().toIso8601String(),
+          });
         },
       ).then((_) {
         getUsers();

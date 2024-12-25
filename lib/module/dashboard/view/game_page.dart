@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:starter_pack_web/module/challenge/model/quiz_session_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/game_controller.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
-import 'package:starter_pack_web/utils/app_extension.dart';
 
 import '../../../utils/app_color.dart';
 import '../../../utils/app_dialog.dart';
@@ -76,7 +75,9 @@ class GamePage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: InkWell(
-                                      onTap: () => _c.updateGame(data),
+                                      onTap: () {
+                                        AppDialog.dialogMarkChallenge(data);
+                                      },
                                       child: const Icon(
                                         Icons.check,
                                         size: 16,
@@ -84,24 +85,24 @@ class GamePage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  8.pw,
-                                  Container(
-                                    width: 26,
-                                    height: 26,
-                                    padding: const EdgeInsets.all(2.5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: const Icon(
-                                        Icons.close,
-                                        size: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                                  // 8.pw,
+                                  // Container(
+                                  //   width: 26,
+                                  //   height: 26,
+                                  //   padding: const EdgeInsets.all(2.5),
+                                  //   decoration: BoxDecoration(
+                                  //     color: Colors.red,
+                                  //     borderRadius: BorderRadius.circular(4),
+                                  //   ),
+                                  //   child: InkWell(
+                                  //     onTap: () {},
+                                  //     child: const Icon(
+                                  //       Icons.close,
+                                  //       size: 16,
+                                  //       color: Colors.white,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
