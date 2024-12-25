@@ -14,6 +14,7 @@ class DemographyM {
   final String infantElevated;
   final String seniorsElevated;
   final String pregnantElevated;
+  final String image;
   final double right;
   final double left;
   final double top;
@@ -21,6 +22,7 @@ class DemographyM {
   final String name;
   final int page;
   final bool isHovered;
+  final double cost;
 
   DemographyM({
     required this.id,
@@ -31,6 +33,7 @@ class DemographyM {
     required this.infantElevated,
     required this.seniorsElevated,
     required this.pregnantElevated,
+    required this.image,
     required this.right,
     required this.left,
     required this.top,
@@ -38,6 +41,7 @@ class DemographyM {
     required this.name,
     required this.page,
     required this.isHovered,
+    required this.cost,
   });
 
   DemographyM copyWith({
@@ -49,6 +53,7 @@ class DemographyM {
     String? infantElevated,
     String? seniorsElevated,
     String? pregnantElevated,
+    String? image,
     double? right,
     double? left,
     double? top,
@@ -56,6 +61,7 @@ class DemographyM {
     String? name,
     int? page,
     bool? isHovered,
+    double? cost,
   }) =>
       DemographyM(
         id: id ?? this.id,
@@ -66,6 +72,7 @@ class DemographyM {
         infantElevated: infantElevated ?? this.infantElevated,
         seniorsElevated: seniorsElevated ?? this.seniorsElevated,
         pregnantElevated: pregnantElevated ?? this.pregnantElevated,
+        image: image ?? this.image,
         right: right ?? this.right,
         left: left ?? this.left,
         top: top ?? this.top,
@@ -73,6 +80,7 @@ class DemographyM {
         name: name ?? this.name,
         page: page ?? this.page,
         isHovered: isHovered ?? this.isHovered,
+        cost: cost ?? this.cost,
       );
 
   factory DemographyM.fromJson(Map<String, dynamic> json) => DemographyM(
@@ -84,6 +92,7 @@ class DemographyM {
         infantElevated: json["infant_elevated_class"] ?? "",
         seniorsElevated: json["seniors_elevated_class"] ?? "",
         pregnantElevated: json["pregnant_elevated_class"] ?? "",
+        image: json["image"] ?? "",
         right: json["right"]?.toDouble() ?? 0,
         left: json["left"]?.toDouble() ?? 0,
         top: json["top"]?.toDouble() ?? 0,
@@ -91,6 +100,7 @@ class DemographyM {
         name: json["name"],
         page: 0,
         isHovered: false,
+        cost: json["cost"]?.toDouble() ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,11 +111,13 @@ class DemographyM {
         "top": top,
         "bottom": bottom,
         "name": name,
+        "image": image,
         "infant_core_lifestyle": infant,
         "pregnant_core_lifestyle": pregnant,
         "seniors_core_lifestyle": seniors,
         "infant_elevated_class": infantElevated,
         "pregnant_elevated_class": pregnantElevated,
         "seniors_elevated_class": seniorsElevated,
+        "cost": cost,
       };
 }

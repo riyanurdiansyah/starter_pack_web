@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
@@ -18,6 +20,8 @@ class DemographysetController extends GetxController {
 
   final tcName = TextEditingController();
   final tcData = TextEditingController();
+  final tcImage = TextEditingController();
+  final tcCost = TextEditingController();
 
   final tcInfant = TextEditingController();
   final tcPregnant = TextEditingController();
@@ -26,6 +30,9 @@ class DemographysetController extends GetxController {
   final tcInfantElevated = TextEditingController();
   final tcPregnantElevated = TextEditingController();
   final tcSeniorsElevated = TextEditingController();
+
+  FilePickerResult? filePickerResult;
+
   //Core Lifestyle
   //Elevated Class
   @override
@@ -99,11 +106,27 @@ class DemographysetController extends GetxController {
     tcInfant.text = oldDemography.infant;
     tcPregnant.text = oldDemography.pregnant;
     tcSeniors.text = oldDemography.seniors;
+    tcImage.text = oldDemography.image;
+    tcCost.text = oldDemography.cost.toString();
   }
 
   void updateDemography(DemographyM? oldDemography) async {
     try {
+      String downlodUrl = "";
       if (oldDemography != null) {
+        if (oldDemography.image != tcImage.text) {
+          final fileBytes = filePickerResult?.files.single.bytes;
+          final fileName = filePickerResult?.files.single.name;
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('assets/demography/$fileName');
+
+          final uploadTask = storageRef.putData(fileBytes!);
+
+          final snapshot = await uploadTask.whenComplete(() {});
+
+          downlodUrl = await snapshot.ref.getDownloadURL();
+        }
         oldDemography = oldDemography.copyWith(
           name: tcName.text,
           data: tcData.text,
@@ -113,6 +136,9 @@ class DemographysetController extends GetxController {
           infantElevated: tcInfantElevated.text,
           pregnantElevated: tcPregnantElevated.text,
           seniorsElevated: tcSeniorsElevated.text,
+          image: downlodUrl.isEmpty
+              ? oldDemography.image
+              : downlodUrl.split("&token")[0].trim(),
         );
         await firestore
             .collection("demography")

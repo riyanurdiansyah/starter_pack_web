@@ -19,312 +19,275 @@ class AssignPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Scaffold(
-      backgroundColor: Colors.grey.withOpacity(0.4),
-      body: Stack(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: size.height,
+    return Obx(() {
+      if (_c.isLoading.value) {
+        return Container(
+          color: Colors.black,
+          width: double.infinity,
+          height: size.height,
+          child: Container(
+            width: 250,
+            height: 150,
+            alignment: Alignment.center,
             child: Image.asset(
-              bgRole,
-              fit: BoxFit.fill,
+              loadingGif,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
+              width: 250,
             ),
           ),
-          Container(
-              margin: const EdgeInsets.symmetric(horizontal: 125, vertical: 14),
+        );
+      }
+      return Scaffold(
+        backgroundColor: Colors.grey.withOpacity(0.4),
+        body: Stack(
+          children: [
+            SizedBox(
               width: double.infinity,
-              child: Obx(() {
-                if (_c.isLoading.value) {
-                  return const SizedBox();
-                }
-
-                if (_c.isDone.value) {
-                  return Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 28.0),
-                      child: AppTextNormal.labelBold(
-                        "You have assigned a role to the user...",
-                        18,
-                        Colors.black,
-                      ),
-                    ),
-                  );
-                }
-                return Container(
-                  color: Colors.black.withOpacity(0.4),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        height: 60,
-                        color: Colors.black,
-                        child: Row(
-                          children: [
-                            AppTextNormal.labelBold(
-                              'MY GOOD TEAM',
-                              18,
-                              Colors.white,
-                            ),
-                            const Spacer(),
-                            Obx(
-                              () => AppTextNormal.labelW600(
-                                "Number of teams: ${_c.users.where((e) => e.roleId != 108).toList().length} / ${_c.users.length}",
-                                16,
-                                Colors.white,
-                              ),
-                            ),
-                            16.pw,
-                            ElevatedButton(
-                              onPressed: () {
-                                AppDialog.dialogDelete(
-                                  title: "Save Role",
-                                  subtitle:
-                                      "Are you sure you want to save the role?",
-                                  confirmText: "Yes, save",
-                                  callback: () {
-                                    context.pop();
-                                    _c.saveUser();
-                                  },
-                                );
-                              },
-                              child: AppTextNormal.labelBold(
-                                "SAVE",
-                                16,
-                                Colors.black,
-                              ),
-                            ),
-                          ],
+              height: size.height,
+              child: Image.asset(
+                bgRole,
+                fit: BoxFit.fill,
+              ),
+            ),
+            Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 125, vertical: 14),
+                width: double.infinity,
+                child: Obx(() {
+                  if (_c.isDone.value) {
+                    return Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 28.0),
+                        child: AppTextNormal.labelBold(
+                          "You have assigned a role to the user...",
+                          18,
+                          Colors.black,
                         ),
                       ),
-                      Expanded(
-                        child: Obx(
-                          () => ListView.builder(
-                            padding: const EdgeInsets.all(10),
-                            itemCount: _c.roles.length,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppTextNormal.labelBold(
-                                    "ROLE : ${_c.roles[index].role}",
-                                    18,
-                                    Colors.white,
-                                  ),
-
-                                  const SizedBox(height: 10),
-                                  GridView.builder(
-                                    shrinkWrap:
-                                        true, // Agar GridView dapat digunakan di dalam ListView
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3, // Jumlah kolom
-                                      crossAxisSpacing: 10, // Jarak antar kolom
-                                      mainAxisSpacing: 10, // Jarak antar baris
-                                      childAspectRatio: 3.2,
+                    );
+                  }
+                  return Container(
+                    color: Colors.black.withOpacity(0.4),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          height: 60,
+                          color: Colors.black,
+                          child: Row(
+                            children: [
+                              AppTextNormal.labelBold(
+                                'MY GOOD TEAM',
+                                18,
+                                Colors.white,
+                              ),
+                              const Spacer(),
+                              Obx(
+                                () => AppTextNormal.labelW600(
+                                  "Number of teams: ${_c.users.where((e) => e.roleId != 108).toList().length} / ${_c.users.length}",
+                                  16,
+                                  Colors.white,
+                                ),
+                              ),
+                              16.pw,
+                              ElevatedButton(
+                                onPressed: () {
+                                  AppDialog.dialogDelete(
+                                    title: "Save Role",
+                                    subtitle:
+                                        "Are you sure you want to save the role?",
+                                    confirmText: "Yes, save",
+                                    callback: () {
+                                      context.pop();
+                                      _c.saveUser();
+                                    },
+                                  );
+                                },
+                                child: AppTextNormal.labelBold(
+                                  "SAVE",
+                                  16,
+                                  Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Obx(
+                            () => ListView.builder(
+                              padding: const EdgeInsets.all(10),
+                              itemCount: _c.roles.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppTextNormal.labelBold(
+                                      "ROLE : ${_c.roles[index].role}",
+                                      18,
+                                      Colors.white,
                                     ),
-                                    itemCount: _c.roles[index].max,
-                                    itemBuilder: (context, subIndex) {
-                                      return ClipPath(
-                                        clipper: MyClipper2(),
-                                        child: Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 10),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withOpacity(0.4),
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                          ),
-                                          height: 150,
-                                          child: Row(
-                                            children: [
-                                              14.pw,
-                                              _c.roles[index].image.isEmpty
-                                                  ? Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      color:
-                                                          Colors.grey.shade200,
-                                                      child: Icon(
-                                                        Icons.person_rounded,
-                                                        size: 80,
+
+                                    const SizedBox(height: 10),
+                                    GridView.builder(
+                                      shrinkWrap:
+                                          true, // Agar GridView dapat digunakan di dalam ListView
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3, // Jumlah kolom
+                                        crossAxisSpacing:
+                                            10, // Jarak antar kolom
+                                        mainAxisSpacing:
+                                            10, // Jarak antar baris
+                                        childAspectRatio: 3.2,
+                                      ),
+                                      itemCount: _c.roles[index].max,
+                                      itemBuilder: (context, subIndex) {
+                                        return ClipPath(
+                                          clipper: MyClipper2(),
+                                          child: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 10),
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.4),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            height: 150,
+                                            child: Row(
+                                              children: [
+                                                14.pw,
+                                                _c.roles[index].image.isEmpty
+                                                    ? Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
                                                         color: Colors
-                                                            .grey.shade600,
-                                                      ),
-                                                    )
-                                                  : SizedBox(
-                                                      width: 125,
-                                                      height: 125,
-                                                      child: DecoratedBox(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  10), // Opsional, membuat sudut melengkung
+                                                            .grey.shade200,
+                                                        child: Icon(
+                                                          Icons.person_rounded,
+                                                          size: 80,
+                                                          color: Colors
+                                                              .grey.shade600,
                                                         ),
-                                                        child: Image.asset(
-                                                          "assets/images/${_c.roles[index].image}",
-                                                          fit: BoxFit.cover,
-                                                          width: 125,
-                                                          height: 125,
-                                                        ),
-                                                      ),
-                                                    ),
-                                              16.pw,
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  14.ph,
-                                                  Stack(
-                                                    children: [
-                                                      Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 10),
-                                                        height: 40,
-                                                        width: _c
-                                                                    .roles[
-                                                                        index]
-                                                                    .role
-                                                                    .length >
-                                                                15
-                                                            ? _c
-                                                                    .roles[
-                                                                        index]
-                                                                    .role
-                                                                    .length *
-                                                                12
-                                                            : _c
-                                                                    .roles[
-                                                                        index]
-                                                                    .role
-                                                                    .length *
-                                                                20,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: [
-                                                              colorElectricViolet,
-                                                              colorElectricViolet
-                                                                  .withOpacity(
-                                                                      0.8),
-                                                              colorElectricViolet
-                                                                  .withOpacity(
-                                                                      0.6),
-                                                              colorElectricViolet
-                                                                  .withOpacity(
-                                                                      0.4),
-                                                              Colors.white
-                                                                  .withOpacity(
-                                                                      0.2)
-                                                            ],
-                                                            begin: Alignment
-                                                                .topLeft,
-                                                            end: Alignment
-                                                                .bottomRight,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 10),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: 40,
-                                                        child: AppTextNormal
-                                                            .labelBold(
-                                                          _c.roles[index].role,
-                                                          16,
-                                                          Colors.white,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  10.ph,
-                                                  Obx(
-                                                    () => SizedBox(
-                                                      width: 200,
-                                                      child:
-                                                          DropdownSearch<UserM>(
-                                                        decoratorProps:
-                                                            DropDownDecoratorProps(
+                                                      )
+                                                    : SizedBox(
+                                                        width: 125,
+                                                        height: 125,
+                                                        child: DecoratedBox(
                                                           decoration:
-                                                              InputDecoration(
-                                                            fillColor: Colors
-                                                                .white
-                                                                .withOpacity(
-                                                                    0.4),
-                                                            filled: true,
-                                                            // hintText: "Masukkan role",
-                                                            // hintStyle: GoogleFonts.poppins(
-                                                            //   fontSize: 14,
-                                                            //   wordSpacing: 4,
-                                                            // ),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical: 0,
-                                                                    horizontal:
-                                                                        12),
-                                                            border:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
-                                                            ),
-                                                            focusedBorder:
-                                                                OutlineInputBorder(
-                                                              borderSide:
-                                                                  const BorderSide(
-                                                                      color:
-                                                                          colorPrimaryDark),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
-                                                            ),
-                                                            enabledBorder:
-                                                                OutlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10), // Opsional, membuat sudut melengkung
+                                                          ),
+                                                          child: Image.asset(
+                                                            "assets/images/${_c.roles[index].image}",
+                                                            fit: BoxFit.cover,
+                                                            width: 125,
+                                                            height: 125,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                16.pw,
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    14.ph,
+                                                    Stack(
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                          height: 40,
+                                                          width: _c
+                                                                      .roles[
+                                                                          index]
+                                                                      .role
+                                                                      .length >
+                                                                  15
+                                                              ? _c
+                                                                      .roles[
+                                                                          index]
+                                                                      .role
+                                                                      .length *
+                                                                  12
+                                                              : _c
+                                                                      .roles[
+                                                                          index]
+                                                                      .role
+                                                                      .length *
+                                                                  20,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            gradient:
+                                                                LinearGradient(
+                                                              colors: [
+                                                                colorElectricViolet,
+                                                                colorElectricViolet
+                                                                    .withOpacity(
+                                                                        0.8),
+                                                                colorElectricViolet
+                                                                    .withOpacity(
+                                                                        0.6),
+                                                                colorElectricViolet
+                                                                    .withOpacity(
+                                                                        0.4),
+                                                                Colors.white
+                                                                    .withOpacity(
+                                                                        0.2)
+                                                              ],
+                                                              begin: Alignment
+                                                                  .topLeft,
+                                                              end: Alignment
+                                                                  .bottomRight,
                                                             ),
                                                           ),
                                                         ),
-                                                        popupProps:
-                                                            PopupProps.menu(
-                                                          disabledItemFn:
-                                                              (itm) {
-                                                            return _c
-                                                                .selectedUser
-                                                                .any((role) => role[
-                                                                        'assignedUser']
-                                                                    .contains(itm
-                                                                        .username));
-                                                          },
-                                                          fit: FlexFit.loose,
-                                                          showSearchBox: true,
-                                                          searchFieldProps:
-                                                              TextFieldProps(
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          height: 40,
+                                                          child: AppTextNormal
+                                                              .labelBold(
+                                                            _c.roles[index]
+                                                                .role,
+                                                            16,
+                                                            Colors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    10.ph,
+                                                    Obx(
+                                                      () => SizedBox(
+                                                        width: 200,
+                                                        child: DropdownSearch<
+                                                            UserM>(
+                                                          decoratorProps:
+                                                              DropDownDecoratorProps(
                                                             decoration:
                                                                 InputDecoration(
+                                                              fillColor: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.4),
+                                                              filled: true,
                                                               // hintText: "Masukkan role",
                                                               // hintStyle: GoogleFonts.poppins(
                                                               //   fontSize: 14,
@@ -368,48 +331,111 @@ class AssignPage extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
+                                                          popupProps:
+                                                              PopupProps.menu(
+                                                            disabledItemFn:
+                                                                (itm) {
+                                                              return _c
+                                                                  .selectedUser
+                                                                  .any((role) => role[
+                                                                          'assignedUser']
+                                                                      .contains(
+                                                                          itm.username));
+                                                            },
+                                                            fit: FlexFit.loose,
+                                                            showSearchBox: true,
+                                                            searchFieldProps:
+                                                                TextFieldProps(
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                // hintText: "Masukkan role",
+                                                                // hintStyle: GoogleFonts.poppins(
+                                                                //   fontSize: 14,
+                                                                //   wordSpacing: 4,
+                                                                // ),
+                                                                contentPadding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                            0,
+                                                                        horizontal:
+                                                                            12),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
+                                                                ),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide:
+                                                                      const BorderSide(
+                                                                          color:
+                                                                              colorPrimaryDark),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
+                                                                ),
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade300),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          items: (_, __) =>
+                                                              _c.getUsers(),
+                                                          compareFn: (_, __) {
+                                                            return false;
+                                                          },
+                                                          itemAsString:
+                                                              (UserM u) =>
+                                                                  u.nama,
+                                                          selectedItem:
+                                                              _c.selectedItems[
+                                                                  index],
+                                                          onChanged: (val) =>
+                                                              _c.onSelectUser(
+                                                                  subIndex,
+                                                                  index,
+                                                                  _c.roles[
+                                                                      index],
+                                                                  val),
                                                         ),
-                                                        items: (_, __) =>
-                                                            _c.getUsers(),
-                                                        compareFn: (_, __) {
-                                                          return false;
-                                                        },
-                                                        itemAsString:
-                                                            (UserM u) => u.nama,
-                                                        selectedItem:
-                                                            _c.selectedItems[
-                                                                index],
-                                                        onChanged: (val) =>
-                                                            _c.onSelectUser(
-                                                                subIndex,
-                                                                index,
-                                                                _c.roles[index],
-                                                                val),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const Divider(), // Garis pemisah antar role
-                                ],
-                              );
-                            },
+                                        );
+                                      },
+                                    ),
+                                    const Divider(), // Garis pemisah antar role
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              })),
-        ],
-      ),
-    );
+                      ],
+                    ),
+                  );
+                })),
+          ],
+        ),
+      );
+    });
   }
 }
 

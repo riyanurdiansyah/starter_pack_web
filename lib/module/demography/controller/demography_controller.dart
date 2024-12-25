@@ -16,12 +16,14 @@ class DemographyController extends GetxController
   final Rx<bool> isHovered2 = false.obs;
   final Rx<bool> isHovered3 = false.obs;
   final Rx<bool> isWidgetVisible = false.obs;
+  final Rx<bool> isLoading = false.obs;
 
   final Rx<int> selectedIndex = 99.obs;
   // final Rx<bool> isWidgetVisible2 = false.obs;
   // final Rx<bool> isWidgetVisible3 = false.obs;
   @override
   void onInit() async {
+    changeLoading(true);
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -31,6 +33,7 @@ class DemographyController extends GetxController
       CurvedAnimation(parent: animationController, curve: Curves.easeInOut),
     );
     await getDemographys();
+    await changeLoading(false);
     super.onInit();
   }
 
@@ -38,6 +41,10 @@ class DemographyController extends GetxController
   void onClose() {
     animationController.dispose();
     super.onClose();
+  }
+
+  Future changeLoading(bool val) async {
+    isLoading.value = val;
   }
 
   void toggleWidget(int index) {

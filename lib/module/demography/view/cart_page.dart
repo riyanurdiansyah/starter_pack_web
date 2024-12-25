@@ -94,20 +94,20 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          height: 45,
-                          child: const Text(
-                            "Production",
-                            style: TextStyle(
-                              fontFamily: "Race",
-                              fontSize: 35,
-                              color: colorElectricViolet,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 4,
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   alignment: Alignment.center,
+                        //   height: 45,
+                        //   child: const Text(
+                        //     "Production",
+                        //     style: TextStyle(
+                        //       fontFamily: "Race",
+                        //       fontSize: 35,
+                        //       color: colorElectricViolet,
+                        //       fontWeight: FontWeight.bold,
+                        //       letterSpacing: 4,
+                        //     ),
+                        //   ),
+                        // ),
                         const Spacer(),
                         Obx(() {
                           if (_c.userSession.value.id == "") {

@@ -73,6 +73,20 @@ class RndPage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   height: 45,
+                      //   child: const Text(
+                      //     "Research & Development",
+                      //     style: TextStyle(
+                      //       fontFamily: "Race",
+                      //       fontSize: 35,
+                      //       color: colorElectricViolet,
+                      //       fontWeight: FontWeight.bold,
+                      //       letterSpacing: 4,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

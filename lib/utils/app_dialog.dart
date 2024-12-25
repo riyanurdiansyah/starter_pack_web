@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1569,37 +1570,63 @@ class AppDialog {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+                  16.ph,
                   AppTextNormal.labelW700(
-                    "Infant Core Lifestyle",
+                    "Image",
                     14,
                     Colors.black,
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
+                  12.ph,
                   TextFormField(
-                    controller: c.tcInfant,
+                    controller: c.tcImage,
                     validator: (val) => AppValidator.requiredField(val!),
-                    style: GoogleFonts.poppins(
-                      height: 1.4,
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
                     ),
-                    minLines: 4,
-                    maxLines: 50,
+                    readOnly: true,
                     decoration: InputDecoration(
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 14,
-                        wordSpacing: 4,
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final result = await pickFile();
+
+                            c.filePickerResult = result;
+
+                            if (result != null) {
+                              c.tcImage.text = result.files.single.name;
+                            } else {
+                              c.tcImage.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose File",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14, horizontal: 12),
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -1608,7 +1635,7 @@ class AppDialog {
                     height: 16,
                   ),
                   AppTextNormal.labelW700(
-                    "Pregnant Core Lifestyle",
+                    "Data",
                     14,
                     Colors.black,
                   ),
@@ -1616,147 +1643,7 @@ class AppDialog {
                     height: 12,
                   ),
                   TextFormField(
-                    controller: c.tcPregnant,
-                    validator: (val) => AppValidator.requiredField(val!),
-                    style: GoogleFonts.poppins(
-                      height: 1.4,
-                    ),
-                    minLines: 4,
-                    maxLines: 50,
-                    decoration: InputDecoration(
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 14,
-                        wordSpacing: 4,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14, horizontal: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade500),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  AppTextNormal.labelW700(
-                    "Seniors Core Lifestyle",
-                    14,
-                    Colors.black,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  TextFormField(
-                    controller: c.tcSeniors,
-                    validator: (val) => AppValidator.requiredField(val!),
-                    style: GoogleFonts.poppins(
-                      height: 1.4,
-                    ),
-                    minLines: 4,
-                    maxLines: 50,
-                    decoration: InputDecoration(
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 14,
-                        wordSpacing: 4,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14, horizontal: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade500),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  AppTextNormal.labelW700(
-                    "Infant Elevated Class",
-                    14,
-                    Colors.black,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  TextFormField(
-                    controller: c.tcInfantElevated,
-                    validator: (val) => AppValidator.requiredField(val!),
-                    style: GoogleFonts.poppins(
-                      height: 1.4,
-                    ),
-                    minLines: 4,
-                    maxLines: 50,
-                    decoration: InputDecoration(
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 14,
-                        wordSpacing: 4,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14, horizontal: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade500),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  AppTextNormal.labelW700(
-                    "Pregnant Elevated Class",
-                    14,
-                    Colors.black,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  TextFormField(
-                    controller: c.tcPregnantElevated,
-                    validator: (val) => AppValidator.requiredField(val!),
-                    style: GoogleFonts.poppins(
-                      height: 1.4,
-                    ),
-                    minLines: 4,
-                    maxLines: 50,
-                    decoration: InputDecoration(
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 14,
-                        wordSpacing: 4,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14, horizontal: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade500),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  AppTextNormal.labelW700(
-                    "Seniors Elevated Class",
-                    14,
-                    Colors.black,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  TextFormField(
-                    controller: c.tcSeniorsElevated,
+                    controller: c.tcData,
                     validator: (val) => AppValidator.requiredField(val!),
                     style: GoogleFonts.poppins(
                       height: 1.4,
@@ -2252,6 +2139,29 @@ class AppDialog {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogImagePreview(String url) {
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: size.width / 1.8,
+          height: size.height / 1.4,
+          child: InteractiveViewer(
+            panEnabled: true, // Aktifkan geser
+            minScale: 1.0, // Zoom minimum
+            maxScale: 4.0, // Zoom maksimum
+            child: CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
