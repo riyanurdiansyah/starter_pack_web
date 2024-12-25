@@ -122,10 +122,11 @@ class DistributePage extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            AppTextNormal.labelW600(
-                                              "Price R\$",
+                                            AppTextNormal.labelBold(
+                                              "Price R\$ ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.minPrice ?? 0} - ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.maxPrice ?? 0}",
                                               12.5,
                                               Colors.black,
+                                              letterSpacing: 1.25,
                                             ),
                                             16.ph,
                                             TextFormField(
@@ -134,21 +135,74 @@ class DistributePage extends StatelessWidget {
                                                   [subindex],
                                               textInputAction:
                                                   TextInputAction.next,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               decoration:
                                                   textFieldAuthDecoration(
                                                       fontSize: 14,
                                                       hintText: "",
                                                       radius: 4),
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                              ],
+                                              onChanged: (value) {
+                                                // Replace ',' with '.' and remove multiple ',' or '.'
+                                                String updatedValue =
+                                                    value.replaceAll(',', '.');
+                                                if (RegExp(r'\..*\.')
+                                                    .hasMatch(updatedValue)) {
+                                                  updatedValue =
+                                                      updatedValue.replaceFirst(
+                                                          RegExp(
+                                                              r'\.(?![^.]*$)'),
+                                                          '');
+                                                }
+                                                if (updatedValue != value) {
+                                                  _c.accessList[index][
+                                                              "controller_price"]
+                                                          [subindex] =
+                                                      TextEditingValue(
+                                                    text: updatedValue,
+                                                    selection:
+                                                        TextSelection.collapsed(
+                                                            offset: updatedValue
+                                                                .length),
+                                                  );
+                                                }
+                                              },
+                                              validator: (val) {
+                                                if (val != null &&
+                                                    val.isNotEmpty) {
+                                                  var dig =
+                                                      val.replaceAll(",", ".");
+                                                  double? number =
+                                                      double.tryParse(dig);
+                                                  if (number == null ||
+                                                      number <
+                                                          (data.details
+                                                                  .firstWhereOrNull((e) =>
+                                                                      e.productId ==
+                                                                      prod.id)
+                                                                  ?.minPrice ??
+                                                              0) ||
+                                                      number >
+                                                          (data.details
+                                                                  .firstWhereOrNull((e) =>
+                                                                      e.productId ==
+                                                                      prod.id)
+                                                                  ?.maxPrice ??
+                                                              0)) {
+                                                    return "Price must be between R\$ ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.minPrice ?? 0} - R\$ ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.maxPrice ?? 0}";
+                                                  }
+                                                }
+                                                return null;
+                                              },
                                               autovalidateMode: AutovalidateMode
                                                   .onUserInteraction,
                                             ),
                                           ],
                                         ),
-                                      )
+                                      ),
+                                      const Expanded(
+                                        child: SizedBox(),
+                                      ),
                                     ],
                                   ),
                                 ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 
 import '../../../utils/app_dialog.dart';
+import '../../demography/model/produk_m.dart';
 
 class DemographysetController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -22,6 +25,11 @@ class DemographysetController extends GetxController {
   final tcData = TextEditingController();
   final tcImage = TextEditingController();
   final tcCost = TextEditingController();
+  final tcMinPrice = TextEditingController();
+  final tcMaxPrice = TextEditingController();
+
+  Map<int, List<TextEditingController>> tcProducts =
+      <int, List<TextEditingController>>{};
 
   final tcInfant = TextEditingController();
   final tcPregnant = TextEditingController();
@@ -31,14 +39,35 @@ class DemographysetController extends GetxController {
   final tcPregnantElevated = TextEditingController();
   final tcSeniorsElevated = TextEditingController();
 
+  final RxList<ProdukM> products = <ProdukM>[].obs;
+
   FilePickerResult? filePickerResult;
 
   //Core Lifestyle
   //Elevated Class
   @override
   void onInit() async {
+    await getProducts();
     await getDemographys();
     super.onInit();
+  }
+
+  Future getProducts() async {
+    final response = await firestore.collection("produk").get();
+    products.value = response.docs.map((e) {
+      return ProdukM.fromJson(e.data());
+    }).toList();
+    products.sort((a, b) => a.nama.compareTo(b.nama));
+
+    for (int i = 0; i < products.length; i++) {
+      tcProducts[i] = [
+        TextEditingController(text: products[i].id),
+        TextEditingController(
+            text: "${products[i].nama} - ${products[i].tipe}"),
+        TextEditingController(text: "0"),
+        TextEditingController(text: "0"),
+      ];
+    }
   }
 
   Future<List<DemographyM>> getDemographys() async {
@@ -108,10 +137,20 @@ class DemographysetController extends GetxController {
     tcSeniors.text = oldDemography.seniors;
     tcImage.text = oldDemography.image;
     tcCost.text = oldDemography.cost.toString();
+    // tcMinPrice.text = oldDemography.minPrice.toString();
+    // tcMaxPrice.text = oldDemography.maxPrice.toString();
   }
 
   void updateDemography(DemographyM? oldDemography) async {
     try {
+      List<DetailProductDemography> details = [];
+      for (int i = 0; i < tcProducts.keys.toList().length; i++) {
+        log("CEK DATA 2: ${tcProducts[i]![1].text}");
+        details.add(DetailProductDemography(
+            productId: tcProducts[i]![0].text,
+            minPrice: double.tryParse(tcProducts[i]![2].text) ?? 0,
+            maxPrice: double.tryParse(tcProducts[i]![3].text) ?? 0));
+      }
       String downlodUrl = "";
       if (oldDemography != null) {
         if (oldDemography.image != tcImage.text) {
@@ -137,9 +176,12 @@ class DemographysetController extends GetxController {
           pregnantElevated: tcPregnantElevated.text,
           seniorsElevated: tcSeniorsElevated.text,
           cost: double.tryParse(tcCost.text) ?? oldDemography.cost,
+          // minPrice: double.tryParse(tcMinPrice.text) ?? oldDemography.minPrice,
+          // maxPrice: double.tryParse(tcMaxPrice.text) ?? oldDemography.maxPrice,
           image: downlodUrl.isEmpty
               ? oldDemography.image
               : downlodUrl.split("&token")[0].trim(),
+          details: details,
         );
         await firestore
             .collection("demography")

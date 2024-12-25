@@ -93,7 +93,7 @@ class RndPage extends StatelessWidget {
                 20.ph,
                 Expanded(
                   child: Obx(() {
-                    if (!_c.isDone.value) {
+                    if (_c.isDone.value) {
                       return Center(
                         child: AppTextNormal.labelBold(
                           "You have already created the product.",

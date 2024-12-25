@@ -1683,11 +1683,7 @@ class AppDialog {
                     style: GoogleFonts.poppins(
                       height: 1.4,
                     ),
-                    minLines: 4,
-                    maxLines: 50,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       hintStyle: GoogleFonts.poppins(
                         fontSize: 14,
@@ -1703,6 +1699,150 @@ class AppDialog {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
+                    "Detail",
+                    14,
+                    Colors.black,
+                  ),
+                  8.ph,
+                  Column(
+                    children: List.generate(c.products.length, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppTextNormal.labelW700(
+                                    "Product Name",
+                                    14,
+                                    Colors.black,
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  TextFormField(
+                                    controller: c.tcProducts[index]![1],
+                                    validator: (val) =>
+                                        AppValidator.requiredField(val!),
+                                    style: GoogleFonts.poppins(
+                                      height: 1.4,
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        wordSpacing: 4,
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 14, horizontal: 12),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey.shade500),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            14.pw,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppTextNormal.labelW700(
+                                    "Min Price",
+                                    14,
+                                    Colors.black,
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  TextFormField(
+                                    controller: c.tcProducts[index]![2],
+                                    validator: (val) =>
+                                        AppValidator.requiredField(val!),
+                                    style: GoogleFonts.poppins(
+                                      height: 1.4,
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        wordSpacing: 4,
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 14, horizontal: 12),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey.shade500),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            14.pw,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppTextNormal.labelW700(
+                                    "Max Price",
+                                    14,
+                                    Colors.black,
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  TextFormField(
+                                    controller: c.tcProducts[index]![3],
+                                    validator: (val) =>
+                                        AppValidator.requiredField(val!),
+                                    style: GoogleFonts.poppins(
+                                      height: 1.4,
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        wordSpacing: 4,
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 14, horizontal: 12),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey.shade500),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                   ),
                   const SizedBox(
                     height: 35,

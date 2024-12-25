@@ -23,6 +23,7 @@ class DemographyM {
   final int page;
   final bool isHovered;
   final double cost;
+  final List<DetailProductDemography> details;
 
   DemographyM({
     required this.id,
@@ -42,6 +43,7 @@ class DemographyM {
     required this.page,
     required this.isHovered,
     required this.cost,
+    required this.details,
   });
 
   DemographyM copyWith({
@@ -62,6 +64,7 @@ class DemographyM {
     int? page,
     bool? isHovered,
     double? cost,
+    List<DetailProductDemography>? details,
   }) =>
       DemographyM(
         id: id ?? this.id,
@@ -81,6 +84,7 @@ class DemographyM {
         page: page ?? this.page,
         isHovered: isHovered ?? this.isHovered,
         cost: cost ?? this.cost,
+        details: details ?? this.details,
       );
 
   factory DemographyM.fromJson(Map<String, dynamic> json) => DemographyM(
@@ -101,6 +105,10 @@ class DemographyM {
         page: 0,
         isHovered: false,
         cost: json["cost"]?.toDouble() ?? 0,
+        details: json["details"] == null
+            ? []
+            : List<DetailProductDemography>.from(json["details"]
+                .map((x) => DetailProductDemography.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -119,5 +127,31 @@ class DemographyM {
         "pregnant_elevated_class": pregnantElevated,
         "seniors_elevated_class": seniorsElevated,
         "cost": cost,
+        "details": List<dynamic>.from(details.map((x) => x.toJson())),
+      };
+}
+
+class DetailProductDemography {
+  final String productId;
+  final double minPrice;
+  final double maxPrice;
+
+  DetailProductDemography({
+    required this.productId,
+    required this.minPrice,
+    required this.maxPrice,
+  });
+
+  factory DetailProductDemography.fromJson(Map<String, dynamic> json) =>
+      DetailProductDemography(
+        productId: json["productId"] ?? "",
+        minPrice: json["minPrice"]?.toDouble() ?? 0,
+        maxPrice: json["maxPrice"]?.toDouble() ?? 0,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "productId": productId,
+        "minPrice": minPrice,
+        "maxPrice": maxPrice,
       };
 }

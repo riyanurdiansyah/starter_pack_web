@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
         );
       }
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black.withOpacity(0.8),
         body: Stack(
           children: [
             Container(
