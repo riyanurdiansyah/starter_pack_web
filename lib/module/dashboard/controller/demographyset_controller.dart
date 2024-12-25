@@ -136,6 +136,7 @@ class DemographysetController extends GetxController {
           infantElevated: tcInfantElevated.text,
           pregnantElevated: tcPregnantElevated.text,
           seniorsElevated: tcSeniorsElevated.text,
+          cost: double.tryParse(tcCost.text) ?? oldDemography.cost,
           image: downlodUrl.isEmpty
               ? oldDemography.image
               : downlodUrl.split("&token")[0].trim(),
