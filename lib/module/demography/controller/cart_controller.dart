@@ -20,6 +20,8 @@ class CartController extends GetxController {
   final RxList<ProdukM> products = <ProdukM>[].obs;
   final RxList<ProdukM> productsOwn = <ProdukM>[].obs;
   Rx<bool> isHovered = false.obs;
+  Rx<bool> isDone = false.obs;
+  Rx<bool> isLoading = false.obs;
 
   final AudioPlayer audioPlayer = AudioPlayer();
 
@@ -49,29 +51,36 @@ class CartController extends GetxController {
 
   @override
   void onInit() async {
+    changeLoading(true);
     verticalTranslateController.addListener(() {
       indexImg.value = verticalTranslateController.page?.round() ?? 0;
     });
     await setup();
     await getProducts();
+    await changeLoading(false);
     super.onInit();
   }
 
+  Future changeLoading(bool val) async {
+    isLoading.value = val;
+  }
+
   void nextPage() {
-    verticalTranslateController.animateToPage(
-      (indexImg.value + 1) % products.length, // Loop ke awal jika di akhir
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+    if ((products.length - 1) > indexImg.value) {
+      AppSound.playHover();
+      indexImg.value++;
+    } else {
+      indexImg.value = 0;
+    }
   }
 
   void previousPage() {
-    verticalTranslateController.animateToPage(
-      (indexImg.value - 1 + products.length) %
-          products.length, // Loop ke akhir jika di awal
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+    if (indexImg.value > 0) {
+      AppSound.playHover();
+      indexImg.value--;
+    } else {
+      indexImg.value = products.length - 1;
+    }
   }
 
   Future setup() async {
