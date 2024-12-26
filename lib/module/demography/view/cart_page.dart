@@ -42,6 +42,7 @@ class CartPage extends StatelessWidget {
           ),
         );
       }
+
       return Scaffold(
         body: Stack(
           children: [
