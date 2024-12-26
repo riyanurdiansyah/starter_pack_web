@@ -180,6 +180,9 @@ class _DemographyPageState extends State<DemographyPage>
                 ),
               ),
               Obx(() {
+                if (_c.selectedIndex.value == 99) {
+                  return const SizedBox();
+                }
                 return AnimatedPositioned(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
@@ -199,7 +202,7 @@ class _DemographyPageState extends State<DemographyPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AppTextNormal.labelBold(
-                            "Data Demography",
+                            _c.demographys[_c.selectedIndex.value].name,
                             26,
                             Colors.white,
                           ),
@@ -240,7 +243,11 @@ class _DemographyPageState extends State<DemographyPage>
                             onPressed: () {
                               _c.toggleWidget(99);
                             },
-                            child: const Text("Tutup"),
+                            child: AppTextNormal.labelBold(
+                              "CLOSE",
+                              16,
+                              Colors.black,
+                            ),
                           ),
                         ],
                       ),

@@ -136,13 +136,16 @@ class CartController extends GetxController {
   }
 
   Future getProducts() async {
-    final response = await firestore.collection("produk").get();
+    final response = await firestore
+        .collection("produk")
+        .where("groups", arrayContains: userSession.value.groupId)
+        .get();
     products.value = response.docs.map((e) {
       return ProdukM.fromJson(e.data());
     }).toList();
-    products.value = products
-        .where((e) => e.groups.contains(userSession.value.groupId))
-        .toList();
+    // products.value = products
+    //     .where((e) => e.groups.contains(userSession.value.groupId))
+    //     .toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
     quantityControllers.value = List.generate(products.length, (index) {
       return TextEditingController(text: products[index].qty.toString());

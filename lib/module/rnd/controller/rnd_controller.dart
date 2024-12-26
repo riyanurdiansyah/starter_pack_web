@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
 import '../../../utils/app_sound.dart';
@@ -21,6 +22,8 @@ class RndController extends GetxController {
 
   Rx<bool> isHovered = false.obs;
 
+  Rx<bool> isLoading = false.obs;
+
   Rx<bool> isDone = false.obs;
 
   RxList<String> checkedProducts = <String>[].obs;
@@ -33,12 +36,30 @@ class RndController extends GetxController {
 
   @override
   void onInit() async {
+    changeLoading(true);
     verticalTranslateController.addListener(() {
       indexImg.value = verticalTranslateController.page?.round() ?? 0;
     });
     await setup();
+    await getLogRND();
     await getProducts();
+    await changeLoading(false);
     super.onInit();
+  }
+
+  Future getLogRND() async {
+    final logAssign = await firestore
+        .collection("log")
+        .where("type", isEqualTo: "rnd")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+    if (logAssign.docs.isNotEmpty) {
+      isDone.value = true;
+    }
+  }
+
+  Future changeLoading(bool val) async {
+    isLoading.value = val;
   }
 
   void nextPage() {
@@ -73,12 +94,6 @@ class RndController extends GetxController {
       return ProdukM.fromJson(e.data());
     }).toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
-    if (products
-        .where((e) => e.groups.contains(userSession.value.groupId))
-        .toList()
-        .isNotEmpty) {
-      isDone.value = true;
-    }
   }
 
   void onCheckProduct(String id) async {
@@ -94,8 +109,14 @@ class RndController extends GetxController {
   }
 
   Future saveProduct() async {
+    var id = const Uuid().v4();
     try {
       await firestore.runTransaction((transaction) async {
+        products.value = products.map((produk) {
+          // Hapus groupId yang sesuai dengan userGroupId
+          produk.groups.removeWhere((id) => id == userSession.value.groupId);
+          return produk;
+        }).toList();
         for (var item in products) {
           var itemJson = item.toJson();
           if (checkedProducts.contains(item.id)) {
@@ -110,10 +131,16 @@ class RndController extends GetxController {
           // Lakukan update dalam transaksi
           transaction.update(docRef, itemJson);
         }
+        await firestore.collection("log").doc(id).set({
+          "logId": id,
+          "groupId": userSession.value.groupId,
+          "type": "rnd",
+          "createdAt": DateTime.now().toIso8601String(),
+        });
       });
 
       // Jika transaksi sukses
-      getProducts();
+      getLogRND();
       AppDialog.dialogSnackbar("Data has been saved");
     } catch (e) {
       // Jika ada kesalahan, transaksi akan dibatalkan

@@ -235,7 +235,7 @@ class CartPage extends StatelessWidget {
                                                 child: CurvedText(
                                                   curvature: -0.0015,
                                                   text:
-                                                      "${_c.productsOwn[_c.indexImg.value].nama} - ${_c.productsOwn[_c.indexImg.value].tipe}",
+                                                      "${_c.products[_c.indexImg.value].nama} - ${_c.products[_c.indexImg.value].tipe}",
                                                   textStyle: const TextStyle(
                                                     fontFamily: 'Bigail',
                                                     fontWeight: FontWeight.bold,
