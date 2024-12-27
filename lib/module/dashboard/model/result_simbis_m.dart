@@ -34,12 +34,14 @@ String resultSimbisMToJson(ResultSimbisM data) => json.encode(data.toJson());
 // }
 
 class ResultSimbisM {
+  final String distributeId;
   final String groupId;
   final String groupName;
   final List<Summary> summary;
   final int page;
 
   ResultSimbisM({
+    required this.distributeId,
     required this.groupId,
     required this.groupName,
     required this.summary,
@@ -47,12 +49,14 @@ class ResultSimbisM {
   });
 
   ResultSimbisM copyWith({
+    String? distributeId,
     String? groupId,
     String? groupName,
     List<Summary>? summary,
     int? page,
   }) =>
       ResultSimbisM(
+        distributeId: distributeId ?? this.distributeId,
         groupId: groupId ?? this.groupId,
         groupName: groupName ?? this.groupName,
         summary: summary ?? this.summary,
@@ -60,6 +64,7 @@ class ResultSimbisM {
       );
 
   factory ResultSimbisM.fromJson(Map<String, dynamic> json) => ResultSimbisM(
+        distributeId: json["distributeId"],
         groupId: json["groupId"],
         groupName: json["groupName"],
         summary:
@@ -68,6 +73,7 @@ class ResultSimbisM {
       );
 
   Map<String, dynamic> toJson() => {
+        "distributeId": distributeId,
         "groupId": groupId,
         "groupName": groupName,
         "summary": List<dynamic>.from(summary.map((x) => x.toJson())),

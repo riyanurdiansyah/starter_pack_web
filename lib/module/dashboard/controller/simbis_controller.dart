@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -17,6 +18,7 @@ class SimbisController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final RxList<DemographyM> demographys = <DemographyM>[].obs;
   final RxList<DistributeM> distributes = <DistributeM>[].obs;
+  final RxList<DistributeM> distributesSearch = <DistributeM>[].obs;
   final RxList<ResultSimbisM> resultSimbis = <ResultSimbisM>[].obs;
   final Rx<String> result = "...".obs;
   final Rx<bool> isLoading = false.obs;
@@ -26,11 +28,14 @@ class SimbisController extends GetxController {
 
   Rx<UserM> userSession = userEmpty.obs;
 
-  final RxList<ResultSimbisM> resultSimbisSearch = <ResultSimbisM>[].obs;
+  // final RxList<ResultSimbisM> resultSimbisSearch = <ResultSimbisM>[].obs;
+
+  // final RxList<DistributeM> resultDistribute = <DistributeM>[].obs;
+  // final RxList<DistributeM> distributesSearch = <DistributeM>[].obs;
   final Rx<bool> isSearched = false.obs;
 
   Rx<int> currentPage = 1.obs;
-  Rx<int> dataPerPage = 5.obs;
+  Rx<int> dataPerPage = 2.obs;
 
   @override
   void onInit() async {
@@ -71,6 +76,12 @@ class SimbisController extends GetxController {
     distributes.value = response.docs.map((e) {
       return DistributeM.fromJson(e.data());
     }).toList();
+    double pageTemp = 0;
+    for (int i = 0; i < distributes.length; i++) {
+      pageTemp =
+          (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
+      distributes[i] = distributes[i].copyWith(page: pageTemp.ceil());
+    }
     return distributes;
   }
 
@@ -86,6 +97,8 @@ class SimbisController extends GetxController {
     for (var item in distributes) {
       simulations.add(
         SimulationM(
+          distributeId: item.distributeId,
+          groupId: item.groupId,
           groupName: item.groupName,
           productSell: item.areas.map((e) {
             return SimulationAreaM(
@@ -96,7 +109,7 @@ class SimbisController extends GetxController {
                   productId: x.productId,
                   productName: x.productName,
                   pricePerProduct: x.pricePerProduct,
-                  qty: x.qty,
+                  qty: x.qty - x.sold,
                 );
               }).toList(),
             );
@@ -104,6 +117,12 @@ class SimbisController extends GetxController {
         ),
       );
     }
+    simulations = simulations.where((simulation) {
+      return simulation.productSell.any((area) {
+        return area.products.any((product) => product.qty > 0);
+      });
+    }).toList();
+
     try {
       final data = {
         "model": "gpt-4o-mini",
@@ -122,10 +141,11 @@ class SimbisController extends GetxController {
           {
             "role": "user",
             "content": '''
-                      dengan data di atas buatkan simulasi penjualan dengan berdasarkan dataset demography yg sudah ada. berikan angka random sesuai dengan dataset demography dan tidak perlu semua qty product terjual habis. dengan format json berikut 
+                      dengan data di atas buatkan simulasi penjualan dengan berdasarkan dataset demography yg sudah ada. berikan angka random sesuai dengan dataset demography dan tidak perlu semua qty product terjual habis. dengan format json berikut
                       result:
                       [
                           {
+                              "distributeId" : "...",
                               "groupId" : "...",
                               "groupName" : "...",
                               "summary" : [
@@ -145,11 +165,12 @@ class SimbisController extends GetxController {
                           }
                       ]
 
-                      BALAS HANYA JSON SAJA!.
+                      BALAS HANYA JSON SAJA!. JIKA ADA 2 DATA KELOMPOK YANG SAMA TETAP DIBEDAKAN KARENA ADA PERBEDAAN HARGA JUAL.
                   ''',
           }
         ]
       };
+
       Dio dio = Dio();
       final response = await dio.post(
         "https://api.openai.com/v1/chat/completions",
@@ -166,30 +187,42 @@ class SimbisController extends GetxController {
       resultSimbis.value = dataJSON.map((e) {
         return ResultSimbisM.fromJson(e);
       }).toList();
-      resultSimbis.sort((a, b) => a.groupName.compareTo(b.groupName));
+
+      await updateData(distributes.map((e) => e.toJson()).toList(),
+          resultSimbis.map((e) => e.toJson()).toList());
+
+      for (var item in distributes) {
+        await firestore
+            .collection("distribution")
+            .doc(item.distributeId)
+            .update(item.toJson());
+      }
+      await getDistribute();
+
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
+      log(e.toString());
       AppDialog.dialogSnackbar("Failed generate simbis : $e");
     }
   }
 
-  List<ResultSimbisM> isUsingSimbis() {
+  List<DistributeM> isUsingSimbis() {
     if (isSearched.value) {
-      return resultSimbisSearch;
+      return distributesSearch;
     }
-    return resultSimbis;
+    return distributes;
   }
 
   int isTotalPage() {
     if (isSearched.value) {
-      return (resultSimbisSearch.length / dataPerPage.value).ceil() == 0
+      return (distributesSearch.length / dataPerPage.value).ceil() == 0
           ? 1
-          : (resultSimbisSearch.length / dataPerPage.value).ceil();
+          : (distributesSearch.length / dataPerPage.value).ceil();
     }
-    return (resultSimbis.length / dataPerPage.value).ceil() == 0
+    return (distributes.length / dataPerPage.value).ceil() == 0
         ? 1
-        : (resultSimbis.length / dataPerPage.value).ceil();
+        : (distributes.length / dataPerPage.value).ceil();
   }
 
   void onChangepage(int newValue) {
@@ -198,21 +231,54 @@ class SimbisController extends GetxController {
 
   void onSearched(String query) {
     double pageTemp = 0;
-    List<ResultSimbisM> simbisTemp = [];
+    List<DistributeM> simbisTemp = [];
     if (query.isEmpty) {
       isSearched.value = false;
       simbisTemp.clear();
-      resultSimbisSearch.clear();
+      distributesSearch.clear();
     } else {
       isSearched.value = true;
-      simbisTemp = resultSimbis
+      simbisTemp = distributes
           .where((e) => e.groupName.toLowerCase().contains(query.toLowerCase()))
           .toList();
       for (int i = 0; i < simbisTemp.length; i++) {
         pageTemp = (i + 1) / dataPerPage.value;
         simbisTemp[i] = simbisTemp[i].copyWith(page: pageTemp.ceil());
       }
-      resultSimbisSearch.value = simbisTemp;
+      distributesSearch.value = simbisTemp;
     }
+  }
+
+  Future updateData(List<Map<String, dynamic>> baseData,
+      List<Map<String, dynamic>> generatedData) async {
+    for (var base in baseData) {
+      String distributeId = base['distributeId'];
+      var matchingGenerated = generatedData.firstWhere(
+        (gen) => gen['distributeId'] == distributeId,
+      );
+
+      for (var baseArea in base['areas']) {
+        String areaId = baseArea['areaId'];
+        var matchingArea = matchingGenerated['summary'].firstWhere(
+          (area) => area['areaId'] == areaId,
+        );
+
+        if (matchingArea != null) {
+          for (var baseProduct in baseArea['products']) {
+            String productId = baseProduct['productId'];
+            var matchingProduct = matchingArea['products'].firstWhere(
+              (product) => product['productId'] == productId,
+            );
+
+            if (matchingProduct != null) {
+              // Add sold and profit to base product
+              baseProduct['sold'] = matchingProduct['sold'];
+              baseProduct['profit'] = matchingProduct['profit'];
+            }
+          }
+        }
+      }
+    }
+    distributes.value = baseData.map((e) => DistributeM.fromJson(e)).toList();
   }
 }

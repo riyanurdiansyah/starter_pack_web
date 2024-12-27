@@ -15,12 +15,14 @@ class DistributeM {
   final String groupId;
   final String groupName;
   final List<AreaM> areas;
+  final int page;
 
   DistributeM({
     required this.distributeId,
     required this.groupId,
     required this.groupName,
     required this.areas,
+    required this.page,
   });
 
   DistributeM copyWith({
@@ -28,12 +30,14 @@ class DistributeM {
     String? groupId,
     String? groupName,
     List<AreaM>? areas,
+    int? page,
   }) =>
       DistributeM(
         distributeId: distributeId ?? this.distributeId,
         groupId: groupId ?? this.groupId,
         groupName: groupName ?? this.groupName,
         areas: areas ?? this.areas,
+        page: page ?? this.page,
       );
 
   factory DistributeM.fromJson(Map<String, dynamic> json) => DistributeM(
@@ -41,12 +45,14 @@ class DistributeM {
         groupId: json["groupId"],
         groupName: json["groupName"] ?? "",
         areas: List<AreaM>.from(json["areas"].map((x) => AreaM.fromJson(x))),
+        page: json["page"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
         "distributeId": distributeId,
         "groupId": groupId,
         "groupName": groupName,
+        "page": page,
         "areas": List<dynamic>.from(areas.map((x) => x.toJson())),
       };
 }
@@ -90,27 +96,35 @@ class AreaM {
 class ProductDistributeM {
   final String productId;
   final String productName;
-  final int pricePerProduct;
+  final double pricePerProduct;
   final int qty;
+  final int sold;
+  final double profit;
 
   ProductDistributeM({
     required this.productId,
     required this.productName,
     required this.pricePerProduct,
     required this.qty,
+    required this.sold,
+    required this.profit,
   });
 
   ProductDistributeM copyWith({
     String? productId,
     String? productName,
-    int? pricePerProduct,
+    double? pricePerProduct,
     int? qty,
+    int? sold,
+    double? profit,
   }) =>
       ProductDistributeM(
         productId: productId ?? this.productId,
         productName: productName ?? this.productName,
         pricePerProduct: pricePerProduct ?? this.pricePerProduct,
         qty: qty ?? this.qty,
+        sold: sold ?? this.sold,
+        profit: profit ?? this.profit,
       );
 
   factory ProductDistributeM.fromJson(Map<String, dynamic> json) =>
@@ -119,6 +133,8 @@ class ProductDistributeM {
         productName: json["productName"],
         pricePerProduct: json["pricePerProduct"],
         qty: json["qty"],
+        sold: json["sold"] ?? 0,
+        profit: json["profit"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -126,5 +142,7 @@ class ProductDistributeM {
         "productName": productName,
         "pricePerProduct": pricePerProduct,
         "qty": qty,
+        "sold": sold,
+        "profit": profit,
       };
 }

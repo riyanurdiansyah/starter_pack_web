@@ -1,15 +1,21 @@
 class SimulationM {
+  String distributeId;
+  String groupId;
   String groupName;
   List<SimulationAreaM> productSell;
 
   SimulationM({
+    required this.distributeId,
     required this.groupName,
+    required this.groupId,
     required this.productSell,
   });
 
   Map<String, dynamic> toJson() {
     return {
+      'distributeId': distributeId,
       'groupName': groupName,
+      'groupId': groupId,
       'productSell': productSell.map((area) => area.toJson()).toList(),
     };
   }
@@ -39,7 +45,7 @@ class SimulationAreaM {
 class SimulationProductM {
   String productId;
   String productName;
-  int pricePerProduct;
+  double pricePerProduct;
   int qty;
 
   SimulationProductM({

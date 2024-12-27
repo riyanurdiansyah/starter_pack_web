@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/dashboard/controller/simbis_controller.dart';
-import 'package:starter_pack_web/utils/app_color.dart';
+import 'package:starter_pack_web/module/demography/model/distribute_m.dart';
+import 'package:starter_pack_web/utils/app_data_table.dart';
+import 'package:starter_pack_web/utils/app_extension.dart';
 
+import '../../../utils/app_color.dart';
+import '../../../utils/app_dialog.dart';
 import '../../../utils/app_text.dart';
 
 class SimbisPage extends StatelessWidget {
@@ -22,29 +26,185 @@ class SimbisPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Obx(
-                  () => Expanded(
-                    child: ListView.builder(
-                      itemCount: _c.resultSimbis.length,
-                      itemBuilder: (context, groupIndex) {
-                        final group = _c.resultSimbis[groupIndex];
-
-                        return ExpansionTile(
-                          title: Text(group.groupName),
-                          children: group.summary.map((area) {
-                            return ExpansionTile(
-                              title: Text(area.areaName),
-                              children: area.products.map((product) {
-                                return ListTile(
-                                  title: Text(product.productName),
-                                  subtitle: Text(
-                                    'Sold: ${product.sold} | Profit: ${product.profit}',
+                  () => Container(
+                    color: Colors.white,
+                    child: AppDataTableSimbis<DistributeM>(
+                      headers: const [
+                        "Group",
+                        "Jawa",
+                        "Kalimantan",
+                        "Sulawesi",
+                        "Sumatera",
+                      ],
+                      datas: _c.isUsingSimbis(),
+                      currentPage: _c.currentPage.value,
+                      totalPage: _c.isTotalPage(),
+                      onPageChanged: _c.onChangepage,
+                      onSearched: _c.onSearched,
+                      buildRow: (data) => Column(
+                        children: [
+                          Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 16),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 80,
+                                  child: FittedBox(
+                                    child: AppTextNormal.labelW500(
+                                      data.groupName,
+                                      16,
+                                      colorPrimaryDark,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                );
-                              }).toList(),
-                            );
-                          }).toList(),
-                        );
-                      },
+                                ),
+                                50.pw,
+                                Expanded(
+                                  flex: data.areas.length,
+                                  child: Row(
+                                    children:
+                                        List.generate(data.areas.length, (i) {
+                                      final areaData = data.areas[i];
+                                      return Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            AppTextNormal.labelBold(
+                                                "QTY", 10, Colors.black),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: List.generate(
+                                                  areaData.products.length,
+                                                  (j) {
+                                                final productData =
+                                                    areaData.products[j];
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 8),
+                                                  child:
+                                                      AppTextNormal.labelW500(
+                                                    "${productData.productName} : ${productData.qty}",
+                                                    11,
+                                                    colorPrimaryDark,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                            12.ph,
+                                            AppTextNormal.labelBold(
+                                                "SOLD", 10, Colors.black),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: List.generate(
+                                                  areaData.products.length,
+                                                  (j) {
+                                                final productData =
+                                                    areaData.products[j];
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 8),
+                                                  child:
+                                                      AppTextNormal.labelW500(
+                                                    "${productData.productName} : ${productData.sold}",
+                                                    11,
+                                                    colorPrimaryDark,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                            12.ph,
+                                            AppTextNormal.labelBold(
+                                                "PROFIT", 10, Colors.black),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: List.generate(
+                                                  areaData.products.length,
+                                                  (j) {
+                                                final productData =
+                                                    areaData.products[j];
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 8),
+                                                  child:
+                                                      AppTextNormal.labelW500(
+                                                    "${productData.productName} : ${productData.profit}",
+                                                    11,
+                                                    colorPrimaryDark,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 26,
+                                        height: 26,
+                                        padding: const EdgeInsets.all(2.5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {},
+                                          child: const Icon(
+                                            Icons.edit_rounded,
+                                            size: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      8.pw,
+                                      Container(
+                                        width: 26,
+                                        height: 26,
+                                        padding: const EdgeInsets.all(2.5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () => AppDialog.dialogDelete(
+                                              callback: () {}),
+                                          child: const Icon(
+                                            Icons.delete_rounded,
+                                            size: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 0.6,
+                            width: double.infinity,
+                            color: Colors.grey.shade400,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -55,33 +215,46 @@ class SimbisPage extends StatelessWidget {
             if (!_c.isLoading.value) {
               return const SizedBox();
             }
-            return Center(
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: colorPrimaryDark,
-                ),
-                child: const CircularProgressIndicator(
-                  color: Colors.white,
-                ),
+            return Container(
+              width: double.infinity,
+              height: size.height,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: colorPrimaryDark,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                        20.ph,
+                        AppTextNormal.labelBold(
+                          "Running Simulation Business...",
+                          14,
+                          Colors.white,
+                          letterSpacing: 1.6,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             );
           })
         ],
       ),
-      floatingActionButton: ElevatedButton(
+      floatingActionButton: FloatingActionButton.small(
         onPressed: _c.generateResult,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colorPrimaryDark,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-        child: AppTextNormal.labelW600(
-          "Generate",
-          16,
-          Colors.white,
+        backgroundColor: Colors.blue,
+        child: const Icon(
+          Icons.get_app_rounded,
+          color: Colors.white,
         ),
       ),
     );

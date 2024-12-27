@@ -11,6 +11,7 @@ class ProdukM {
   final int harga;
   final String image;
   final int qty;
+  final int qtyDistributed;
   final List<String> groups;
 
   ProdukM({
@@ -20,6 +21,7 @@ class ProdukM {
     required this.harga,
     required this.image,
     required this.qty,
+    required this.qtyDistributed,
     required this.groups,
   });
 
@@ -39,6 +41,7 @@ class ProdukM {
         harga: harga ?? this.harga,
         image: image ?? this.image,
         qty: qty ?? this.qty,
+        qtyDistributed: qtyDistributed ?? qtyDistributed,
         groups: groups ?? this.groups,
       );
 
@@ -49,6 +52,7 @@ class ProdukM {
         harga: json["harga"],
         image: json["image"],
         qty: json["qty"] ?? 0,
+        qtyDistributed: 0,
         groups: json["groups"] == null
             ? []
             : List<String>.from(json["groups"].map((x) => x)),
