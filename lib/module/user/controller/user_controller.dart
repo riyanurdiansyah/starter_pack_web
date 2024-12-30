@@ -161,7 +161,9 @@ class UserController extends GetxController {
           role: selectedRole.value.role,
           kelompok: selectedGroup.value.name,
           kelompokId: selectedGroup.value.groupId,
-          groupId: selectedGroup.value.id,
+          groupId: selectedGroup.value.id.isEmpty
+              ? user.groupId
+              : selectedGroup.value.id,
           page: 0,
           password: user.password,
         );
@@ -183,8 +185,9 @@ class UserController extends GetxController {
           groupId: selectedGroup.value.id,
         );
 
-        userCollection.doc(id).set(newUser.toJson());
+        await userCollection.doc(id).set(newUser.toJson());
       }
+      // log("${user?.toJson()}");
       getUsers();
       AppDialog.dialogSnackbar("Data has been saved");
 
@@ -215,6 +218,21 @@ class UserController extends GetxController {
       page: 0,
       pointBefore: 0,
       updatedDate: DateTime.now().toIso8601String(),
+    );
+
+    selectedGroup.value = GroupM(
+      alias: "",
+      country: "",
+      groupId: oldUser.kelompokId,
+      id: "",
+      image: "",
+      name: oldUser.kelompok,
+      point: 0,
+      page: 0,
+      pointBefore: 0,
+      updatedDate: "",
+      rank: 0,
+      rankOld: 0,
     );
     selectedRole.value = RoleM(
       id: "",

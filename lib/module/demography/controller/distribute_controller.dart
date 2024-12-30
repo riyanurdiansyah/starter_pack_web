@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +84,7 @@ class DistributeController extends GetxController {
     }).toList();
 
     totalDistributed.value = List.generate(productsOwn.length, (i) => 0);
+    log("CEK DATA : ${productsOwn.length}");
   }
 
   Future generateAccess() async {

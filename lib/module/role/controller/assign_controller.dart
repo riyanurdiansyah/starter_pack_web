@@ -87,6 +87,7 @@ class AssignController extends GetxController {
     final listTemp = response.docs.map((e) {
       return RoleM.fromJson(e.data());
     }).toList();
+
     list.sort((a, b) => a.role.compareTo(b.role));
     list = listTemp
         .where((e) => e.roleId != 109 && e.roleId != 108 && e.roleId != 106)
