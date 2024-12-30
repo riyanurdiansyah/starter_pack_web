@@ -15,6 +15,7 @@ class ChallengePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
@@ -23,7 +24,7 @@ class ChallengePage extends StatelessWidget {
             children: [
               Obx(
                 () => Padding(
-                  padding: const EdgeInsets.only(top: 18.0, left: 35),
+                  padding: EdgeInsets.only(top: isMobile ? 35 : 18.0, left: 35),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     onEnter: (_) {
@@ -59,6 +60,59 @@ class ChallengePage extends StatelessWidget {
             if (_c.challenges.isEmpty) {
               return const SizedBox();
             }
+
+            if (isMobile) {
+              return Container(
+                  height: size.height / 1.2,
+                  alignment: Alignment.center,
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    children: List.generate(_c.challenges.length, (index) {
+                      return GestureDetector(
+                        onTap: () => _c.handleTap(index),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: _c.challenges[index].image,
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                  baseColor: Colors.grey,
+                                  highlightColor: Colors.yellow,
+                                  child: const SizedBox(
+                                    width: double.infinity,
+                                    height: 200.0,
+                                  ),
+                                ),
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 200,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                _c.challenges[index].name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: colorElectricViolet,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ));
+            }
+
             return Container(
               height: size.height / 1.1,
               alignment: Alignment.center,

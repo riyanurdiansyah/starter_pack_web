@@ -2392,79 +2392,92 @@ class __AppDialogContentState extends State<_AppDialogContent>
   @override
   Widget build(BuildContext context) {
     final size = widget.size;
+    final isMobile = size.width < 600;
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: size.width / 6),
+      insetPadding:
+          EdgeInsets.symmetric(horizontal: isMobile ? 20 : size.width / 6),
       child: ScaleTransition(
         scale: _animation,
         child: Container(
-          width: size.width / 3,
-          height: size.height / 1.5,
-          // color: Colors.white.withOpacity(0.6),
-          padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 50),
-          child: Form(
-            key: _c.formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                125.ph,
-                TextFormField(
-                  controller: _c.tcUsername,
-                  textInputAction: TextInputAction.next,
-                  decoration: textFieldAuthDecoration(
-                      fontSize: 14, hintText: "username", radius: 4),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (val) => AppValidator.requiredField(val!,
-                      errorMsg: "Username tidak boleh kosong"),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                TextFormField(
-                  obscureText: true,
-                  controller: _c.tcPassword,
-                  textInputAction: TextInputAction.go,
-                  onEditingComplete: () => _c.onLogin(),
-                  decoration: textFieldAuthDecoration(
-                      fontSize: 14, hintText: "Password", radius: 4),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (val) => AppValidator.requiredField(val!,
-                      errorMsg: "Password tidak boleh kosong"),
-                ),
-                Obx(() {
-                  if (_c.errorMessage.isEmpty) {
-                    return const SizedBox();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 18.0),
-                    child: AppTextNormal.labelNormal(
-                        _c.errorMessage.value, 14, Colors.red),
-                  );
-                }),
-                const SizedBox(
-                  height: 35,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 45,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shape: WidgetStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6)))),
-                      backgroundColor: WidgetStateProperty.all(colorPointRank),
+          height: size.height / 2.8,
+          width: isMobile ? size.width * 0.9 : size.width / 3,
+          padding: EdgeInsets.symmetric(
+            vertical: isMobile ? 20 : 35,
+            horizontal: isMobile ? 20 : 50,
+          ),
+          child: Center(
+            child: Form(
+              key: _c.formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: _c.tcUsername,
+                      textInputAction: TextInputAction.next,
+                      decoration: textFieldAuthDecoration(
+                          fontSize: isMobile ? 12 : 14,
+                          hintText: "username",
+                          radius: 4),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (val) => AppValidator.requiredField(val!,
+                          errorMsg: "Username tidak boleh kosong"),
                     ),
-                    onPressed: () => _c.onLogin(),
-                    child: AppTextNormal.labelBold(
-                      "SIGN IN",
-                      18,
-                      Colors.white,
+                    const SizedBox(
+                      height: 25,
                     ),
-                  ),
+                    TextFormField(
+                      obscureText: true,
+                      controller: _c.tcPassword,
+                      textInputAction: TextInputAction.go,
+                      onEditingComplete: () => _c.onLogin(),
+                      decoration: textFieldAuthDecoration(
+                          fontSize: isMobile ? 12 : 14,
+                          hintText: "Password",
+                          radius: 4),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (val) => AppValidator.requiredField(val!,
+                          errorMsg: "Password tidak boleh kosong"),
+                    ),
+                    Obx(() {
+                      if (_c.errorMessage.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 18.0),
+                        child: AppTextNormal.labelNormal(_c.errorMessage.value,
+                            isMobile ? 12 : 14, Colors.red),
+                      );
+                    }),
+                    const SizedBox(
+                      height: 35,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: isMobile ? 40 : 45,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: WidgetStateProperty.all(
+                              const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(6)))),
+                          backgroundColor:
+                              WidgetStateProperty.all(colorPointRank),
+                        ),
+                        onPressed: () => _c.onLogin(),
+                        child: AppTextNormal.labelBold(
+                          "SIGN IN",
+                          isMobile ? 16 : 18,
+                          Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

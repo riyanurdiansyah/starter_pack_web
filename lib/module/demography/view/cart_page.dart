@@ -44,17 +44,19 @@ class CartPage extends StatelessWidget {
       }
 
       return Scaffold(
+        backgroundColor: Colors.black,
         body: Stack(
           children: [
-            SizedBox(
-              width: double.infinity,
-              height: size.height,
-              child: Image.asset(
-                bgProd,
-                filterQuality: FilterQuality.high,
-                fit: BoxFit.fill,
+            if (!_c.isDone.value)
+              SizedBox(
+                width: double.infinity,
+                height: size.height,
+                child: Image.asset(
+                  bgProd,
+                  filterQuality: FilterQuality.high,
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -162,12 +164,131 @@ class CartPage extends StatelessWidget {
                   Expanded(
                     child: Obx(() {
                       if (_c.isDone.value) {
-                        return Center(
-                          child: AppTextNormal.labelBold(
-                            "You have already created the product.",
-                            26,
-                            Colors.blueAccent,
-                          ),
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AppTextNormal.labelBold(
+                              "You have already created ${_c.productsOwn.length} product.",
+                              25,
+                              Colors.white,
+                              letterSpacing: 2.5,
+                              shadows: [
+                                const Shadow(
+                                  offset: Offset(
+                                      -1.5, -1.5), // Bayangan ke kiri atas
+                                  color: Colors.black,
+                                  blurRadius: 1.0,
+                                ),
+                                const Shadow(
+                                  offset: Offset(
+                                      1.5, -1.5), // Bayangan ke kanan atas
+                                  color: Colors.black,
+                                  blurRadius: 1.0,
+                                ),
+                                const Shadow(
+                                  offset: Offset(
+                                      1.5, 1.5), // Bayangan ke kanan bawah
+                                  color: Colors.black,
+                                  blurRadius: 1.0,
+                                ),
+                                const Shadow(
+                                  offset: Offset(
+                                      -1.5, 1.5), // Bayangan ke kiri bawah
+                                  color: Colors.black,
+                                  blurRadius: 1.0,
+                                ),
+                              ],
+                            ),
+                            100.ph,
+                            SingleChildScrollView(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(_c.productsOwn.length,
+                                    (index) {
+                                  final data = _c.productsOwn[index];
+                                  return Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 50),
+                                      child: FittedBox(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 200,
+                                              height: 225,
+                                              child: CachedNetworkImage(
+                                                imageUrl: data.image,
+                                                width: 200,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            18.ph,
+                                            AppTextNormal.labelBold(
+                                              "${data.nama}\n${data.tipe}",
+                                              18,
+                                              Colors.white,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 5,
+                                              letterSpacing: 2.5,
+                                              height: 1.5,
+                                              shadows: [
+                                                const Shadow(
+                                                  offset: Offset(-1.5,
+                                                      -1.5), // Bayangan ke kiri atas
+                                                  color: Colors.black,
+                                                  blurRadius: 1.0,
+                                                ),
+                                                const Shadow(
+                                                  offset: Offset(1.5,
+                                                      -1.5), // Bayangan ke kanan atas
+                                                  color: Colors.black,
+                                                  blurRadius: 1.0,
+                                                ),
+                                                const Shadow(
+                                                  offset: Offset(1.5,
+                                                      1.5), // Bayangan ke kanan bawah
+                                                  color: Colors.black,
+                                                  blurRadius: 1.0,
+                                                ),
+                                                const Shadow(
+                                                  offset: Offset(-1.5,
+                                                      1.5), // Bayangan ke kiri bawah
+                                                  color: Colors.black,
+                                                  blurRadius: 1.0,
+                                                ),
+                                              ],
+                                            ),
+                                            20.ph,
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 18),
+                                              alignment: Alignment.center,
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: AppTextNormal.labelBold(
+                                                data.qty.toString(),
+                                                20,
+                                                Colors.black,
+                                                letterSpacing: 2.5,
+                                              ),
+                                            ),
+                                            135.ph,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ],
                         );
                       }
 

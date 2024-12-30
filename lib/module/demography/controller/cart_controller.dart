@@ -13,6 +13,7 @@ import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_constanta.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:starter_pack_web/utils/app_sound.dart';
+import 'package:uuid/uuid.dart';
 
 class CartController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -56,9 +57,21 @@ class CartController extends GetxController {
       indexImg.value = verticalTranslateController.page?.round() ?? 0;
     });
     await setup();
+    await getLogProduction();
     await getProducts();
     await changeLoading(false);
     super.onInit();
+  }
+
+  Future getLogProduction() async {
+    final logAssign = await firestore
+        .collection("log")
+        .where("type", isEqualTo: "production")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+    if (logAssign.docs.isNotEmpty) {
+      isDone.value = true;
+    }
   }
 
   Future changeLoading(bool val) async {
@@ -92,6 +105,7 @@ class CartController extends GetxController {
   }
 
   Future saveProduct() async {
+    var id = const Uuid().v4();
     bool isUpdate = false;
     navigatorKey.currentContext!.pop();
     AppSound.playButton();
@@ -126,9 +140,17 @@ class CartController extends GetxController {
               products.fold(
                   0, (total, product) => total + (product.qty * product.harga)),
         });
+
+        await firestore.collection("log").doc(id).set({
+          "logId": id,
+          "groupId": userSession.value.groupId,
+          "type": "production",
+          "createdAt": DateTime.now().toIso8601String(),
+        });
       },
     ).then((_) {
       getProducts();
+      getLogProduction();
       AppDialog.dialogSnackbar("Data has been saved");
     }).catchError((e) {
       AppDialog.dialogSnackbar("Error while creating : $e");

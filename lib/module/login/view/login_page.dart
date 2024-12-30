@@ -24,10 +24,7 @@ class LoginPage extends StatelessWidget {
             color: Colors.black,
             width: double.infinity,
             height: size.height,
-            child: Container(
-              width: 250,
-              height: 150,
-              alignment: Alignment.center,
+            child: Center(
               child: Image.asset(
                 loadingGif,
                 fit: BoxFit.cover,
@@ -37,86 +34,64 @@ class LoginPage extends StatelessWidget {
             ),
           );
         }
-        return Stack(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: size.height,
-              child: Image.network(
-                gbSigninGif,
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.high,
-              ),
-            ),
-            Positioned(
-              top: 10,
-              child: Image.asset(
-                textImage,
-                width: size.width / 2.25,
-              ),
-            ),
-            // Positioned(
-            //   top: 200,
-            //   left: 40,
-            //   child: Stack(
-            //     children: [
-            //       ElevatedButton(
-            //         onPressed: () {},
-            //         style: ElevatedButton.styleFrom(
-            //             backgroundColor: colorElectricViolet,
-            //             shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(10),
-            //             )),
-            //         child: Padding(
-            //           padding: const EdgeInsets.symmetric(
-            //               vertical: 16, horizontal: 16),
-            //           child: AppTextNormal.labelNormal(
-            //             "Let's Play The Game!",
-            //             18,
-            //             Colors.white,
-            //             wordSpacing: 10,
-            //             letterSpacing: 6,
-            //           ),
-            //         ),
-            //       ),
-            //       Shimmer.fromColors(
-            //         baseColor: Colors.red,
-            //         highlightColor: Colors.white,
-            //         child: const SizedBox(
-            //           width: 100,
-            //           height: 50,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Positioned(
-                bottom: 50.0,
-                left: 0.0,
-                right: 0.0,
-                child: Center(
-                  child: Opacity(
-                    opacity: 0.8,
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.white,
-                      highlightColor: colorElectricViolet,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () => AppDialog.dialogSignin(),
-                            child: AppTextNormal.labelNormal(
-                              "Let's Play The Game!",
-                              45,
-                              colorElectricViolet,
-                            ),
-                          )
-                        ],
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 600;
+
+            return Stack(
+              children: [
+                Container(
+                  color: Colors.black,
+                  width: double.infinity,
+                  height: size.height,
+                  child: Image.asset(
+                    isMobile ? bgLoginPotrait : bgLogin,
+                    fit: isMobile ? BoxFit.fitWidth : BoxFit.cover,
+                    filterQuality: FilterQuality.high,
+                  ),
+                ),
+                Positioned(
+                  top: isMobile ? 40 : 10,
+                  left: isMobile ? 10 : null,
+                  right: isMobile ? 10 : null,
+                  child: Center(
+                    child: Image.asset(
+                      textImage,
+                      width: isMobile ? size.width * 0.8 : size.width / 2.25,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: isMobile ? 30.0 : 50.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: Center(
+                    child: Opacity(
+                      opacity: 0.8,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.white,
+                        highlightColor: colorElectricViolet,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () => AppDialog.dialogSignin(),
+                              child: AppTextNormal.labelNormal(
+                                "Let's Play The Game!",
+                                isMobile ? 30 : 45,
+                                colorElectricViolet,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                )),
-          ],
+                ),
+              ],
+            );
+          },
         );
       }),
     );

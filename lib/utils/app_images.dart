@@ -31,6 +31,9 @@ const bgRole = "assets/images/bg_role.png";
 const bgProd = "assets/images/bg_prod.png";
 const bgProdName = "assets/images/bg_prod_name.png";
 
+const bgLogin = "assets/images/bg_login.png";
+const bgLoginPotrait = "assets/images/bg_login_potrait.png";
+
 const gbSigninGif =
     "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";
 

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:starter_pack_web/module/rnd/model/config_simbis_m.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,7 +14,9 @@ import '../../demography/model/produk_m.dart';
 import '../../user/model/user_m.dart';
 
 class RndController extends GetxController {
+  final RxList<ConfigSimbs> configSimbis = <ConfigSimbs>[].obs;
   final RxList<ProdukM> products = <ProdukM>[].obs;
+  final RxList<ProdukM> productsOwn = <ProdukM>[].obs;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   late SharedPreferences pref;
@@ -86,6 +89,11 @@ class RndController extends GetxController {
     if (user != null) {
       userSession.value = UserM.fromJson(json.decode(user));
     }
+
+    final response = await firestore.collection("simbis").get();
+    configSimbis.value = response.docs.map((e) {
+      return ConfigSimbs.fromJson(e.data());
+    }).toList();
   }
 
   Future getProducts() async {
@@ -94,6 +102,10 @@ class RndController extends GetxController {
       return ProdukM.fromJson(e.data());
     }).toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
+
+    productsOwn.value = products.where((produk) {
+      return produk.groups.contains(userSession.value.groupId);
+    }).toList();
   }
 
   void onCheckProduct(String id) async {
@@ -131,10 +143,16 @@ class RndController extends GetxController {
           // Lakukan update dalam transaksi
           transaction.update(docRef, itemJson);
         }
+        final filteredCase = configSimbis.firstWhereOrNull((item) {
+          return DateTime.now().isAfter(DateTime.parse(item.start)) &&
+              DateTime.now().isBefore(DateTime.parse(item.end));
+        });
+
         await firestore.collection("log").doc(id).set({
           "logId": id,
           "groupId": userSession.value.groupId,
           "type": "rnd",
+          "week": filteredCase?.name ?? "",
           "createdAt": DateTime.now().toIso8601String(),
         });
       });
