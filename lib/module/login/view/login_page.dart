@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -45,8 +46,8 @@ class LoginPage extends StatelessWidget {
                   color: Colors.black,
                   width: double.infinity,
                   height: size.height,
-                  child: Image.asset(
-                    isMobile ? bgLoginPotrait : bgLogin,
+                  child: CachedNetworkImage(
+                    imageUrl: gbSigninGif,
                     fit: isMobile ? BoxFit.fitWidth : BoxFit.cover,
                     filterQuality: FilterQuality.high,
                   ),
