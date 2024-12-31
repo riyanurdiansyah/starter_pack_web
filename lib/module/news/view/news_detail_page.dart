@@ -94,22 +94,11 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                                     child: AnimatedTextKit(
                                       repeatForever: false,
                                       isRepeatingAnimation: false,
-                                      onFinished: () {
-                                        // Optional: Add behavior after animation finishes
-                                      },
-                                      onNext: (int charIndex, bool isLast) {
-                                        // Calculate the height to scroll based on charIndex
-                                        double targetPosition = charIndex *
-                                            20.0; // Adjust based on font size
-                                        if (targetPosition >
-                                            _c.currentOffset.value) {
-                                          _c.scrollToAnimatedText(
-                                              targetPosition);
-                                        }
-                                      },
+                                      onFinished: () {},
                                       animatedTexts: [
                                         TypewriterAnimatedText(
-                                          _c.news.value.content,
+                                          _c.removeHtmlTags(_c.news.value
+                                              .content), // Teks biasa tanpa tag HTML
                                           textStyle: const TextStyle(
                                             color: Colors.white,
                                             fontFamily: "Race",

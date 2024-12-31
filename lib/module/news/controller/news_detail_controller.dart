@@ -63,4 +63,9 @@ class NewsDetailController extends GetxController {
       curve: Curves.easeInOut,
     );
   }
+
+  String removeHtmlTags(String html) {
+    final regExp = RegExp(r'<[^>]*>');
+    return html.replaceAll(regExp, ''); // Menghapus semua tag HTML
+  }
 }

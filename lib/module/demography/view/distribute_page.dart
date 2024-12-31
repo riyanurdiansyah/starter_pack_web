@@ -364,10 +364,19 @@ class DistributePage extends StatelessWidget {
                       children: List.generate(_c.demographys.length, (index) {
                         final data = _c.demographys[index];
                         return ExpansionTile(
-                          title: AppTextNormal.labelBold(
-                            data.name,
-                            16,
-                            Colors.black,
+                          title: Row(
+                            children: [
+                              AppTextNormal.labelBold(
+                                "${data.name} ",
+                                16,
+                                Colors.black,
+                              ),
+                              AppTextNormal.labelBold(
+                                "  -  Cost: ${data.cost}/item",
+                                12,
+                                Colors.grey.shade600,
+                              ),
+                            ],
                           ),
                           children:
                               List.generate(_c.productsOwn.length, (subindex) {
@@ -391,12 +400,12 @@ class DistributePage extends StatelessWidget {
                                           16,
                                           Colors.black,
                                         ),
-                                        const Spacer(),
-                                        AppTextNormal.labelBold(
-                                          "Stok : ${prod.qty}",
-                                          16,
-                                          Colors.grey.shade600,
-                                        ),
+                                        // const Spacer(),
+                                        // AppTextNormal.labelBold(
+                                        //   "Stok : ${prod.qty}",
+                                        //   16,
+                                        //   Colors.grey.shade600,
+                                        // ),
                                         20.pw,
                                       ],
                                     ),
@@ -404,201 +413,95 @@ class DistributePage extends StatelessWidget {
                                   Expanded(
                                     child: Row(
                                       children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              AppTextNormal.labelBold(
-                                                "Price R\$ ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.minPrice ?? 0} - ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.maxPrice ?? 0}",
-                                                12.5,
-                                                Colors.black,
-                                                letterSpacing: 1.25,
-                                              ),
-                                              16.ph,
-                                              TextFormField(
-                                                controller: _c.accessList[index]
-                                                        ["controller_price"]
-                                                    [subindex],
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                decoration:
-                                                    textFieldAuthDecoration(
-                                                        fontSize: 14,
-                                                        hintText: "",
-                                                        radius: 4),
-                                                onChanged: (value) {
-                                                  // Replace ',' with '.' and remove multiple ',' or '.'
-                                                  String updatedValue = value
-                                                      .replaceAll(',', '.');
-                                                  if (RegExp(r'\..*\.')
-                                                      .hasMatch(updatedValue)) {
-                                                    updatedValue = updatedValue
-                                                        .replaceFirst(
-                                                            RegExp(
-                                                                r'\.(?![^.]*$)'),
-                                                            '');
-                                                  }
-                                                  if (updatedValue != value) {
-                                                    _c.accessList[index][
-                                                                "controller_price"]
-                                                            [subindex] =
-                                                        TextEditingValue(
-                                                      text: updatedValue,
-                                                      selection: TextSelection
-                                                          .collapsed(
-                                                              offset:
-                                                                  updatedValue
-                                                                      .length),
-                                                    );
-                                                  }
-                                                },
-                                                validator: (val) {
-                                                  if (val != null &&
-                                                      val.isNotEmpty) {
-                                                    var dig = val.replaceAll(
-                                                        ",", ".");
-                                                    double? number =
-                                                        double.tryParse(dig);
-                                                    if (number == null ||
-                                                        number <
-                                                            (data.details
-                                                                    .firstWhereOrNull((e) =>
-                                                                        e.productId ==
-                                                                        prod.id)
-                                                                    ?.minPrice ??
-                                                                0) ||
-                                                        number >
-                                                            (data.details
-                                                                    .firstWhereOrNull((e) =>
-                                                                        e.productId ==
-                                                                        prod.id)
-                                                                    ?.maxPrice ??
-                                                                0)) {
-                                                      return "Price must be between R\$ ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.minPrice ?? 0} - R\$ ${data.details.firstWhereOrNull((e) => e.productId == prod.id)?.maxPrice ?? 0}";
-                                                    }
-                                                  }
-                                                  return null;
-                                                },
-                                                autovalidateMode:
-                                                    AutovalidateMode
-                                                        .onUserInteraction,
-                                              ),
-                                            ],
+                                        16.pw,
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            _c.decrementQuantity(
+                                                index, subindex);
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          child: AppTextNormal.labelBold(
+                                            "-",
+                                            16,
+                                            Colors.grey.shade600,
                                           ),
                                         ),
-                                        const Expanded(
-                                          child: SizedBox(),
+                                        16.pw,
+                                        Expanded(
+                                          child: TextFormField(
+                                            controller: _c.accessList[index]
+                                                ["controller"][subindex],
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            decoration: textFieldAuthDecoration(
+                                                fontSize: 14,
+                                                hintText: "",
+                                                radius: 4),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
+                                            // readOnly: true,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            // onChanged: (value) {
+                                            //   int? newQty = int.tryParse(value);
+                                            //   if (newQty != null) {
+                                            //     if (_c.productsOwn[subindex].qty <
+                                            //         newQty) {
+                                            //       final updatedText =
+                                            //           value.substring(
+                                            //               0, value.length - 1);
+                                            //       (_c.accessList[index]
+                                            //                       ["controller"]
+                                            //                   [subindex]
+                                            //               as TextEditingController)
+                                            //           .text = updatedText;
+                                            //       AppDialog.dialogSnackbar(
+                                            //           "${_c.productsOwn[subindex].nama} is out of Stock");
+                                            //     } else {
+                                            //       _c.productsOwn[subindex] = _c
+                                            //           .productsOwn[subindex]
+                                            //           .copyWith(
+                                            //         qty: _c.productsOwn[subindex]
+                                            //                 .qty -
+                                            //             newQty,
+                                            //       );
+                                            //     }
+                                            //   } else {
+                                            //     _c.productsOwn[subindex] = _c
+                                            //         .productsOwn[subindex]
+                                            //         .copyWith(
+                                            //       qty: _c.productsOwn[subindex].qty,
+                                            //     );
+                                            //   }
+                                            // },
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        AppTextNormal.labelW600(
-                                          "TOTAL : ${_c.totalDistributed.value}",
-                                          12.5,
-                                          Colors.black,
+                                        16.pw,
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            _c.incrementQuantity(
+                                                index, subindex);
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          child: AppTextNormal.labelBold(
+                                            "+",
+                                            16,
+                                            Colors.grey.shade600,
+                                          ),
                                         ),
-                                        16.ph,
-                                        Row(
-                                          children: [
-                                            16.pw,
-                                            OutlinedButton(
-                                              onPressed: () {
-                                                _c.decrementQuantity(
-                                                    index, subindex);
-                                              },
-                                              style: OutlinedButton.styleFrom(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                ),
-                                              ),
-                                              child: AppTextNormal.labelBold(
-                                                "-",
-                                                16,
-                                                Colors.grey.shade600,
-                                              ),
-                                            ),
-                                            16.pw,
-                                            Expanded(
-                                              child: TextFormField(
-                                                controller: _c.accessList[index]
-                                                    ["controller"][subindex],
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                decoration:
-                                                    textFieldAuthDecoration(
-                                                        fontSize: 14,
-                                                        hintText: "",
-                                                        radius: 4),
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .digitsOnly,
-                                                ],
-                                                readOnly: true,
-                                                autovalidateMode:
-                                                    AutovalidateMode
-                                                        .onUserInteraction,
-                                                // onChanged: (value) {
-                                                //   int? newQty = int.tryParse(value);
-                                                //   if (newQty != null) {
-                                                //     if (_c.productsOwn[subindex].qty <
-                                                //         newQty) {
-                                                //       final updatedText =
-                                                //           value.substring(
-                                                //               0, value.length - 1);
-                                                //       (_c.accessList[index]
-                                                //                       ["controller"]
-                                                //                   [subindex]
-                                                //               as TextEditingController)
-                                                //           .text = updatedText;
-                                                //       AppDialog.dialogSnackbar(
-                                                //           "${_c.productsOwn[subindex].nama} is out of Stock");
-                                                //     } else {
-                                                //       _c.productsOwn[subindex] = _c
-                                                //           .productsOwn[subindex]
-                                                //           .copyWith(
-                                                //         qty: _c.productsOwn[subindex]
-                                                //                 .qty -
-                                                //             newQty,
-                                                //       );
-                                                //     }
-                                                //   } else {
-                                                //     _c.productsOwn[subindex] = _c
-                                                //         .productsOwn[subindex]
-                                                //         .copyWith(
-                                                //       qty: _c.productsOwn[subindex].qty,
-                                                //     );
-                                                //   }
-                                                // },
-                                              ),
-                                            ),
-                                            16.pw,
-                                            OutlinedButton(
-                                              onPressed: () {
-                                                _c.incrementQuantity(
-                                                    index, subindex);
-                                              },
-                                              style: OutlinedButton.styleFrom(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                ),
-                                              ),
-                                              child: AppTextNormal.labelBold(
-                                                "+",
-                                                16,
-                                                Colors.grey.shade600,
-                                              ),
-                                            ),
-                                            16.pw,
-                                          ],
-                                        ),
+                                        16.pw,
                                       ],
                                     ),
                                   ),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/news/controller/news_controller.dart';
+import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
@@ -34,7 +35,7 @@ class NewsPage extends StatelessWidget {
                         .goNamed(AppRouteName.newsDetail, pathParameters: {
                       "id": _c.news[0].id,
                     }),
-                    hoverColor: Colors.grey.shade200,
+                    hoverColor: colorPrimaryDark,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 14),
@@ -45,7 +46,7 @@ class NewsPage extends StatelessWidget {
                             imageUrl: _c.news[0].image,
                             height: size.height / 1.25,
                             width: double.infinity,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           ),
                           16.ph,
                           AppTextNormal.labelBold(
@@ -97,7 +98,7 @@ class NewsPage extends StatelessWidget {
                                   pathParameters: {
                                     "id": _c.news[index].id,
                                   }),
-                              hoverColor: Colors.black45,
+                              hoverColor: colorPrimaryDark,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
