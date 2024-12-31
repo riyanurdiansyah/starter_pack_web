@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/home/controller/home_controller.dart';
-import 'package:starter_pack_web/module/home/view/widget/individu_page.dart';
-import 'package:starter_pack_web/utils/app_color.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
+import '../../../utils/app_color.dart';
 import '../../../utils/app_images.dart';
+import 'widget/individu_page.dart';
 import 'widget/team_page.dart';
 
 class CustomClipRank extends CustomClipper<Path> {
@@ -56,97 +56,15 @@ class HomePage extends StatelessWidget {
       }
       return Scaffold(
         backgroundColor: Colors.black.withOpacity(0.8),
-        body: Stack(
+        body: Row(
           children: [
-            Container(
-              alignment: Alignment.topCenter,
-              width: size.width,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      20.ph,
-                      Obx(
-                        () => Container(
-                          margin: const EdgeInsets.only(left: 50),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          width: size.width / 1.6,
-                          height: 40,
-                          color: colorElectricViolet,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 50,
-                                child: AppTextNormal.labelBold(
-                                  "RANK",
-                                  14,
-                                  Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 100,
-                                child: AppTextNormal.labelBold(
-                                  "",
-                                  14,
-                                  Colors.white,
-                                ),
-                              ),
-                              if (_c.indexTab.value == 0)
-                                SizedBox(
-                                  width: 80,
-                                  child: AppTextNormal.labelBold(
-                                    "",
-                                    14,
-                                    Colors.white,
-                                  ),
-                                ),
-                              Expanded(
-                                flex: 2,
-                                child: AppTextNormal.labelBold(
-                                  _c.indexTab.value == 0 ? "TEAM" : "NAME",
-                                  14,
-                                  Colors.white,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: AppTextNormal.labelBold(
-                                  "RESULT",
-                                  14,
-                                  Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 70,
-                                child: AppTextNormal.labelBold(
-                                  "PROFIT",
-                                  14,
-                                  Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      20.ph,
-                      Obx(() {
-                        if (_c.indexTab.value == 0) {
-                          return TeamPage();
-                        }
-
-                        return IndividuPage();
-                      })
-                    ],
-                  ),
-                ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 250,
               ),
             ),
-            Positioned(
-              left: 180,
-              top: 0,
-              bottom: 0,
+            Expanded(
               child: MouseRegion(
                 cursor: SystemMouseCursors.click,
                 onEnter: (_) {
@@ -176,37 +94,133 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              right: 180,
-              top: 0,
-              bottom: 0,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: (_) {
-                  // _c.isHovered.value = true;
-                },
-                onExit: (_) {
-                  // _c.isHovered.value = false;
-                },
-                child: Obx(
-                  () => SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: GestureDetector(
-                      onTap: _c.indexTab.value == 1
-                          ? null
-                          : () {
-                              _c.indexTab.value++;
-                            },
-                      child: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color:
-                            _c.indexTab.value == 1 ? Colors.grey : Colors.red,
-                        size: 35,
+            Expanded(
+              flex: 10,
+              child: Container(
+                alignment: Alignment.topCenter,
+                width: size.width,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        20.ph,
+                        Obx(
+                          () => Container(
+                            margin: const EdgeInsets.only(left: 50),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            width: size.width / 1.6,
+                            height: 40,
+                            color: colorElectricViolet,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 50,
+                                  child: AppTextNormal.labelBold(
+                                    "RANK",
+                                    14,
+                                    Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: AppTextNormal.labelBold(
+                                    "",
+                                    14,
+                                    Colors.white,
+                                  ),
+                                ),
+                                if (_c.indexTab.value == 0)
+                                  SizedBox(
+                                    width: 80,
+                                    child: AppTextNormal.labelBold(
+                                      "",
+                                      14,
+                                      Colors.white,
+                                    ),
+                                  ),
+                                Expanded(
+                                  flex: 2,
+                                  child: AppTextNormal.labelBold(
+                                    _c.indexTab.value == 0 ? "TEAM" : "NAME",
+                                    14,
+                                    Colors.white,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: AppTextNormal.labelBold(
+                                    "RESULT",
+                                    14,
+                                    Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 70,
+                                  child: AppTextNormal.labelBold(
+                                    "PROFIT",
+                                    14,
+                                    Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        20.ph,
+                        Obx(() {
+                          if (_c.indexTab.value == 0) {
+                            return TeamPage();
+                          }
+
+                          return IndividuPage();
+                        })
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Positioned(
+                right: 180,
+                top: 0,
+                bottom: 0,
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  onEnter: (_) {
+                    // _c.isHovered.value = true;
+                  },
+                  onExit: (_) {
+                    // _c.isHovered.value = false;
+                  },
+                  child: Obx(
+                    () => SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: GestureDetector(
+                        onTap: _c.indexTab.value == 1
+                            ? null
+                            : () {
+                                _c.indexTab.value++;
+                              },
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color:
+                              _c.indexTab.value == 1 ? Colors.grey : Colors.red,
+                          size: 35,
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 250,
               ),
             ),
           ],

@@ -379,6 +379,8 @@ class ChallengeQuizController extends GetxController {
   }
 
   void showBottomSheet(BuildContext context) {
+    final isMiniMobile = MediaQuery.sizeOf(context).width < 400;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     showModalBottomSheet(
       context: context,
       isDismissible: false,
@@ -407,11 +409,16 @@ class ChallengeQuizController extends GetxController {
                 ),
                 // Konten di atas
                 Padding(
-                  padding: const EdgeInsets.only(top: 300),
+                  padding: EdgeInsets.only(
+                      top: isMiniMobile
+                          ? 170
+                          : isMobile
+                              ? 250
+                              : 300),
                   child: Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(12),
-                    height: 150,
+                    height: 180,
                     margin: const EdgeInsets.only(top: 50),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.95),
@@ -427,6 +434,7 @@ class ChallengeQuizController extends GetxController {
                           letterSpacing: 2.5,
                           height: 1.8,
                         ),
+                        10.ph,
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [

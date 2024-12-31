@@ -117,7 +117,7 @@ class TeamPage extends StatelessWidget {
                                       children: [
                                         AppTextNormal.labelBold(
                                           data.alias.toUpperCase(),
-                                          14,
+                                          12.5,
                                           Colors.black,
                                           letterSpacing: 3.5,
                                         ),

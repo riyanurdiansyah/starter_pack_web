@@ -114,7 +114,7 @@ class ChallengePage extends StatelessWidget {
             }
 
             return Container(
-              height: size.height / 1.1,
+              height: size.height / 1.2,
               alignment: Alignment.center,
               child: Stack(
                 children: [
@@ -190,35 +190,39 @@ class ChallengePage extends StatelessWidget {
                                       Positioned(
                                         bottom: 0,
                                         child: Container(
+                                          width: 180,
                                           margin: const EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 20),
-                                          child: Text(
-                                            _c.challenges[displayIndex].name,
-                                            style: TextStyle(
-                                              fontFamily: "Race",
-                                              fontSize: 26,
-                                              color: _c.isHoveredList[
-                                                          displayIndex] &&
-                                                      DateTime.parse(_c
-                                                              .challenges[index]
-                                                              .start)
-                                                          .isBefore(
-                                                              DateTime.now())
-                                                  ? colorElectricViolet
-                                                  : Colors.grey,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 4,
-                                              shadows: !_c.isHoveredList[
-                                                      displayIndex]
-                                                  ? null
-                                                  : [
-                                                      const Shadow(
-                                                        offset:
-                                                            Offset(2.0, 2.0),
-                                                        blurRadius: 1.0,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ],
+                                          child: FittedBox(
+                                            child: Text(
+                                              _c.challenges[displayIndex].name,
+                                              style: TextStyle(
+                                                fontFamily: "Race",
+                                                fontSize: 26,
+                                                color: _c.isHoveredList[
+                                                            displayIndex] &&
+                                                        DateTime.parse(_c
+                                                                .challenges[
+                                                                    index]
+                                                                .start)
+                                                            .isBefore(
+                                                                DateTime.now())
+                                                    ? colorElectricViolet
+                                                    : Colors.grey,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 4,
+                                                shadows: !_c.isHoveredList[
+                                                        displayIndex]
+                                                    ? null
+                                                    : [
+                                                        const Shadow(
+                                                          offset:
+                                                              Offset(2.0, 2.0),
+                                                          blurRadius: 1.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
+                                              ),
                                             ),
                                           ),
                                         ),
