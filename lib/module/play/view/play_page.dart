@@ -96,8 +96,8 @@ class PlayPage extends StatelessWidget {
                     child: Obx(
                       () => Container(
                         margin: const EdgeInsets.only(top: 100, right: 75),
-                        padding: const EdgeInsets.only(left: 55, right: 80),
-                        width: size.width / 2,
+                        padding: const EdgeInsets.only(left: 0, right: 100),
+                        width: size.width / 3,
                         height: size.height / 1.6,
                         child: SingleChildScrollView(
                           child: Column(
@@ -263,9 +263,9 @@ class _HoverTextItemState extends State<HoverTextItem> {
             duration: const Duration(milliseconds: 300),
             style: TextStyle(
               fontFamily: 'Race',
-              fontSize: isHovered ? 45 : 35, // Ukuran font berubah saat hover
+              fontSize: isHovered ? 35 : 28, // Ukuran font berubah saat hover
               height: 2.5,
-              letterSpacing: 10,
+              letterSpacing: 8,
               fontStyle: FontStyle.italic,
               color: isHovered ? colorPointRank : Colors.white,
             ),
