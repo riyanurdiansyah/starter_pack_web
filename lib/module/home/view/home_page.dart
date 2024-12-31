@@ -183,34 +183,29 @@ class HomePage extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Positioned(
-                right: 180,
-                top: 0,
-                bottom: 0,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  onEnter: (_) {
-                    // _c.isHovered.value = true;
-                  },
-                  onExit: (_) {
-                    // _c.isHovered.value = false;
-                  },
-                  child: Obx(
-                    () => SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: GestureDetector(
-                        onTap: _c.indexTab.value == 1
-                            ? null
-                            : () {
-                                _c.indexTab.value++;
-                              },
-                        child: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color:
-                              _c.indexTab.value == 1 ? Colors.grey : Colors.red,
-                          size: 35,
-                        ),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: (_) {
+                  // _c.isHovered.value = true;
+                },
+                onExit: (_) {
+                  // _c.isHovered.value = false;
+                },
+                child: Obx(
+                  () => SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: GestureDetector(
+                      onTap: _c.indexTab.value == 1
+                          ? null
+                          : () {
+                              _c.indexTab.value++;
+                            },
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color:
+                            _c.indexTab.value == 1 ? Colors.grey : Colors.red,
+                        size: 35,
                       ),
                     ),
                   ),
