@@ -46,28 +46,181 @@ class ChallengeQuizPage extends StatelessWidget {
           }
           if (DateTime.now()
               .isBefore(DateTime.parse(_c.challenge.value.start))) {
-            return Container(
-              width: double.infinity,
-              color: Colors.amber,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppTextNormal.labelBold(
-                    "COMING SOON",
-                    50,
-                    Colors.black,
-                    letterSpacing: 18,
-                  ),
-                  14.ph,
-                  AppTextNormal.labelW600(
-                    "The challenge will start in...",
-                    36,
-                    Colors.black,
-                    letterSpacing: 8,
-                  ),
-                  50.ph,
-                  _c.formatDuration(),
-                ],
+            int days = _c.remainingTime.value.inDays; // Hitung jumlah hari
+            int hours =
+                _c.remainingTime.value.inHours % 24; // Sisa jam setelah hari
+            int minutes = _c.remainingTime.value.inMinutes % 60; // Sisa menit
+            int seconds = _c.remainingTime.value.inSeconds % 60; // Sisa detik
+            return Center(
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                color: Colors.amber,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppTextNormal.labelBold(
+                      "COMING SOON",
+                      50,
+                      Colors.black,
+                      letterSpacing: 18,
+                    ),
+                    14.ph,
+                    AppTextNormal.labelW600(
+                      "The challenge will start in...",
+                      36,
+                      Colors.black,
+                      letterSpacing: 8,
+                    ),
+                    50.ph,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (!isMobile)
+                          const Expanded(
+                            flex: 4,
+                            child: SizedBox(),
+                          ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  days.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Days",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        16.pw,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  hours.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Hours",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        16.pw,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  minutes.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Minutes",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        16.pw,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  seconds.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Seconds",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (!isMobile)
+                          const Expanded(
+                            flex: 4,
+                            child: SizedBox(),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           }
@@ -83,6 +236,34 @@ class ChallengeQuizPage extends StatelessWidget {
                     "The time to complete the challenge has run out",
                     20,
                     Colors.white,
+                    textAlign: TextAlign.center,
+                  ),
+                  45.ph,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () => context.pop(),
+                        style: ButtonStyle(
+                          side: WidgetStateProperty.all(
+                            BorderSide(
+                              color: Colors.grey.shade200,
+                            ), // Ganti warna dan lebar sesuai kebutuhan
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  16), // Custom border radius
+                            ),
+                          ),
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "Back",
+                          14,
+                          Colors.grey.shade200,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -291,7 +472,7 @@ class ChallengeQuizPage extends StatelessWidget {
                           height: 150,
                           child: AppTextNormal.labelBold(
                             _c.multipleChoices[_c.indexNow.value].question,
-                            25,
+                            isMobile ? 18 : 25,
                             Colors.white,
                             letterSpacing: 2.5,
                             textAlign: TextAlign.center,
@@ -368,9 +549,11 @@ class ChallengeQuizPage extends StatelessWidget {
                                               },
                                         child: Container(
                                           width: double.infinity,
-                                          margin: const EdgeInsets.all(12),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 18, vertical: 18),
+                                          margin:
+                                              EdgeInsets.all(isMobile ? 8 : 12),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: isMobile ? 8 : 18,
+                                              vertical: isMobile ? 10 : 18),
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(6),

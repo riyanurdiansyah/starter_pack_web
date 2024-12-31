@@ -16,6 +16,7 @@ class AssignController extends GetxController {
   final Rx<UserM> user = userEmpty.obs;
 
   final RxList<RoleM> roles = <RoleM>[].obs;
+  final RxList<String> userSelected = <String>[].obs;
 
   final RxList<String> roleSelected = <String>[].obs;
 
@@ -35,9 +36,9 @@ class AssignController extends GetxController {
     changeLoading(true);
     roleSelected.clear();
     pref = await SharedPreferences.getInstance();
-    await getRoles();
     await getUser();
     await getUsers();
+    await getRoles();
     await getLogAssign();
     await changeLoading(false);
 
@@ -100,7 +101,7 @@ class AssignController extends GetxController {
       (i) => {
         "role": roles[i].role,
         "max": roles[i].max,
-        "assignedUser": List.generate(roles[i].max, (_) => ""),
+        "assignedUser": List.generate(users.length, (_) => ""),
       },
     );
     return list;
@@ -108,24 +109,41 @@ class AssignController extends GetxController {
 
   void onSelectUser(int index, int roleIndex, RoleM? value, UserM? user) {
     if (value != null && user != null) {
-      // Cari indeks elemen
-      final userIndex = users.indexWhere((e) => e == user);
-
-      // Pastikan indeks valid
+      final userIndex = users.indexWhere((e) => e.username == user.username);
       if (userIndex != -1) {
         users[userIndex] = users[userIndex].copyWith(
           roleId: value.roleId,
           role: value.role,
         );
-
+        if (!userSelected.contains(user.username)) {
+          userSelected.add(user.username);
+        }
         selectedUser[roleIndex]['assignedUser'][userIndex] = user.username;
       }
     }
   }
 
-  void saveUser() {
+  Future validateUser() async {
+    var valid = true;
+    for (var item in users) {
+      if (!userSelected.contains(item.username)) {
+        valid = false;
+        AppDialog.dialogSnackbar(
+          "Warning\nAll users must have an assigned role before proceeding.",
+        );
+        break;
+      }
+    }
+    return valid;
+  }
+
+  void saveUser() async {
     var id = const Uuid().v4();
     try {
+      var isValid = await validateUser();
+      if (!isValid) {
+        return;
+      }
       firestore.runTransaction(
         (trx) async {
           for (var item in users) {
@@ -143,6 +161,7 @@ class AssignController extends GetxController {
         },
       ).then((_) {
         getUsers();
+        getLogAssign();
         AppDialog.dialogSnackbar("Data has been saved");
       }).catchError((e) {
         AppDialog.dialogSnackbar("Error while saving : $e");
