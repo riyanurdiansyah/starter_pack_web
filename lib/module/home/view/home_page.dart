@@ -169,13 +169,15 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         20.ph,
-                        Obx(() {
-                          if (_c.indexTab.value == 0) {
-                            return TeamPage();
-                          }
+                        Obx(
+                          () {
+                            if (_c.indexTab.value == 0) {
+                              return TeamPage();
+                            }
 
-                          return IndividuPage();
-                        })
+                            return IndividuPage();
+                          },
+                        )
                       ],
                     ),
                   ),

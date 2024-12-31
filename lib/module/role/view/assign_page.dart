@@ -84,14 +84,14 @@ class AssignPage extends StatelessWidget {
                                 Colors.white,
                               ),
                               const Spacer(),
-                              Obx(
-                                () => AppTextNormal.labelW600(
-                                  "Number of teams: ${_c.users.where((e) => e.roleId != 108).toList().length} / ${_c.users.length}",
-                                  16,
-                                  Colors.white,
-                                ),
-                              ),
-                              16.pw,
+                              // Obx(
+                              //   () => AppTextNormal.labelW600(
+                              //     "Number of teams: ${_c.users.where((e) => e.roleId != 108).toList().length} / ${_c.users.length}",
+                              //     16,
+                              //     Colors.white,
+                              //   ),
+                              // ),
+                              // 16.pw,
                               ElevatedButton(
                                 onPressed: () {
                                   AppDialog.dialogDelete(
@@ -142,7 +142,7 @@ class AssignPage extends StatelessWidget {
                                             10, // Jarak antar kolom
                                         mainAxisSpacing:
                                             10, // Jarak antar baris
-                                        childAspectRatio: 3.2,
+                                        childAspectRatio: 2,
                                       ),
                                       itemCount: _c.roles[index].max,
                                       itemBuilder: (context, subIndex) {
@@ -177,8 +177,8 @@ class AssignPage extends StatelessWidget {
                                                         ),
                                                       )
                                                     : SizedBox(
-                                                        width: 125,
-                                                        height: 125,
+                                                        width: 80,
+                                                        height: 80,
                                                         child: DecoratedBox(
                                                           decoration:
                                                               BoxDecoration(
@@ -203,54 +203,63 @@ class AssignPage extends StatelessWidget {
                                                     14.ph,
                                                     Stack(
                                                       children: [
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      10),
-                                                          height: 40,
-                                                          width: _c
-                                                                      .roles[
-                                                                          index]
-                                                                      .role
-                                                                      .length >
-                                                                  15
-                                                              ? _c
-                                                                      .roles[
-                                                                          index]
-                                                                      .role
-                                                                      .length *
-                                                                  12
-                                                              : _c
-                                                                      .roles[
-                                                                          index]
-                                                                      .role
-                                                                      .length *
-                                                                  20,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            gradient:
-                                                                LinearGradient(
-                                                              colors: [
-                                                                colorElectricViolet,
-                                                                colorElectricViolet
-                                                                    .withOpacity(
-                                                                        0.8),
-                                                                colorElectricViolet
-                                                                    .withOpacity(
-                                                                        0.6),
-                                                                colorElectricViolet
-                                                                    .withOpacity(
-                                                                        0.4),
-                                                                Colors.white
-                                                                    .withOpacity(
-                                                                        0.2)
-                                                              ],
-                                                              begin: Alignment
-                                                                  .topLeft,
-                                                              end: Alignment
-                                                                  .bottomRight,
+                                                        FittedBox(
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                            height: 40,
+                                                            width: _c
+                                                                        .roles[
+                                                                            index]
+                                                                        .role
+                                                                        .length >
+                                                                    15
+                                                                ? _c
+                                                                        .roles[
+                                                                            index]
+                                                                        .role
+                                                                        .length *
+                                                                    6
+                                                                : _c.roles[index].role.length >
+                                                                        8
+                                                                    ? _c
+                                                                            .roles[
+                                                                                index]
+                                                                            .role
+                                                                            .length *
+                                                                        8
+                                                                    : _c.roles[index].role
+                                                                            .length *
+                                                                        18,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                colors: [
+                                                                  colorElectricViolet,
+                                                                  colorElectricViolet
+                                                                      .withOpacity(
+                                                                          0.8),
+                                                                  colorElectricViolet
+                                                                      .withOpacity(
+                                                                          0.6),
+                                                                  colorElectricViolet
+                                                                      .withOpacity(
+                                                                          0.4),
+                                                                  Colors.white
+                                                                      .withOpacity(
+                                                                          0.2)
+                                                                ],
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -260,15 +269,18 @@ class AssignPage extends StatelessWidget {
                                                                   .symmetric(
                                                                   horizontal:
                                                                       10),
-                                                          alignment:
-                                                              Alignment.center,
+                                                          alignment: Alignment
+                                                              .centerLeft,
                                                           height: 40,
-                                                          child: AppTextNormal
-                                                              .labelBold(
-                                                            _c.roles[index]
-                                                                .role,
-                                                            16,
-                                                            Colors.white,
+                                                          width: 150,
+                                                          child: FittedBox(
+                                                            child: AppTextNormal
+                                                                .labelBold(
+                                                              _c.roles[index]
+                                                                  .role,
+                                                              16,
+                                                              Colors.white,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -276,7 +288,7 @@ class AssignPage extends StatelessWidget {
                                                     10.ph,
                                                     Obx(
                                                       () => SizedBox(
-                                                        width: 200,
+                                                        width: 130,
                                                         child: DropdownSearch<
                                                             UserM>(
                                                           decoratorProps:
