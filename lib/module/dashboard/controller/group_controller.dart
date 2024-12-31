@@ -174,7 +174,7 @@ class GroupController extends GetxController {
             downloadUrl = await snapshot.ref.getDownloadURL();
           }
           final data = GroupM(
-            alias: tcGroupName.text,
+            alias: tcAlias.text,
             country: oldGroup.country,
             groupId: oldGroup.groupId,
             id: oldGroup.id,

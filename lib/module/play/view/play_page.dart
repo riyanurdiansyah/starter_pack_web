@@ -19,12 +19,6 @@ class PlayPage extends StatelessWidget {
     final isMobile = size.width < 600;
 
     return Scaffold(
-      // appBar: isMobile
-      //     ? AppBar(
-      //         title: AppTextNormal.labelBold("Home", 14, Colors.black),
-      //         backgroundColor: Colors.white,
-      //       )
-      //     : null,
       drawer: isMobile
           ? Obx(
               () => SafeArea(
@@ -35,6 +29,7 @@ class PlayPage extends StatelessWidget {
                     child: ListView(
                       padding: EdgeInsets.zero,
                       children: _c.menus
+                          .where((e) => e.isMobile)
                           .map(
                             (item) => ListTile(
                               title: AppTextNormal.labelBold(
@@ -151,7 +146,7 @@ class PlayPage extends StatelessWidget {
                       color: Colors.grey.shade100,
                     ),
                     child: IconButton(
-                        iconSize: 25,
+                        iconSize: 18,
                         icon: const Icon(
                           Icons.menu,
                           color: Colors.black,
@@ -162,33 +157,37 @@ class PlayPage extends StatelessWidget {
               ),
             Positioned(
               bottom: 0,
+              left: isMobile ? 0 : -50,
               child: Container(
+                width: isMobile ? size.width : size.width / 3,
                 padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 20 : 80,
+                  horizontal: isMobile ? 30 : 80,
                   vertical: 18,
                 ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      cImage,
-                      width: isMobile ? 15 : 20,
-                      color: Colors.white,
-                    ),
-                    10.pw,
-                    const Padding(
-                      padding: EdgeInsets.only(top: 5.0),
-                      child: AnimatedDefaultTextStyle(
-                        duration: Duration(milliseconds: 300),
-                        style: TextStyle(
-                          fontFamily: 'Race',
-                          letterSpacing: 10,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white,
-                        ),
-                        child: Text("Tim Rakor MNF & IDC"),
+                child: FittedBox(
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        cImage,
+                        width: isMobile ? 15 : 20,
+                        color: Colors.white,
                       ),
-                    ),
-                  ],
+                      10.pw,
+                      Container(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: const AnimatedDefaultTextStyle(
+                          duration: Duration(milliseconds: 300),
+                          style: TextStyle(
+                            fontFamily: 'Race',
+                            letterSpacing: 10,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white,
+                          ),
+                          child: Text("GT Academy Team"),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

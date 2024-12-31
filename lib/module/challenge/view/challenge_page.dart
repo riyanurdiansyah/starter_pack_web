@@ -68,7 +68,7 @@ class ChallengePage extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     children: List.generate(_c.challenges.length, (index) {
-                      return GestureDetector(
+                      return InkWell(
                         onTap: () => _c.handleTap(index),
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),

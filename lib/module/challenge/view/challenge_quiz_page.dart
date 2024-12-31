@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:starter_pack_web/module/challenge/controller/challenge_quiz_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
@@ -20,6 +21,7 @@ class ChallengeQuizPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
     return Scaffold(
       backgroundColor: colorPointRank,
       body: Obx(
@@ -94,25 +96,55 @@ class ChallengeQuizPage extends StatelessWidget {
                 children: [
                   AppTextNormal.labelBold(
                     "Welcome to the ${_c.challenge.value.name}",
-                    25,
+                    isMobile ? 18 : 25,
                     Colors.white,
                     letterSpacing: 8,
+                    maxLines: 10,
+                    height: 1.5,
+                    textAlign: TextAlign.center,
                   ),
-                  25.ph,
-                  ElevatedButton(
-                    onPressed: () async {
-                      _c.startTimer();
-                      await _c.saveSessionQuiz(false);
-                      await _c.getSessionQuiz();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorGold,
-                    ),
-                    child: AppTextNormal.labelBold(
-                      "START",
-                      14,
-                      Colors.black,
-                    ),
+                  45.ph,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () => context.pop(),
+                        style: ButtonStyle(
+                          side: WidgetStateProperty.all(
+                            BorderSide(
+                              color: Colors.grey.shade200,
+                            ), // Ganti warna dan lebar sesuai kebutuhan
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  16), // Custom border radius
+                            ),
+                          ),
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "Back",
+                          14,
+                          Colors.grey.shade200,
+                        ),
+                      ),
+                      18.pw,
+                      ElevatedButton(
+                        onPressed: () async {
+                          _c.startTimer();
+                          await _c.saveSessionQuiz(false);
+                          await _c.getSessionQuiz();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorGold,
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "START",
+                          14,
+                          Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -134,6 +166,7 @@ class ChallengeQuizPage extends StatelessWidget {
                 ),
                 SizedBox(
                   width: double.infinity,
+                  height: size.height,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -142,12 +175,6 @@ class ChallengeQuizPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white.withOpacity(0.8),
-                          // image: const DecorationImage(
-                          //   image: AssetImage(
-                          //     helmetImg,
-                          //   ),
-                          //   fit: BoxFit.cover,
-                          // ),
                         ),
                         child: Image.asset(
                           helmetImg,
@@ -201,11 +228,11 @@ class ChallengeQuizPage extends StatelessWidget {
                   Positioned(
                     left: 0,
                     right: 0,
-                    top: 50,
+                    top: isMobile ? 75 : 50,
                     child: Container(
                       alignment: Alignment.center,
-                      width: 90,
-                      height: 90,
+                      width: isMobile ? 75 : 90,
+                      height: isMobile ? 75 : 90,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
@@ -258,8 +285,9 @@ class ChallengeQuizPage extends StatelessWidget {
                     child: Column(
                       children: [
                         185.ph,
-                        SizedBox(
-                          width: size.width / 2.2,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          width: isMobile ? size.width : size.width / 2.2,
                           height: 150,
                           child: AppTextNormal.labelBold(
                             _c.multipleChoices[_c.indexNow.value].question,
@@ -272,13 +300,14 @@ class ChallengeQuizPage extends StatelessWidget {
                           ),
                         ),
                         18.ph,
-                        SizedBox(
-                          width: size.width / 2.4,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          width: isMobile ? size.width : size.width / 2.2,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               AppTextNormal.labelBold(
-                                "Max Point : ${convertNumber(_c.point.value)}",
+                                "Max Point : ${convertNumber(_c.challenge.value.maxPoint)}",
                                 16,
                                 Colors.white,
                               ),
@@ -299,92 +328,187 @@ class ChallengeQuizPage extends StatelessWidget {
                         20.ph,
                         SizedBox(
                           width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                                _c.multipleChoices[_c.indexNow.value].options
-                                    .length, (index) {
-                              return MouseRegion(
-                                onEnter: (_) {
-                                  _c.indexOptionHover.value = index;
-                                },
-                                onExit: (_) {
-                                  _c.indexOptionHover.value = 99;
-                                },
-                                child: InkWell(
-                                  onTap: _c.listAnswer[_c.indexNow.value]
-                                              .indexAnswer ==
-                                          index
-                                      ? null
-                                      : () {
-                                          _c.onSelectOption(index);
-                                        },
+                          child: Row(
+                            children: [
+                              if (!isMobile)
+                                Expanded(
+                                  flex: 2,
                                   child: Container(
-                                    width: size.width / 2.4,
-                                    margin: const EdgeInsets.all(12),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 18, vertical: 18),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: _c.listAnswer[_c.indexNow.value]
-                                                  .indexAnswer ==
-                                              index
-                                          ? colorGold
-                                          : _c.indexOptionHover.value == index
-                                              ? Colors.grey.shade300
-                                              : Colors.white,
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.center,
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                colorPointRank.withOpacity(0.4),
-                                          ),
-                                          child: AppTextNormal.labelBold(
-                                            String.fromCharCode(65 + index),
-                                            16,
-                                            Colors.black,
-                                          ),
-                                        ),
-                                        14.pw,
-                                        AppTextNormal.labelBold(
-                                          _c.multipleChoices[_c.indexNow.value]
-                                              .options[index].answer,
-                                          16,
-                                          Colors.black,
-                                        )
-                                      ],
-                                    ),
+                                    height: 150,
                                   ),
                                 ),
-                              );
-                            }),
+                              if (!isMobile)
+                                Expanded(
+                                  child: Container(
+                                    height: 150,
+                                  ),
+                                ),
+                              Expanded(
+                                flex: 4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                      _c.multipleChoices[_c.indexNow.value]
+                                          .options.length, (index) {
+                                    return MouseRegion(
+                                      onEnter: (_) {
+                                        _c.indexOptionHover.value = index;
+                                      },
+                                      onExit: (_) {
+                                        _c.indexOptionHover.value = 99;
+                                      },
+                                      child: InkWell(
+                                        onTap: _c.listAnswer[_c.indexNow.value]
+                                                    .indexAnswer ==
+                                                index
+                                            ? null
+                                            : () {
+                                                _c.onSelectOption(index);
+                                              },
+                                        child: Container(
+                                          width: double.infinity,
+                                          margin: const EdgeInsets.all(12),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18, vertical: 18),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            color:
+                                                _c.listAnswer[_c.indexNow.value]
+                                                            .indexAnswer ==
+                                                        index
+                                                    ? colorGold
+                                                    : _c.indexOptionHover
+                                                                .value ==
+                                                            index
+                                                        ? Colors.grey.shade300
+                                                        : Colors.white,
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                alignment: Alignment.center,
+                                                width: 30,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: colorPointRank
+                                                      .withOpacity(0.4),
+                                                ),
+                                                child: AppTextNormal.labelBold(
+                                                  String.fromCharCode(
+                                                      65 + index),
+                                                  16,
+                                                  Colors.black,
+                                                ),
+                                              ),
+                                              14.pw,
+                                              AppTextNormal.labelBold(
+                                                _c
+                                                    .multipleChoices[
+                                                        _c.indexNow.value]
+                                                    .options[index]
+                                                    .answer,
+                                                16,
+                                                Colors.black,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                              if (!isMobile)
+                                Expanded(
+                                  child: Container(
+                                    height: 150,
+                                  ),
+                                ),
+                              if (!isMobile)
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    height: 150,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                         16.ph,
                         SizedBox(
-                          width: size.width / 2.4,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: _c.submitChallenge,
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
+                          width: isMobile ? double.infinity : size.width / 2.4,
+                          child: Row(
+                            children: [
+                              14.pw,
+                              if (isMobile)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  child: IconButton(
+                                    iconSize: 18,
+                                    icon: const Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: _c.indexNow.value == 0
+                                        ? null
+                                        : () {
+                                            _c.indexNow.value--;
+                                          },
+                                  ),
+                                ),
+                              10.pw,
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: isMobile ? 0 : 14),
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: _c.submitChallenge,
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      backgroundColor: colorPointRank,
+                                    ),
+                                    child: AppTextNormal.labelBold(
+                                      "SUBMIT",
+                                      16,
+                                      Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              backgroundColor: colorPointRank,
-                            ),
-                            child: AppTextNormal.labelBold(
-                              "SUBMIT",
-                              16,
-                              Colors.white,
-                            ),
+                              10.pw,
+                              if (isMobile)
+                                Container(
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  child: IconButton(
+                                    iconSize: 18,
+                                    icon: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: (_c.indexNow.value + 1) ==
+                                            _c.multipleChoices.length
+                                        ? null
+                                        : () {
+                                            _c.indexNow.value++;
+                                          },
+                                  ),
+                                ),
+                              14.pw,
+                            ],
                           ),
                         )
                       ],
@@ -425,7 +549,8 @@ class ChallengeQuizPage extends StatelessWidget {
                   ),
                 ),
               if (!_c.isQuestFinished.value)
-                SizedBox(
+                Container(
+                  color: Colors.red,
                   width: size.width,
                   child: Column(
                     children: [
@@ -444,7 +569,7 @@ class ChallengeQuizPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        width: size.width / 2.4,
+                        width: isMobile ? double.infinity : size.width / 2.4,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -650,140 +775,6 @@ class ChallengeQuizPage extends StatelessWidget {
                 ),
             ],
           );
-
-          // return Stack(
-          //   children: [
-          //     SizedBox(
-          //       width: size.width,
-          //       height: size.height,
-          //       child: Image.asset(
-          //         quizPlayImage,
-          //         fit: BoxFit.fill,
-          //       ),
-          //     ),
-          //     if (!_c.isQuestFinished.value)
-          //       Positioned(
-          //         left: 0,
-          //         right: 0,
-          //         top: 50,
-          //         child: Container(
-          //           alignment: Alignment.center,
-          //           width: 90,
-          //           height: 90,
-          //           decoration: const BoxDecoration(
-          //             shape: BoxShape.circle,
-          //             color: Colors.white,
-          //           ),
-          //           child: AppTextNormal.labelNormal(
-          //             "1 / 1",
-          //             18,
-          //             Colors.black,
-          //           ),
-          //         ),
-          //       ),
-          //     Center(
-          //       child: Container(
-          //         height: 200,
-          //         width: size.width / 2.6,
-          //         color: Colors.grey.withOpacity(0.4),
-          //         child: Builder(
-          //           builder: (context) {
-          //             return DropzoneView(
-          //               onCreated: (controller) =>
-          //                   _c.dropzoneController = controller,
-          //               onDropFile: (file) async {
-          //                 _c.fileName.value = file.name;
-          //               },
-          //               onError: (e) => debugPrint('Error: $e'),
-          //             );
-          //           },
-          //         ),
-          //       ),
-          //     ),
-          //     Positioned.fill(
-          //       child: Center(
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             160.ph,
-          //             InkWell(
-          //               onTap: _c.pickImage,
-          //               child: const Column(
-          //                 children: [
-          //                   Icon(Icons.cloud_upload,
-          //                       size: 50, color: Colors.grey),
-          //                   Text("Drag & Drop or Click to Upload"),
-          //                 ],
-          //               ),
-          //             ),
-          //             80.ph,
-          //             TextFormField(
-          //               controller: _c.tcRemark,
-          //               validator: (val) => AppValidator.requiredField(val!),
-          //               style: GoogleFonts.poppins(
-          //                 height: 1.4,
-          //                 color: Colors.white,
-          //               ),
-          //               decoration: InputDecoration(
-          //                 hintStyle: GoogleFonts.poppins(
-          //                   fontSize: 14,
-          //                   wordSpacing: 4,
-          //                 ),
-          //                 contentPadding: const EdgeInsets.symmetric(
-          //                     vertical: 0, horizontal: 12),
-          //                 border: OutlineInputBorder(
-          //                   borderRadius: BorderRadius.circular(8),
-          //                 ),
-          //                 enabledBorder: OutlineInputBorder(
-          //                   borderSide: const BorderSide(
-          //                     color: Colors.white,
-          //                   ),
-          //                   borderRadius: BorderRadius.circular(8),
-          //                 ),
-          //               ),
-          //             ),
-          //             16.ph,
-          //             ElevatedButton.icon(
-          //               onPressed: _c.saveChallengeWellfit,
-          //               icon: const Icon(Icons.file_upload),
-          //               label: const Text("UPLOAD"),
-          //             ),
-          //             const SizedBox(height: 20),
-          //             Obx(() {
-          //               if (_c.fileName.value.isEmpty) {
-          //                 return const Text("No File Selected");
-          //               }
-
-          //               return SizedBox(
-          //                 width: 80,
-          //                 height: 80,
-          //                 child: Image.memory(
-          //                     _c.filePickerResult!.files.single.bytes!),
-          //               );
-          //             }),
-          //             Obx(() {
-          //               if (_c.imageBytes.value != null) {
-          //                 return Column(
-          //                   children: [
-          //                     160.ph,
-          //                     Text("Uploaded File: ${_c.fileName}"),
-          //                     const SizedBox(height: 10),
-          //                     Image.memory(
-          //                       _c.imageBytes.value!,
-          //                       height: 200,
-          //                       fit: BoxFit.cover,
-          //                     ),
-          //                   ],
-          //                 );
-          //               }
-          //               return const SizedBox();
-          //             })
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // );
         },
       ),
     );

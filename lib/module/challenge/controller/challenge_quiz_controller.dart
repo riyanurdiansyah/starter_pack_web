@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -484,8 +483,6 @@ class ChallengeQuizController extends GetxController {
       }
       listCorrect.add(indexNow.value);
     } else {
-      log("CEK CORRECT : $listCorrect");
-      log("CEK CORRECT 2 : ${indexNow.value}");
       if (listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
           point.value -=
