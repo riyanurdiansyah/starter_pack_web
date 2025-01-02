@@ -36,8 +36,8 @@ class HomeController extends GetxController {
   void onInit() async {
     changeLoading(true);
     await setup();
-    await getGroups();
     await getSessionQuiz();
+    await getGroups();
     await getUsers();
     await changeLoading(false);
     super.onInit();
@@ -116,13 +116,13 @@ class HomeController extends GetxController {
     for (int i = 0; i < users.length; i++) {
       pageTemp = (i + 1) ~/ 12 < 1 ? 1 : (i + 1) / 12;
       users[i] = users[i].copyWith(page: pageTemp.ceil());
-      if (users[i].username == userSession.value.username) {
-        users[i] = users[i].copyWith(
-          point: quizess
-              .where((e) => e.username == userSession.value.username)
-              .fold<int>(0, (total, element) => total + element.point),
-        );
-      }
+      // if (users[i].username == userSession.value.username) {
+      users[i] = users[i].copyWith(
+        point: quizess
+            .where((e) => e.username == users[i].username)
+            .fold<int>(0, (total, element) => total + element.point),
+      );
+      // }
     }
     users.sort((a, b) => b.point.compareTo(a.point));
   }

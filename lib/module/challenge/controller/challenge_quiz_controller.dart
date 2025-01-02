@@ -37,6 +37,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<String> id = "".obs;
 
+  Rx<bool> isComingSoon = false.obs;
+
   Rx<int> point = 0.obs;
 
   Rx<int> indexNow = 0.obs;
@@ -61,7 +63,7 @@ class ChallengeQuizController extends GetxController {
 
   Rx<int> timeElapsedCountdown = 0.obs;
 
-  late Timer _timer;
+  Timer? _timer;
 
   late Timer _timerCountdown;
 
@@ -89,6 +91,19 @@ class ChallengeQuizController extends GetxController {
   @override
   void onInit() async {
     pref = await SharedPreferences.getInstance();
+    await refreshAll();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+    super.onClose();
+  }
+
+  Future refreshAll() async {
     await getUser();
     Future.delayed(const Duration(seconds: 1), () async {
       await getChallenge();
@@ -98,13 +113,6 @@ class ChallengeQuizController extends GetxController {
         await changeLoading(false);
       });
     });
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    _timer.cancel();
-    super.onClose();
   }
 
   Future getUser() async {
@@ -173,7 +181,7 @@ class ChallengeQuizController extends GetxController {
         if (isFinished.value == false) {
           saveSessionQuiz(true);
         }
-        _timer.cancel();
+        _timer?.cancel();
       } else if (timeQuiz.value > 0) {
         timeQuiz.value--;
         timeElapsed.value++;
@@ -186,7 +194,7 @@ class ChallengeQuizController extends GetxController {
         if (isFinished.value == false) {
           saveSessionQuiz(true);
         }
-        _timer.cancel();
+        _timer?.cancel();
       }
     });
   }
@@ -301,12 +309,15 @@ class ChallengeQuizController extends GetxController {
             DateTime.parse(challenge.value.start).difference(DateTime.now());
         if (remainingTime.value.isNegative) {
           remainingTime.value = Duration.zero;
+          isComingSoon.value = false;
         } else {
           _timerCountdown = Timer.periodic(const Duration(seconds: 1), (timer) {
             if (remainingTime.value.inSeconds <= 0) {
+              isComingSoon.value = false;
               timer.cancel();
-              getChallenge();
+              // refreshAll();
             } else {
+              isComingSoon.value = true;
               remainingTime.value =
                   remainingTime.value - const Duration(seconds: 1);
             }
@@ -472,7 +483,7 @@ class ChallengeQuizController extends GetxController {
                                   ),
                                 ),
                                 onPressed: () async {
-                                  _timer.cancel();
+                                  _timer?.cancel();
                                   timeQuiz.value = 0;
                                   context.pop();
                                   await saveSessionQuiz(true);
@@ -573,7 +584,7 @@ class ChallengeQuizController extends GetxController {
         uploadProgress.value = progress;
         if (progress.toInt() == 100 && isFinished.value == false) {
           navigatorKey.currentContext!.pop();
-          _timer.cancel();
+          _timer?.cancel();
           isFinished.value = true;
           downloadUrl = await snapshot.ref.getDownloadURL();
 

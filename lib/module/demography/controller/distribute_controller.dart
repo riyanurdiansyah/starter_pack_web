@@ -81,7 +81,6 @@ class DistributeController extends GetxController {
     productsOwn.value = responseStock.docs.map((e) {
       return ProdukM.fromJson(e.data());
     }).toList();
-
     totalDistributed.value = List.generate(productsOwn.length, (i) => 0);
   }
 
@@ -103,14 +102,19 @@ class DistributeController extends GetxController {
 
   void incrementQuantity(int index, int subindex) {
     AppSound.playHover();
-    var qTc =
-        accessList[index]["controller"][subindex] as TextEditingController;
-    int currentQty = int.parse(qTc.text);
-    if (productsOwn[subindex].qty > 0) {
-      totalDistributed[subindex] = totalDistributed[subindex] + 1;
-      qTc.text = (currentQty + 1).toString();
-      productsOwn[subindex] =
-          productsOwn[subindex].copyWith(qty: productsOwn[subindex].qty - 1);
+    if (productsOwn[subindex].priceDistribute == 0) {
+      AppDialog.dialogSnackbar(
+          "Please determine the distribution price for this product first!!");
+    } else {
+      var qTc =
+          accessList[index]["controller"][subindex] as TextEditingController;
+      int currentQty = int.parse(qTc.text);
+      if (productsOwn[subindex].qty > 0) {
+        totalDistributed[subindex] = totalDistributed[subindex] + 1;
+        qTc.text = (currentQty + 1).toString();
+        productsOwn[subindex] =
+            productsOwn[subindex].copyWith(qty: productsOwn[subindex].qty - 1);
+      }
     }
   }
 

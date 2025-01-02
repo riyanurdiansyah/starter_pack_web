@@ -10,6 +10,7 @@ import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:universal_html/html.dart' as html;
 
+import '../../dashboard/controller/audio_controller.dart';
 import '../../dashboard/model/sidebar_m.dart';
 
 class PlayController extends GetxController {
@@ -18,6 +19,8 @@ class PlayController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final Rx<bool> isLoading = true.obs;
+
+  final Rx<bool> isPlayingMusic = true.obs;
 
   final Rx<bool> isShow = false.obs;
 
@@ -85,6 +88,21 @@ class PlayController extends GetxController {
       await audioPlayer.play(AssetSource("music/typing.mp3"));
     } else {
       await audioPlayer.stop();
+    }
+  }
+
+  void mute() async {
+    if (Get.isRegistered<AudioController>()) {
+      final audioC = Get.find<AudioController>();
+      if (audioC.isPlaySound.value) {
+        await audioC.audioPlayer.setVolume(0.0);
+        audioC.isPlaySound.value = false;
+        isPlayingMusic.value = false;
+      } else {
+        await audioC.audioPlayer.setVolume(1.0);
+        audioC.isPlaySound.value = true;
+        isPlayingMusic.value = true;
+      }
     }
   }
 }

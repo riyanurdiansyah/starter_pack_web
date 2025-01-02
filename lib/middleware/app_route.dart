@@ -10,6 +10,7 @@ import 'package:starter_pack_web/module/challenge/controller/challenge_controlle
 import 'package:starter_pack_web/module/challenge/controller/challenge_quiz_controller.dart';
 import 'package:starter_pack_web/module/challenge/view/challenge_page.dart';
 import 'package:starter_pack_web/module/challenge/view/challenge_quiz_page.dart';
+import 'package:starter_pack_web/module/dashboard/controller/audio_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_detail_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/demographyset_controller.dart';
@@ -29,8 +30,10 @@ import 'package:starter_pack_web/module/dashboard/view/simbis_page.dart';
 import 'package:starter_pack_web/module/demography/controller/cart_controller.dart';
 import 'package:starter_pack_web/module/demography/controller/demography_controller.dart';
 import 'package:starter_pack_web/module/demography/controller/distribute_controller.dart';
+import 'package:starter_pack_web/module/demography/controller/finance_controller.dart';
 import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
+import 'package:starter_pack_web/module/demography/view/finance_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/login/view/login_page.dart';
 import 'package:starter_pack_web/module/news/controller/news_controller.dart';
@@ -92,6 +95,7 @@ GoRouter router = GoRouter(
   initialLocation: "/play",
   debugLogDiagnostics: true,
   redirect: (context, state) async {
+    Get.put(AudioController());
     SharedPreferences pref = await SharedPreferences.getInstance();
     final user = pref.getString("user");
     if (user == null) {
@@ -423,6 +427,19 @@ GoRouter router = GoRouter(
             Get.put(CartController());
             return NoTransitionPage(child: CartPage());
           },
+        ),
+        GoRoute(
+          path: AppRouteName.finance,
+          name: AppRouteName.finance,
+          onExit: (_, __) {
+            Get.delete<FinanceController>();
+            return true;
+          },
+          pageBuilder: (context, state) {
+            Get.put(FinanceController());
+            return NoTransitionPage(child: FinancePage());
+          },
+          routes: const [],
         ),
         GoRoute(
           path: AppRouteName.demography,

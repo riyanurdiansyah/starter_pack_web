@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/middleware/app_route.dart';
@@ -68,13 +67,13 @@ class ChallengeController extends GetxController
   }
 
   void handleTap(int index) {
-    final bool isDisabled =
-        DateTime.parse(challenges[index].start).isAfter(DateTime.now());
-    if (isDisabled) {
-      animationController.forward(from: 0);
-      HapticFeedback.heavyImpact();
-      return;
-    }
+    // final bool isDisabled =
+    //     DateTime.parse(challenges[index].start).isAfter(DateTime.now());
+    // if (isDisabled) {
+    //   animationController.forward(from: 0);
+    //   HapticFeedback.heavyImpact();
+    //   return;
+    // }
     // Navigate to quiz page
     navigatorKey.currentContext!.goNamed(
       AppRouteName.quiz,

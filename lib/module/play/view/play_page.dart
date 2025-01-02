@@ -133,6 +133,87 @@ class PlayPage extends StatelessWidget {
                 ),
               ),
             ),
+            if (!isMobile)
+              Positioned(
+                top: isMobile ? 50 : 25,
+                right: 0,
+                child: InkWell(
+                  onTap: () {
+                    _c.mute();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.black,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 18),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 30,
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            AppTextNormal.labelBold(
+                              _c.user.value.nama,
+                              14,
+                              Colors.white,
+                              letterSpacing: 1.4,
+                            ),
+                            6.ph,
+                            AppTextNormal.labelBold(
+                              "${_c.user.value.role} - ${_c.user.value.kelompok}",
+                              10,
+                              Colors.white,
+                              letterSpacing: 1.4,
+                            ),
+                          ],
+                        ),
+                        20.pw,
+                        const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            Positioned(
+              bottom: isMobile ? 50 : 25,
+              right: 0,
+              child: Obx(
+                () => InkWell(
+                  onTap: () {
+                    _c.mute();
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      margin: const EdgeInsets.all(4),
+                      child: _c.isPlayingMusic.value
+                          ? const Icon(Icons.volume_up_rounded)
+                          : const Icon(Icons.volume_off_rounded),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             if (isMobile)
               Positioned(
                 top: isMobile ? 50 : 25,

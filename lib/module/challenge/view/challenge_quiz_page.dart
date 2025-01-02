@@ -45,8 +45,7 @@ class ChallengeQuizPage extends StatelessWidget {
               ),
             );
           }
-          if (DateTime.now()
-              .isBefore(DateTime.parse(_c.challenge.value.start))) {
+          if (_c.isComingSoon.value) {
             int days = _c.remainingTime.value.inDays; // Hitung jumlah hari
             int hours =
                 _c.remainingTime.value.inHours % 24; // Sisa jam setelah hari
@@ -356,24 +355,57 @@ class ChallengeQuizPage extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.8),
+                          color: colorElectricViolet.withOpacity(0.6),
                         ),
-                        child: Image.asset(
-                          helmetImg,
-                          width: 150,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
+                          child: Image.asset(
+                            helmetImg,
+                            width: 250,
+                          ),
                         ),
                       ),
                       35.ph,
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(35),
-                          color: Colors.white.withOpacity(0.8),
+                          color: colorElectricViolet.withOpacity(0.6),
                         ),
-                        child: AppTextNormal.labelBold(
-                          "Congratulations : ${_c.point.value}",
-                          20,
-                          Colors.grey.shade600,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 22, horizontal: 30),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(35),
+                            color: Colors.grey.withOpacity(0.8),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AppTextNormal.labelBold(
+                                "Congratulation! You've Reach the Finished Line ${_c.point.value}",
+                                20,
+                                Colors.white,
+                              ),
+                              10.ph,
+                              AppTextNormal.labelBold(
+                                "You Scored",
+                                14,
+                                Colors.white,
+                              ),
+                              8.ph,
+                              AppTextNormal.labelBold(
+                                "${_c.point.value}",
+                                20,
+                                Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],

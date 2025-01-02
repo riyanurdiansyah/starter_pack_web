@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
+import 'package:starter_pack_web/module/dashboard/controller/audio_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:universal_html/html.dart' as html;
 
@@ -18,17 +18,16 @@ import '../../../utils/app_dialog.dart';
 class LoginController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  final AudioPlayer audioPlayer = AudioPlayer();
-
   late SharedPreferences pref;
 
   Rx<bool> isLoading = false.obs;
-  Rx<bool> isPlaySound = false.obs;
 
   TextEditingController tcUsername = TextEditingController();
   TextEditingController tcPassword = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+
+  final audioC = Get.find<AudioController>();
 
   Rx<String> errorMessage = "".obs;
 
@@ -71,7 +70,7 @@ class LoginController extends GetxController {
               pref.setString("user", json.encode(user.toJson()));
               saveSessionToCookie(user.id);
               isLoading.value = false;
-              playMusic();
+              audioC.playMusic();
               navigatorKey.currentContext!.goNamed(AppRouteName.play);
             } else {
               AppDialog.dialogSignin();
@@ -81,13 +80,6 @@ class LoginController extends GetxController {
           }
         },
       );
-    }
-  }
-
-  Future playMusic() async {
-    if (!isPlaySound.value) {
-      await audioPlayer.play(AssetSource("music/sound.mp3"));
-      isPlaySound.value = true;
     }
   }
 

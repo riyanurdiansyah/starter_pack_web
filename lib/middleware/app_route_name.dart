@@ -6,6 +6,7 @@ class AppRouteName {
   static const String product = 'product';
   static const String demography = 'demography';
   static const String distribute = 'distribute';
+  static const String finance = 'finance';
   static const String demographset = 'demographyset';
   static const String production = 'production';
   static const String rnd = 'rnd';

@@ -163,14 +163,19 @@ class CartPage extends StatelessWidget {
                   20.ph,
                   Expanded(
                     child: Obx(() {
-                      if (_c.isDone.value) {
+                      if (_c.isDone.value || _c.products.isEmpty) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             AppTextNormal.labelBold(
-                              "You have already created ${_c.productsOwn.length} product.",
+                              _c.products.isEmpty
+                                  ? "Your team member in the R&D role has not yet\ndecided on the product they want to develop."
+                                  : "You have already created ${_c.productsOwn.length} product.",
                               25,
                               Colors.white,
+                              maxLines: 3,
+                              textAlign: TextAlign.center,
+                              height: 1.4,
                               letterSpacing: 2.5,
                               shadows: [
                                 const Shadow(
@@ -207,81 +212,78 @@ class CartPage extends StatelessWidget {
                                     (index) {
                                   final data = _c.productsOwn[index];
                                   return Expanded(
-                                    child: Padding(
+                                    child: Container(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 50),
-                                      child: FittedBox(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 200,
+                                            height: 225,
+                                            child: CachedNetworkImage(
+                                              imageUrl: data.image,
                                               width: 200,
-                                              height: 225,
-                                              child: CachedNetworkImage(
-                                                imageUrl: data.image,
-                                                width: 200,
-                                                fit: BoxFit.cover,
-                                              ),
+                                              fit: BoxFit.cover,
                                             ),
-                                            18.ph,
-                                            AppTextNormal.labelBold(
-                                              "${data.nama}\n${data.tipe}",
-                                              18,
-                                              Colors.white,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 5,
+                                          ),
+                                          18.ph,
+                                          AppTextNormal.labelBold(
+                                            "${data.nama}\n${data.tipe}",
+                                            18,
+                                            Colors.white,
+                                            textAlign: TextAlign.center,
+                                            maxLines: 5,
+                                            letterSpacing: 2.5,
+                                            height: 1.5,
+                                            shadows: [
+                                              const Shadow(
+                                                offset: Offset(-1.5,
+                                                    -1.5), // Bayangan ke kiri atas
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                              const Shadow(
+                                                offset: Offset(1.5,
+                                                    -1.5), // Bayangan ke kanan atas
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                              const Shadow(
+                                                offset: Offset(1.5,
+                                                    1.5), // Bayangan ke kanan bawah
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                              const Shadow(
+                                                offset: Offset(-1.5,
+                                                    1.5), // Bayangan ke kiri bawah
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                            ],
+                                          ),
+                                          20.ph,
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 18),
+                                            alignment: Alignment.center,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: AppTextNormal.labelBold(
+                                              data.qty.toString(),
+                                              20,
+                                              Colors.black,
                                               letterSpacing: 2.5,
-                                              height: 1.5,
-                                              shadows: [
-                                                const Shadow(
-                                                  offset: Offset(-1.5,
-                                                      -1.5), // Bayangan ke kiri atas
-                                                  color: Colors.black,
-                                                  blurRadius: 1.0,
-                                                ),
-                                                const Shadow(
-                                                  offset: Offset(1.5,
-                                                      -1.5), // Bayangan ke kanan atas
-                                                  color: Colors.black,
-                                                  blurRadius: 1.0,
-                                                ),
-                                                const Shadow(
-                                                  offset: Offset(1.5,
-                                                      1.5), // Bayangan ke kanan bawah
-                                                  color: Colors.black,
-                                                  blurRadius: 1.0,
-                                                ),
-                                                const Shadow(
-                                                  offset: Offset(-1.5,
-                                                      1.5), // Bayangan ke kiri bawah
-                                                  color: Colors.black,
-                                                  blurRadius: 1.0,
-                                                ),
-                                              ],
                                             ),
-                                            20.ph,
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 18),
-                                              alignment: Alignment.center,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: AppTextNormal.labelBold(
-                                                data.qty.toString(),
-                                                20,
-                                                Colors.black,
-                                                letterSpacing: 2.5,
-                                              ),
-                                            ),
-                                            135.ph,
-                                          ],
-                                        ),
+                                          ),
+                                          135.ph,
+                                        ],
                                       ),
                                     ),
                                   );
