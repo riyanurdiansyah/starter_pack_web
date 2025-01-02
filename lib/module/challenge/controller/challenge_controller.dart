@@ -23,7 +23,6 @@ class ChallengeController extends GetxController
   RxList<ChallengeM> challenges = <ChallengeM>[].obs;
 
   Rx<double> widthDefault = 0.0.obs;
-
   @override
   void onClose() {
     animationController.dispose();

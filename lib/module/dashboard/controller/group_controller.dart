@@ -129,6 +129,7 @@ class GroupController extends GetxController {
           final data = GroupM(
               alias: tcGroupName.text,
               country: "",
+              profit: 0,
               groupId: newGroupId,
               id: id,
               image: downloadUrl.split("&token")[0],
@@ -176,6 +177,7 @@ class GroupController extends GetxController {
           final data = GroupM(
             alias: tcAlias.text,
             country: oldGroup.country,
+            profit: 0,
             groupId: oldGroup.groupId,
             id: oldGroup.id,
             image: downloadUrl.isNotEmpty

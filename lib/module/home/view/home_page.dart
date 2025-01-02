@@ -151,7 +151,9 @@ class HomePage extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: AppTextNormal.labelBold(
-                                    "RESULT",
+                                    _c.indexTab.value == 0
+                                        ? "CURRENT BALANCE"
+                                        : "TEAM",
                                     14,
                                     Colors.white,
                                   ),

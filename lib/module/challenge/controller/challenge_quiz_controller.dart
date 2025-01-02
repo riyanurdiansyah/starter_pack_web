@@ -85,6 +85,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<Duration> remainingTime = Duration.zero.obs;
 
+  Rx<bool> isLastQuestion = false.obs;
+
   final Rx<GroupM> group = groupEmpty.obs;
   final RxList<int> listCorrect = <int>[].obs;
   // final RxList<int> listIncorrect = <int>[].obs;
@@ -374,7 +376,7 @@ class ChallengeQuizController extends GetxController {
 
     if ((indexNow.value + 1) == multipleChoices.length) {
       isQuestFinished.value = true;
-      showBottomSheet(navigatorKey.currentContext!);
+      // showBottomSheet(navigatorKey.currentContext!);
     }
     listAnswer[indexNow.value] = AnswerM(
         indexAnswer: index,
@@ -386,7 +388,7 @@ class ChallengeQuizController extends GetxController {
 
   void submitChallenge() {
     isQuestFinished.value = true;
-    showBottomSheet(navigatorKey.currentContext!);
+    // showBottomSheet(navigatorKey.currentContext!);
   }
 
   void showBottomSheet(BuildContext context) {
@@ -658,5 +660,13 @@ class ChallengeQuizController extends GetxController {
       navigatorKey.currentContext!.pop();
       AppDialog.dialogSnackbar("Error while saving : $e");
     }
+  }
+
+  void submitChallengeOK() async {
+    _timer?.cancel();
+    timeQuiz.value = 0;
+    // navigatorKey.currentContext!.pop();
+    await saveSessionQuiz(true);
+    await getSessionQuiz();
   }
 }

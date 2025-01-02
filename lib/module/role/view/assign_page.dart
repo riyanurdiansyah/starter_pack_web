@@ -50,6 +50,40 @@ class AssignPage extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
             ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.only(top: 18.0, left: 35),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      onEnter: (_) {
+                        _c.isHovered.value = true;
+                      },
+                      onExit: (_) {
+                        _c.isHovered.value = false;
+                      },
+                      child: InkWell(
+                        onTap: () => context.pop(),
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          height: 45,
+                          child: AppTextNormal.labelBold(
+                            "HOME",
+                            26,
+                            _c.isHovered.value
+                                ? colorElectricViolet
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 125, vertical: 14),
@@ -79,7 +113,7 @@ class AssignPage extends StatelessWidget {
                           child: Row(
                             children: [
                               AppTextNormal.labelBold(
-                                'MY GOOD TEAM',
+                                'MY TEAM',
                                 18,
                                 Colors.white,
                               ),
@@ -116,322 +150,327 @@ class AssignPage extends StatelessWidget {
                         ),
                         Expanded(
                           child: Obx(
-                            () => ListView.builder(
-                              padding: const EdgeInsets.all(10),
-                              itemCount: _c.roles.length,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AppTextNormal.labelBold(
-                                      "ROLE : ${_c.roles[index].role}",
-                                      18,
-                                      Colors.white,
-                                    ),
+                            () => SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children:
+                                      List.generate(_c.roles.length, (index) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AppTextNormal.labelBold(
+                                          "ROLE : ${_c.roles[index].role}",
+                                          18,
+                                          Colors.white,
+                                        ),
 
-                                    const SizedBox(height: 10),
-                                    GridView.builder(
-                                      shrinkWrap:
-                                          true, // Agar GridView dapat digunakan di dalam ListView
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3, // Jumlah kolom
-                                        crossAxisSpacing:
-                                            10, // Jarak antar kolom
-                                        mainAxisSpacing:
-                                            10, // Jarak antar baris
-                                        childAspectRatio: 2,
-                                      ),
-                                      itemCount: _c.roles[index].max,
-                                      itemBuilder: (context, subIndex) {
-                                        return ClipPath(
-                                          clipper: MyClipper2(),
-                                          child: Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 10),
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Colors.white.withOpacity(0.4),
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                            ),
-                                            height: 150,
-                                            child: Row(
-                                              children: [
-                                                14.pw,
-                                                _c.roles[index].image.isEmpty
-                                                    ? Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(10),
-                                                        color: Colors
-                                                            .grey.shade200,
-                                                        child: Icon(
-                                                          Icons.person_rounded,
-                                                          size: 80,
-                                                          color: Colors
-                                                              .grey.shade600,
-                                                        ),
-                                                      )
-                                                    : SizedBox(
-                                                        width: 80,
-                                                        height: 80,
-                                                        child: DecoratedBox(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10), // Opsional, membuat sudut melengkung
-                                                          ),
-                                                          child: Image.asset(
-                                                            "assets/images/${_c.roles[index].image}",
-                                                            fit: BoxFit.cover,
-                                                            width: 125,
-                                                            height: 125,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                16.pw,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                        const SizedBox(height: 10),
+                                        GridView.builder(
+                                          shrinkWrap:
+                                              true, // Agar GridView dapat digunakan di dalam ListView
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3, // Jumlah kolom
+                                            crossAxisSpacing:
+                                                10, // Jarak antar kolom
+                                            mainAxisSpacing:
+                                                10, // Jarak antar baris
+                                            childAspectRatio: 2,
+                                          ),
+                                          itemCount: _c.roles[index].max,
+                                          itemBuilder: (context, subIndex) {
+                                            return ClipPath(
+                                              clipper: MyClipper2(),
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 10),
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white
+                                                      .withOpacity(0.4),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                height: 150,
+                                                child: Row(
                                                   children: [
-                                                    14.ph,
-                                                    Stack(
-                                                      children: [
-                                                        FittedBox(
-                                                          child: Container(
-                                                            alignment: Alignment
-                                                                .centerLeft,
+                                                    14.pw,
+                                                    _c.roles[index].image
+                                                            .isEmpty
+                                                        ? Container(
                                                             padding:
                                                                 const EdgeInsets
+                                                                    .all(10),
+                                                            color: Colors
+                                                                .grey.shade200,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .person_rounded,
+                                                              size: 80,
+                                                              color: Colors.grey
+                                                                  .shade600,
+                                                            ),
+                                                          )
+                                                        : SizedBox(
+                                                            width: 80,
+                                                            height: 80,
+                                                            child: DecoratedBox(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10), // Opsional, membuat sudut melengkung
+                                                              ),
+                                                              child:
+                                                                  Image.asset(
+                                                                "assets/images/${_c.roles[index].image}",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                width: 125,
+                                                                height: 125,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                    16.pw,
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        14.ph,
+                                                        Stack(
+                                                          children: [
+                                                            FittedBox(
+                                                              child: Container(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                padding: const EdgeInsets
                                                                     .symmetric(
                                                                     horizontal:
                                                                         10),
-                                                            height: 40,
-                                                            width: _c
-                                                                        .roles[
-                                                                            index]
-                                                                        .role
-                                                                        .length >
-                                                                    15
-                                                                ? _c
-                                                                        .roles[
-                                                                            index]
-                                                                        .role
-                                                                        .length *
-                                                                    6
-                                                                : _c.roles[index].role.length >
-                                                                        8
+                                                                height: 40,
+                                                                width: _c
+                                                                            .roles[
+                                                                                index]
+                                                                            .role
+                                                                            .length >
+                                                                        15
                                                                     ? _c
                                                                             .roles[
                                                                                 index]
                                                                             .role
                                                                             .length *
-                                                                        8
-                                                                    : _c.roles[index].role
-                                                                            .length *
-                                                                        18,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                colors: [
-                                                                  colorElectricViolet,
-                                                                  colorElectricViolet
-                                                                      .withOpacity(
-                                                                          0.8),
-                                                                  colorElectricViolet
-                                                                      .withOpacity(
-                                                                          0.6),
-                                                                  colorElectricViolet
-                                                                      .withOpacity(
-                                                                          0.4),
-                                                                  Colors.white
-                                                                      .withOpacity(
-                                                                          0.2)
-                                                                ],
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
+                                                                        6
+                                                                    : _c.roles[index].role.length >
+                                                                            8
+                                                                        ? _c.roles[index].role.length *
+                                                                            8
+                                                                        : _c.roles[index].role.length *
+                                                                            18,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  gradient:
+                                                                      LinearGradient(
+                                                                    colors: [
+                                                                      colorElectricViolet,
+                                                                      colorElectricViolet
+                                                                          .withOpacity(
+                                                                              0.8),
+                                                                      colorElectricViolet
+                                                                          .withOpacity(
+                                                                              0.6),
+                                                                      colorElectricViolet
+                                                                          .withOpacity(
+                                                                              0.4),
+                                                                      Colors
+                                                                          .white
+                                                                          .withOpacity(
+                                                                              0.2)
+                                                                    ],
+                                                                    begin: Alignment
+                                                                        .topLeft,
+                                                                    end: Alignment
+                                                                        .bottomRight,
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      10),
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          height: 40,
-                                                          width: 150,
-                                                          child: FittedBox(
-                                                            child: AppTextNormal
-                                                                .labelBold(
-                                                              _c.roles[index]
-                                                                  .role,
-                                                              16,
-                                                              Colors.white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    10.ph,
-                                                    Obx(
-                                                      () => SizedBox(
-                                                        width: 130,
-                                                        child: DropdownSearch<
-                                                            UserM>(
-                                                          decoratorProps:
-                                                              DropDownDecoratorProps(
-                                                            decoration:
-                                                                InputDecoration(
-                                                              fillColor: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                      0.4),
-                                                              filled: true,
-                                                              // hintText: "Masukkan role",
-                                                              // hintStyle: GoogleFonts.poppins(
-                                                              //   fontSize: 14,
-                                                              //   wordSpacing: 4,
-                                                              // ),
-                                                              contentPadding:
+                                                            Container(
+                                                              padding:
                                                                   const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          10),
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              height: 40,
+                                                              width: 150,
+                                                              child: FittedBox(
+                                                                child: AppTextNormal
+                                                                    .labelBold(
+                                                                  _c
+                                                                      .roles[
+                                                                          index]
+                                                                      .role,
+                                                                  16,
+                                                                  Colors.white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        10.ph,
+                                                        Obx(
+                                                          () => SizedBox(
+                                                            width: 130,
+                                                            child:
+                                                                DropdownSearch<
+                                                                    UserM>(
+                                                              decoratorProps:
+                                                                  DropDownDecoratorProps(
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  fillColor: Colors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.4),
+                                                                  filled: true,
+                                                                  // hintText: "Masukkan role",
+                                                                  // hintStyle: GoogleFonts.poppins(
+                                                                  //   fontSize: 14,
+                                                                  //   wordSpacing: 4,
+                                                                  // ),
+                                                                  contentPadding: const EdgeInsets
                                                                       .symmetric(
                                                                       vertical:
                                                                           0,
                                                                       horizontal:
                                                                           12),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8),
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(8),
+                                                                  ),
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide:
+                                                                        const BorderSide(
+                                                                            color:
+                                                                                colorPrimaryDark),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(8),
+                                                                  ),
+                                                                  enabledBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide: BorderSide(
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade300),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(8),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                borderSide:
-                                                                    const BorderSide(
-                                                                        color:
-                                                                            colorPrimaryDark),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8),
-                                                              ),
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade300),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          popupProps:
-                                                              PopupProps.menu(
-                                                            disabledItemFn:
-                                                                (itm) {
-                                                              return _c
-                                                                  .selectedUser
-                                                                  .any((role) => role[
-                                                                          'assignedUser']
-                                                                      .contains(
-                                                                          itm.username));
-                                                            },
-                                                            fit: FlexFit.loose,
-                                                            showSearchBox: true,
-                                                            searchFieldProps:
-                                                                TextFieldProps(
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                contentPadding:
-                                                                    const EdgeInsets
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                disabledItemFn:
+                                                                    (itm) {
+                                                                  return _c
+                                                                      .selectedUser
+                                                                      .any((role) => role[
+                                                                              'assignedUser']
+                                                                          .contains(
+                                                                              itm.username));
+                                                                },
+                                                                fit: FlexFit
+                                                                    .loose,
+                                                                showSearchBox:
+                                                                    true,
+                                                                searchFieldProps:
+                                                                    TextFieldProps(
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    contentPadding: const EdgeInsets
                                                                         .symmetric(
                                                                         vertical:
                                                                             0,
                                                                         horizontal:
                                                                             12),
-                                                                border:
-                                                                    OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                                                    border:
+                                                                        OutlineInputBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
                                                                               8),
-                                                                ),
-                                                                focusedBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide:
-                                                                      const BorderSide(
-                                                                          color:
-                                                                              colorPrimaryDark),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                                                    ),
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                              color: colorPrimaryDark),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
                                                                               8),
-                                                                ),
-                                                                enabledBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderSide: BorderSide(
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade300),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                                                    ),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide: BorderSide(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade300),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
                                                                               8),
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ),
+                                                              items: (_, __) =>
+                                                                  _c.getUsers(),
+                                                              compareFn:
+                                                                  (_, __) {
+                                                                return false;
+                                                              },
+                                                              itemAsString:
+                                                                  (UserM u) =>
+                                                                      u.nama,
+                                                              selectedItem:
+                                                                  _c.selectedItems[
+                                                                      index],
+                                                              onChanged: (val) =>
+                                                                  _c.onSelectUser(
+                                                                      subIndex,
+                                                                      index,
+                                                                      _c.roles[
+                                                                          index],
+                                                                      val),
                                                             ),
                                                           ),
-                                                          items: (_, __) =>
-                                                              _c.getUsers(),
-                                                          compareFn: (_, __) {
-                                                            return false;
-                                                          },
-                                                          itemAsString:
-                                                              (UserM u) =>
-                                                                  u.nama,
-                                                          selectedItem:
-                                                              _c.selectedItems[
-                                                                  index],
-                                                          onChanged: (val) =>
-                                                              _c.onSelectUser(
-                                                                  subIndex,
-                                                                  index,
-                                                                  _c.roles[
-                                                                      index],
-                                                                  val),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    const Divider(), // Garis pemisah antar role
-                                  ],
-                                );
-                              },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        const Divider(), // Garis pemisah antar role
+                                      ],
+                                    );
+                                  }),
+                                ),
+                              ),
                             ),
                           ),
                         ),

@@ -115,7 +115,11 @@ class IndividuPage extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: AppTextNormal.labelBold(
-                                        "RESULT",
+                                        _c.groups
+                                                .firstWhereOrNull(
+                                                    (e) => e.id == data.groupId)
+                                                ?.alias ??
+                                            "-",
                                         14,
                                         Colors.black,
                                       ),
@@ -132,7 +136,7 @@ class IndividuPage extends StatelessWidget {
                                       ),
                                       child: FittedBox(
                                         child: AppTextNormal.labelBold(
-                                          "R\$ ${formatToThousandK(data.point)}",
+                                          "R\$ ${data.point}",
                                           14,
                                           Colors.white,
                                         ),

@@ -31,6 +31,7 @@ final roleEmpty = RoleM(
 final groupEmpty = GroupM(
   alias: "",
   country: "",
+  profit: 0,
   groupId: 0,
   id: "",
   image: "",

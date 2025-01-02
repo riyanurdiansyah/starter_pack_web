@@ -7,6 +7,7 @@ import 'package:starter_pack_web/module/user/model/group_m.dart';
 
 import '../../../utils/app_constanta.dart';
 import '../../challenge/model/quiz_session_m.dart';
+import '../../demography/model/distribute_m.dart';
 import '../../user/model/user_m.dart';
 
 class HomeController extends GetxController {
@@ -32,15 +33,26 @@ class HomeController extends GetxController {
   Rx<bool> isSearched = false.obs;
   Rx<bool> isLoading = false.obs;
 
+  final RxList<DistributeM> distributes = <DistributeM>[].obs;
+
   @override
   void onInit() async {
     changeLoading(true);
     await setup();
+    await getDistribute();
     await getSessionQuiz();
     await getGroups();
     await getUsers();
     await changeLoading(false);
     super.onInit();
+  }
+
+  Future<List<DistributeM>> getDistribute() async {
+    final response = await firestore.collection("distribution").get();
+    distributes.value = response.docs.map((e) {
+      return DistributeM.fromJson(e.data());
+    }).toList();
+    return distributes;
   }
 
   Future changeLoading(bool val) async {
@@ -56,10 +68,16 @@ class HomeController extends GetxController {
   }
 
   Future getGroups() async {
-    final response = await firestore.collection("group").get();
+    final response = await firestore
+        .collection("group")
+        .where("alias", isNotEqualTo: "PANITIA")
+        .get();
 
     groups.value = response.docs.map((e) {
-      return GroupM.fromJson(e.data());
+      var data = GroupM.fromJson(e.data()).copyWith(
+        profit: calculateTotalProfit(e.id).toInt(),
+      );
+      return data;
     }).toList();
 
     oldGroups.value = List.from(groups);
@@ -75,7 +93,7 @@ class HomeController extends GetxController {
       );
     }
 
-    groups.sort((a, b) => b.point.compareTo(a.point));
+    groups.sort((a, b) => b.profit.compareTo(a.profit));
   }
 
   // Future insertDummy() async {
@@ -112,20 +130,25 @@ class HomeController extends GetxController {
       return UserM.fromJson(e.data());
     }).toList();
 
+    users.sort((a, b) => b.point.compareTo(a.point));
     double pageTemp = 0;
     for (int i = 0; i < users.length; i++) {
-      pageTemp =
-          (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
-      users[i] = users[i].copyWith(page: pageTemp.ceil());
-      // if (users[i].username == userSession.value.username) {
       users[i] = users[i].copyWith(
         point: quizess
             .where((e) => e.username == users[i].username)
             .fold<int>(0, (total, element) => total + element.point),
       );
-      // }
     }
+
+    users.sort((a, b) => a.nama.compareTo(b.nama));
     users.sort((a, b) => b.point.compareTo(a.point));
+    for (int i = 0; i < users.length; i++) {
+      pageTemp =
+          (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
+      users[i] = users[i].copyWith(
+        page: pageTemp.ceil(),
+      );
+    }
   }
 
   List<UserM> isUsingUsers() {
@@ -152,6 +175,7 @@ class HomeController extends GetxController {
   void onSearched(String query) {
     double pageTemp = 0;
     List<UserM> usersTemp = [];
+    users.sort((a, b) => b.point.compareTo(a.point));
     if (query.isEmpty) {
       isSearched.value = false;
       usersTemp.clear();
@@ -177,5 +201,17 @@ class HomeController extends GetxController {
 
   void onChangepage(int newValue) {
     currentPage.value = newValue;
+  }
+
+  double calculateTotalProfit(String targetGroupId) {
+    // log("CEK DATA : $targetGroupId");
+    // log("CEK DATA : ${distributes.where((e) => e.groupId == targetGroupId).length}");
+    return distributes
+        .where((distribute) =>
+            distribute.groupId == targetGroupId) // Filter berdasarkan groupId
+        .expand((distribute) => distribute.areas) // Dapatkan semua AreaM
+        .expand((area) => area.products) // Dapatkan semua ProductDistributeM
+        .map((product) => product.profit) // Ambil nilai profit
+        .fold(0.0, (total, profit) => total + profit); // Jumlahkan semua profit
   }
 }

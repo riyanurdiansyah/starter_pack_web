@@ -13,6 +13,7 @@ import '../../user/model/role_m.dart';
 class AssignController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final RxList<UserM> users = <UserM>[].obs;
+  final RxList<UserM> usersUp = <UserM>[].obs;
   final Rx<UserM> user = userEmpty.obs;
 
   final RxList<RoleM> roles = <RoleM>[].obs;
@@ -28,6 +29,7 @@ class AssignController extends GetxController {
       <Map<String, dynamic>>[].obs;
 
   final Rx<bool> isDone = false.obs;
+  final Rx<bool> isHovered = false.obs;
 
   final Rx<bool> isLoading = false.obs;
 
@@ -111,21 +113,25 @@ class AssignController extends GetxController {
     if (value != null && user != null) {
       final userIndex = users.indexWhere((e) => e.username == user.username);
       if (userIndex != -1) {
-        users[userIndex] = users[userIndex].copyWith(
+        var data = users[userIndex].copyWith(
           roleId: value.roleId,
           role: value.role,
         );
+
+        usersUp.add(data);
+
+        selectedUser[roleIndex]['assignedUser'][userIndex] = user.username;
+
         if (!userSelected.contains(user.username)) {
           userSelected.add(user.username);
         }
-        selectedUser[roleIndex]['assignedUser'][userIndex] = user.username;
       }
     }
   }
 
   Future validateUser() async {
     var valid = true;
-    for (var item in users) {
+    for (var item in usersUp) {
       if (!userSelected.contains(item.username)) {
         valid = false;
         AppDialog.dialogSnackbar(
@@ -146,7 +152,7 @@ class AssignController extends GetxController {
       }
       firestore.runTransaction(
         (trx) async {
-          for (var item in users) {
+          for (var item in usersUp) {
             await firestore
                 .collection("user")
                 .doc(item.id)

@@ -68,11 +68,8 @@ class ChallengePage extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     children: List.generate(_c.challenges.length, (index) {
-                      int displayIndex = (_c.currentIndex.value + index) %
-                          _c.challenges.length;
-
                       return InkWell(
-                        onTap: () => _c.handleTap(displayIndex),
+                        onTap: () => _c.handleTap(index),
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(

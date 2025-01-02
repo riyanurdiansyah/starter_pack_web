@@ -345,6 +345,70 @@ class ChallengeQuizPage extends StatelessWidget {
                     fit: BoxFit.fill,
                   ),
                 ),
+                Align(
+                  // top: 20,
+                  // left: 20,
+                  alignment: Alignment.topLeft,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    onEnter: (_) {
+                      // AppSound.playHover();
+                      // _c.isHovered.value = true;
+                    },
+                    onExit: (_) {
+                      // _c.isHovered.value = false;
+                    },
+                    child: InkWell(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            top: isMiniMobile
+                                ? 25
+                                : isMobile
+                                    ? 80
+                                    : 30,
+                            left: 20),
+                        alignment: Alignment.center,
+                        height: 45,
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: AppTextNormal.labelBold(
+                            "BACK",
+                            26,
+                            Colors.grey,
+                            shadows: [
+                              const Shadow(
+                                offset:
+                                    Offset(-1.5, -1.5), // Bayangan ke kiri atas
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                              const Shadow(
+                                offset:
+                                    Offset(1.5, -1.5), // Bayangan ke kanan atas
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                              const Shadow(
+                                offset:
+                                    Offset(1.5, 1.5), // Bayangan ke kanan bawah
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                              const Shadow(
+                                offset:
+                                    Offset(-1.5, 1.5), // Bayangan ke kiri bawah
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   width: double.infinity,
                   height: size.height,
@@ -526,6 +590,118 @@ class ChallengeQuizPage extends StatelessWidget {
                           Colors.black,
                         ),
                       ),
+                      if (_c.isQuestFinished.value)
+                        Container(
+                          alignment: Alignment.bottomLeft,
+                          width: isMobile || isMiniMobile
+                              ? size.width
+                              : size.width / 2.6,
+                          height: size.height / 1.2,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                bottom: 0, // Letakkan di bagian bawah
+                                left:
+                                    0, // Opsional jika ingin gambar sejajar dengan sisi kiri
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  width: 250,
+                                  height: 500,
+                                  child: Image.asset(
+                                    andyImg,
+                                    width: 300,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0, // Letakkan di bagian bawah
+                                left:
+                                    0, // Opsional jika ingin gambar sejajar dengan sisi kiri
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 18),
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  width: isMobile || isMiniMobile
+                                      ? size.width
+                                      : size.width / 2.6,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      AppTextNormal.labelBold(
+                                        "Great job completing all the questions! Are you ready to submit your answers?",
+                                        12,
+                                        Colors.black,
+                                        maxLines: 10,
+                                        letterSpacing: 2.5,
+                                        height: 1.8,
+                                      ),
+                                      10.ph,
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          const Spacer(),
+                                          SizedBox(
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.grey.shade400,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  )),
+                                              onPressed: () {
+                                                _c.isQuestFinished.value =
+                                                    false;
+                                                // context.pop();
+                                              },
+                                              child: AppTextNormal.labelBold(
+                                                "CANCEL",
+                                                14,
+                                                Colors.white,
+                                                letterSpacing: 1.6,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          SizedBox(
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    colorPrimaryDark,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                _c.submitChallengeOK();
+                                              },
+                                              child: AppTextNormal.labelBold(
+                                                "SUBMIT",
+                                                14,
+                                                Colors.white,
+                                                letterSpacing: 1.6,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       if (!_c.isQuestFinished.value)
                         SizedBox(
                           width: size.width,

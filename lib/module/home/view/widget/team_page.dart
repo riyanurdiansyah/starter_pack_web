@@ -163,7 +163,7 @@ class TeamPage extends StatelessWidget {
                                     ),
                                     child: FittedBox(
                                       child: AppTextNormal.labelBold(
-                                        "R\$ ${formatToThousandK(data.point)}",
+                                        "R\$ ${data.profit}",
                                         14,
                                         Colors.white,
                                       ),
