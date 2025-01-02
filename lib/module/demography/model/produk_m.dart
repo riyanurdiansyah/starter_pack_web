@@ -14,6 +14,7 @@ class ProdukM {
   final int qtyDistributed;
   final List<String> groups;
   final double priceDistribute;
+  final int page;
 
   ProdukM({
     required this.nama,
@@ -25,6 +26,7 @@ class ProdukM {
     required this.qtyDistributed,
     required this.groups,
     required this.priceDistribute,
+    required this.page,
   });
 
   ProdukM copyWith({
@@ -37,6 +39,7 @@ class ProdukM {
     int? qtyDistributed,
     List<String>? groups,
     double? priceDistribute,
+    int? page,
   }) =>
       ProdukM(
         nama: nama ?? this.nama,
@@ -48,6 +51,7 @@ class ProdukM {
         qtyDistributed: qtyDistributed ?? this.qtyDistributed,
         groups: groups ?? this.groups,
         priceDistribute: priceDistribute ?? this.priceDistribute,
+        page: page ?? this.page,
       );
 
   factory ProdukM.fromJson(Map<String, dynamic> json) => ProdukM(
@@ -58,6 +62,7 @@ class ProdukM {
         image: json["image"],
         qty: json["qty"] ?? 0,
         qtyDistributed: 0,
+        page: 0,
         priceDistribute: json["priceDistribute"] ?? 0,
         groups: json["groups"] == null
             ? []

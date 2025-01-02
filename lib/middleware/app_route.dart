@@ -174,6 +174,18 @@ GoRouter router = GoRouter(
               },
               routes: [
                 GoRoute(
+                  path: AppRouteName.product,
+                  name: AppRouteName.product,
+                  onExit: (_, __) {
+                    Get.delete<ProductController>();
+                    return true;
+                  },
+                  pageBuilder: (context, state) {
+                    Get.put(ProductController());
+                    return NoTransitionPage(child: ProductPage());
+                  },
+                ),
+                GoRoute(
                   path: AppRouteName.home,
                   name: AppRouteName.home,
                   onExit: (_, __) {
@@ -322,18 +334,6 @@ GoRouter router = GoRouter(
           pageBuilder: (context, state) {
             Get.put(HomeController());
             return NoTransitionPage(child: HomePage());
-          },
-        ),
-        GoRoute(
-          path: AppRouteName.product,
-          name: AppRouteName.product,
-          onExit: (_, __) {
-            Get.delete<ProductController>();
-            return true;
-          },
-          pageBuilder: (context, state) {
-            Get.put(ProductController());
-            return NoTransitionPage(child: ProductPage());
           },
         ),
         GoRoute(

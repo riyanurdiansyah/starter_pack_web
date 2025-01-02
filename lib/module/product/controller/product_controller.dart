@@ -1,80 +1,81 @@
-import 'dart:convert';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starter_pack_web/module/product/model/product_m.dart';
-import 'package:starter_pack_web/module/user/model/user_m.dart';
-import 'package:starter_pack_web/utils/app_constanta.dart';
+import 'package:starter_pack_web/module/demography/model/produk_m.dart';
 
 class ProductController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final RxList<ProdukM> products = <ProdukM>[].obs;
+  final RxList<ProdukM> productsSearch = <ProdukM>[].obs;
 
-  final CarouselSliderController carouselSliderController =
-      CarouselSliderController();
+  final Rx<bool> isSearched = false.obs;
 
-  Rx<int> currentPage = 0.obs;
+  FilePickerResult? filePickerResult;
 
-  Rx<int> price = 0.obs;
+  Rx<int> currentPage = 1.obs;
+  Rx<int> dataPerPage = 8.obs;
 
-  Rx<bool> isLoading = true.obs;
-
-  Rx<bool> isUseIklan = false.obs;
-
-  RxList<ProductM> products = <ProductM>[].obs;
-
-  RxList<InformasiProductM> informasiSelected = <InformasiProductM>[].obs;
-
-  Rx<UserM> user = userEmpty.obs;
-
-  late SharedPreferences pref;
   @override
   void onInit() async {
-    await setup();
     await getProducts();
-    await onChangeLoading(false);
     super.onInit();
   }
 
-  Future setup() async {
-    pref = await SharedPreferences.getInstance();
-    final userJson = pref.getString("user");
-    if (userJson != null) {
-      user.value = UserM.fromJson(jsonDecode(userJson));
-    }
-  }
-
-  Future onChangeLoading(bool val) async {
-    isLoading.value = val;
-  }
-
-  Future<List<ProductM>> getProducts() async {
+  Future<List<ProdukM>> getProducts() async {
     final response = await firestore.collection("produk").get();
-
     products.value = response.docs.map((e) {
-      return ProductM.fromJson(e.data());
+      return ProdukM.fromJson(e.data());
     }).toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
+
+    double pageTemp = 0;
+    for (int i = 0; i < products.length; i++) {
+      pageTemp = (i + 1) ~/ 8 < 1 ? 1 : (i + 1) / 8;
+      products[i] = products[i].copyWith(page: pageTemp.ceil());
+    }
     return products;
   }
 
-  void onChangeProduct(int index) {
-    currentPage.value = index;
+  List<ProdukM> isUsingProduct() {
+    if (isSearched.value) {
+      return productsSearch.where((e) => e.page == currentPage.value).toList();
+    }
+    return products.where((e) => e.page == currentPage.value).toList();
   }
 
-  void onChangeIklan(bool val) {
-    isUseIklan.value = val;
+  int isTotalPage() {
+    if (isSearched.value) {
+      return (productsSearch.length / dataPerPage.value).ceil() == 0
+          ? 1
+          : (productsSearch.length / dataPerPage.value).ceil();
+    }
+    return (products.length / dataPerPage.value).ceil() == 0
+        ? 1
+        : (products.length / dataPerPage.value).ceil();
   }
 
-  void onSelectInformasi(InformasiProductM infor) {
-    if (informasiSelected.contains(infor)) {
-      informasiSelected
-          .removeWhere((x) => x.gizi == infor.gizi && x.price == infor.price);
-      price.value -= infor.price;
+  void onChangepage(int newValue) {
+    currentPage.value = newValue;
+  }
+
+  void onSearched(String query) {
+    double pageTemp = 0;
+    List<ProdukM> productsTemp = [];
+    if (query.isEmpty) {
+      isSearched.value = false;
+      productsTemp.clear();
+      productsSearch.clear();
     } else {
-      informasiSelected.add(infor);
-      price.value += infor.price;
+      isSearched.value = true;
+      productsTemp = products
+          .where((e) => e.nama.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      for (int i = 0; i < productsTemp.length; i++) {
+        pageTemp = (i + 1) / dataPerPage.value;
+        productsTemp[i] = productsTemp[i].copyWith(page: pageTemp.ceil());
+      }
+      productsSearch.value = productsTemp;
+      productsSearch.sort((a, b) => a.nama.compareTo(b.nama));
     }
   }
 }

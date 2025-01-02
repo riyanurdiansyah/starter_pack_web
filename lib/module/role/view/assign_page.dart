@@ -61,7 +61,7 @@ class AssignPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 28.0),
                         child: AppTextNormal.labelBold(
-                          "You have assigned a role to the user...",
+                          "You have assigned role to the user...",
                           18,
                           Colors.black,
                         ),
@@ -97,7 +97,7 @@ class AssignPage extends StatelessWidget {
                                   AppDialog.dialogDelete(
                                     title: "Save Role",
                                     subtitle:
-                                        "Are you sure you want to save the role?",
+                                        "Are you sure you want to save the role? Once saved, the data can no longer be modified",
                                     confirmText: "Yes, save",
                                     callback: () {
                                       context.pop();

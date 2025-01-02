@@ -2401,7 +2401,7 @@ class __AppDialogContentState extends State<_AppDialogContent>
       child: ScaleTransition(
         scale: _animation,
         child: Container(
-          height: size.height / 2.8,
+          // height: size.height / 2.8,
           width: isMobile ? size.width * 0.9 : size.width / 3,
           padding: EdgeInsets.symmetric(
             vertical: isMobile ? 20 : 35,
