@@ -857,31 +857,29 @@ class ChallengeQuizPage extends StatelessWidget {
                   top: 50,
                   child: Container(
                     alignment: Alignment.center,
-                    width: 75,
-                    height: 75,
+                    width: 55,
+                    height: 55,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
                     child: AppTextNormal.labelNormal(
                       "${_c.indexNow.value + 1} / 1",
-                      18,
+                      14,
                       Colors.black,
                     ),
                   ),
                 ),
               if (!_c.isQuestFinished.value)
-                Container(
-                  color: Colors.red,
+                SizedBox(
                   width: size.width,
                   child: Column(
                     children: [
-                      225.ph,
+                      125.ph,
                       SizedBox(
                         width: size.width / 2.2,
-                        height: 150,
                         child: AppTextNormal.labelBold(
-                          "....",
+                          "",
                           25,
                           Colors.white,
                           letterSpacing: 2.5,
@@ -897,27 +895,27 @@ class ChallengeQuizPage extends StatelessWidget {
                           children: [
                             AppTextNormal.labelBold(
                               "Max Point : ${convertNumber(_c.challenge.value.maxPoint)}",
-                              16,
+                              12.5,
                               Colors.white,
                             ),
                             AppTextNormal.labelBold(
                               "Time : ${_c.formatTime()}",
-                              16,
+                              12.5,
                               Colors.white,
                             ),
                           ],
                         ),
                       ),
-                      18.ph,
+                      10.ph,
                       Container(
                         height: 4,
                         width: double.infinity,
                         color: Colors.white.withOpacity(0.4),
                       ),
-                      20.ph,
+                      14.ph,
                       Center(
                         child: Container(
-                          height: 225,
+                          height: 150,
                           width: size.width / 2.4,
                           decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.2),
@@ -930,7 +928,7 @@ class ChallengeQuizPage extends StatelessWidget {
                             children: [
                               if (_c.fileName.value.isNotEmpty)
                                 Container(
-                                  height: 225,
+                                  height: 180,
                                   width: size.width / 2.4,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
@@ -1055,7 +1053,7 @@ class ChallengeQuizPage extends StatelessWidget {
                             ),
                             hintText: "Insert your remark",
                             contentPadding: const EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 12),
+                                vertical: 0, horizontal: 8),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide:
@@ -1072,7 +1070,7 @@ class ChallengeQuizPage extends StatelessWidget {
                       16.ph,
                       SizedBox(
                         width: size.width / 2.4,
-                        height: 50,
+                        height: 45,
                         child: ElevatedButton(
                           onPressed: _c.fileName.value.isEmpty
                               ? () {}
@@ -1087,7 +1085,7 @@ class ChallengeQuizPage extends StatelessWidget {
                           ),
                           child: AppTextNormal.labelBold(
                             "SUBMIT",
-                            16,
+                            14,
                             Colors.white,
                           ),
                         ),
