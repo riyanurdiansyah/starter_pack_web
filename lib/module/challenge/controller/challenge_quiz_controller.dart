@@ -422,15 +422,17 @@ class ChallengeQuizController extends GetxController {
                 Padding(
                   padding: EdgeInsets.only(
                       top: isMiniMobile
-                          ? 170
+                          ? 330
                           : isMobile
                               ? 250
-                              : 300),
+                              : 180,
+                      bottom: 50),
                   child: Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.all(12),
-                    height: 180,
-                    margin: const EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: isMiniMobile || isMobile ? 0 : 80),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.95),
                       borderRadius: BorderRadius.circular(20),
@@ -439,7 +441,7 @@ class ChallengeQuizController extends GetxController {
                       children: [
                         AppTextNormal.labelBold(
                           "Great job completing all the questions! Are you ready to submit your answers?",
-                          18,
+                          12,
                           Colors.black,
                           maxLines: 10,
                           letterSpacing: 2.5,
@@ -451,7 +453,6 @@ class ChallengeQuizController extends GetxController {
                           children: [
                             const Spacer(),
                             SizedBox(
-                              height: 40,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey.shade400,
@@ -474,7 +475,6 @@ class ChallengeQuizController extends GetxController {
                               width: 10,
                             ),
                             SizedBox(
-                              height: 40,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: colorPrimaryDark,

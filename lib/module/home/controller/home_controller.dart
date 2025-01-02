@@ -114,7 +114,8 @@ class HomeController extends GetxController {
 
     double pageTemp = 0;
     for (int i = 0; i < users.length; i++) {
-      pageTemp = (i + 1) ~/ 12 < 1 ? 1 : (i + 1) / 12;
+      pageTemp =
+          (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
       users[i] = users[i].copyWith(page: pageTemp.ceil());
       // if (users[i].username == userSession.value.username) {
       users[i] = users[i].copyWith(
@@ -129,8 +130,11 @@ class HomeController extends GetxController {
 
   List<UserM> isUsingUsers() {
     if (isSearched.value) {
+      usersSearch.sort((a, b) => b.point.compareTo(a.point));
       return usersSearch.where((e) => e.page == currentPage.value).toList();
     }
+
+    users.sort((a, b) => b.point.compareTo(a.point));
     return users.where((e) => e.page == currentPage.value).toList();
   }
 

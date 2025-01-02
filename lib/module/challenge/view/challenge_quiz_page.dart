@@ -590,8 +590,17 @@ class ChallengeQuizPage extends StatelessWidget {
                                       ),
                                     if (!isMobile)
                                       Expanded(
-                                        child: Container(
-                                          height: 150,
+                                        child: IconButton(
+                                          iconSize: 18,
+                                          icon: const Icon(
+                                            Icons.arrow_back_ios,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: _c.indexNow.value == 0
+                                              ? null
+                                              : () {
+                                                  _c.indexNow.value--;
+                                                },
                                         ),
                                       ),
                                     Expanded(
@@ -696,8 +705,18 @@ class ChallengeQuizPage extends StatelessWidget {
                                     ),
                                     if (!isMobile)
                                       Expanded(
-                                        child: Container(
-                                          height: 150,
+                                        child: IconButton(
+                                          iconSize: 18,
+                                          icon: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: (_c.indexNow.value + 1) ==
+                                                  _c.multipleChoices.length
+                                              ? null
+                                              : () {
+                                                  _c.indexNow.value++;
+                                                },
                                         ),
                                       ),
                                     if (!isMobile)
