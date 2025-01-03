@@ -130,7 +130,6 @@ class HomeController extends GetxController {
       return UserM.fromJson(e.data());
     }).toList();
 
-    users.sort((a, b) => b.point.compareTo(a.point));
     double pageTemp = 0;
     for (int i = 0; i < users.length; i++) {
       users[i] = users[i].copyWith(
@@ -153,11 +152,9 @@ class HomeController extends GetxController {
 
   List<UserM> isUsingUsers() {
     if (isSearched.value) {
-      usersSearch.sort((a, b) => b.point.compareTo(a.point));
       return usersSearch.where((e) => e.page == currentPage.value).toList();
     }
 
-    users.sort((a, b) => b.point.compareTo(a.point));
     return users.where((e) => e.page == currentPage.value).toList();
   }
 
