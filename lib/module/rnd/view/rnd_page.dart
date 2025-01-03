@@ -44,16 +44,16 @@ class RndPage extends StatelessWidget {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            if (!_c.isDone.value)
-              SizedBox(
-                width: double.infinity,
-                height: size.height,
-                child: Image.asset(
-                  bgProd,
-                  filterQuality: FilterQuality.high,
-                  fit: BoxFit.fill,
-                ),
+            // if (!_c.isDone.value)
+            SizedBox(
+              width: double.infinity,
+              height: size.height,
+              child: Image.asset(
+                bgProd,
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.fill,
               ),
+            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -137,7 +137,6 @@ class RndPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  20.ph,
                   Expanded(
                     child: Obx(() {
                       if (_c.isDone.value) {
@@ -146,7 +145,7 @@ class RndPage extends StatelessWidget {
                           children: [
                             AppTextNormal.labelBold(
                               "You have already created ${_c.productsOwn.length} product.",
-                              25,
+                              20,
                               Colors.white,
                               letterSpacing: 2.5,
                               shadows: [
@@ -176,7 +175,7 @@ class RndPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            100.ph,
+                            25.ph,
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children:
@@ -189,12 +188,12 @@ class RndPage extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        width: 200,
-                                        height: 225,
+                                        width: 250,
+                                        height: 175,
                                         child: CachedNetworkImage(
                                           imageUrl: data.image,
-                                          width: 200,
-                                          fit: BoxFit.cover,
+                                          width: 250,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                       18.ph,
@@ -233,7 +232,7 @@ class RndPage extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      100.ph,
+                                      // 100.ph,
                                     ],
                                   ),
                                 );

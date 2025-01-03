@@ -47,16 +47,16 @@ class CartPage extends StatelessWidget {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            if (!_c.isDone.value)
-              SizedBox(
-                width: double.infinity,
-                height: size.height,
-                child: Image.asset(
-                  bgProd,
-                  filterQuality: FilterQuality.high,
-                  fit: BoxFit.fill,
-                ),
+            // if (!_c.isDone.value)
+            SizedBox(
+              width: double.infinity,
+              height: size.height,
+              child: Image.asset(
+                bgProd,
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.fill,
               ),
+            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -160,7 +160,6 @@ class CartPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  20.ph,
                   Expanded(
                     child: Obx(() {
                       if (_c.isDone.value || _c.products.isEmpty) {
@@ -171,7 +170,7 @@ class CartPage extends StatelessWidget {
                               _c.products.isEmpty
                                   ? "Your team member in the R&D role has not yet\ndecided on the product they want to develop."
                                   : "You have already created ${_c.productsOwn.length} product.",
-                              25,
+                              20,
                               Colors.white,
                               maxLines: 3,
                               textAlign: TextAlign.center,
@@ -204,7 +203,7 @@ class CartPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            100.ph,
+                            35.ph,
                             SingleChildScrollView(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -214,24 +213,24 @@ class CartPage extends StatelessWidget {
                                   return Expanded(
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 50),
+                                          horizontal: 10),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           SizedBox(
-                                            width: 200,
-                                            height: 225,
+                                            width: 250,
+                                            height: 175,
                                             child: CachedNetworkImage(
                                               imageUrl: data.image,
-                                              width: 200,
-                                              fit: BoxFit.cover,
+                                              width: 250,
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
                                           18.ph,
                                           AppTextNormal.labelBold(
                                             "${data.nama}\n${data.tipe}",
-                                            18,
+                                            12.5,
                                             Colors.white,
                                             textAlign: TextAlign.center,
                                             maxLines: 5,
@@ -267,7 +266,7 @@ class CartPage extends StatelessWidget {
                                           20.ph,
                                           Container(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 18),
+                                                horizontal: 0),
                                             alignment: Alignment.center,
                                             height: 50,
                                             decoration: BoxDecoration(
@@ -277,12 +276,11 @@ class CartPage extends StatelessWidget {
                                             ),
                                             child: AppTextNormal.labelBold(
                                               data.qty.toString(),
-                                              20,
+                                              16,
                                               Colors.black,
                                               letterSpacing: 2.5,
                                             ),
                                           ),
-                                          135.ph,
                                         ],
                                       ),
                                     ),

@@ -191,8 +191,7 @@ class PlayPage extends StatelessWidget {
                     _c.mute();
                   },
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    padding: const EdgeInsets.all(2),
                     decoration: const BoxDecoration(
                       color: Colors.black,
                       shape: BoxShape.circle,
@@ -201,6 +200,7 @@ class PlayPage extends StatelessWidget {
                       horizontal: 30,
                     ),
                     child: Container(
+                      padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
