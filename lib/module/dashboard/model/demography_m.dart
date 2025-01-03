@@ -8,6 +8,7 @@ String demographyMToJson(DemographyM data) => json.encode(data.toJson());
 class DemographyM {
   final String id;
   final String data;
+  final String specialCase;
   final String infant;
   final String seniors;
   final String pregnant;
@@ -28,6 +29,7 @@ class DemographyM {
   DemographyM({
     required this.id,
     required this.data,
+    required this.specialCase,
     required this.infant,
     required this.seniors,
     required this.pregnant,
@@ -49,6 +51,7 @@ class DemographyM {
   DemographyM copyWith({
     String? id,
     String? data,
+    String? specialCase,
     String? infant,
     String? seniors,
     String? pregnant,
@@ -69,6 +72,7 @@ class DemographyM {
       DemographyM(
         id: id ?? this.id,
         data: data ?? this.data,
+        specialCase: specialCase ?? this.specialCase,
         infant: infant ?? this.infant,
         seniors: seniors ?? this.seniors,
         pregnant: pregnant ?? this.pregnant,
@@ -90,6 +94,7 @@ class DemographyM {
   factory DemographyM.fromJson(Map<String, dynamic> json) => DemographyM(
         id: json["id"],
         data: json["data"] ?? "",
+        specialCase: json["specialCase"] ?? "",
         infant: json["infant_core_lifestyle"] ?? "",
         seniors: json["seniors_core_lifestyle"] ?? "",
         pregnant: json["pregnant_core_lifestyle"] ?? "",
@@ -114,6 +119,7 @@ class DemographyM {
   Map<String, dynamic> toJson() => {
         "id": id,
         "data": data,
+        "specialCase": specialCase,
         "right": right,
         "left": left,
         "top": top,

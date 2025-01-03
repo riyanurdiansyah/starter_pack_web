@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +53,10 @@ class FinanceController extends GetxController {
         "id": data.id,
         "name": data.name,
         "controller": List.generate(productsOwn.length, (subindex) {
-          return TextEditingController(text: "0");
+          return TextEditingController(text: "");
         }),
         "controller_price": List.generate(productsOwn.length, (subindex) {
-          return TextEditingController(text: "0");
+          return TextEditingController(text: "");
         }),
       };
     });
@@ -88,5 +89,10 @@ class FinanceController extends GetxController {
     productsOwn.value = responseStock.docs.map((e) {
       return ProdukM.fromJson(e.data());
     }).toList();
+  }
+
+  void savePrice() {
+    log("MASUK");
+    if (!formKey.currentState!.validate()) {}
   }
 }

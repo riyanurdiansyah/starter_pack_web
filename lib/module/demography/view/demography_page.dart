@@ -236,7 +236,6 @@ class _DemographyPageState extends State<DemographyPage>
                               maxLines: 100,
                               height: 1.6,
                               letterSpacing: 1.2,
-                              textAlign: TextAlign.justify,
                             ),
                           20.ph,
                           ElevatedButton(

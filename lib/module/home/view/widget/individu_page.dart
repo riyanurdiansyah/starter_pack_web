@@ -124,6 +124,13 @@ class IndividuPage extends StatelessWidget {
                                         Colors.black,
                                       ),
                                     ),
+                                    Expanded(
+                                      child: AppTextNormal.labelBold(
+                                        data.role,
+                                        14,
+                                        Colors.black,
+                                      ),
+                                    ),
                                     Container(
                                       width: 70,
                                       padding: const EdgeInsets.all(6),

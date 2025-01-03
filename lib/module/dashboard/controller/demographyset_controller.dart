@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -23,6 +21,7 @@ class DemographysetController extends GetxController {
 
   final tcName = TextEditingController();
   final tcData = TextEditingController();
+  final tcSpecial = TextEditingController();
   final tcImage = TextEditingController();
   final tcCost = TextEditingController();
   final tcMinPrice = TextEditingController();
@@ -145,7 +144,6 @@ class DemographysetController extends GetxController {
     try {
       List<DetailProductDemography> details = [];
       for (int i = 0; i < tcProducts.keys.toList().length; i++) {
-        log("CEK DATA 2: ${tcProducts[i]![1].text}");
         details.add(DetailProductDemography(
             productId: tcProducts[i]![0].text,
             minPrice: double.tryParse(tcProducts[i]![2].text) ?? 0,

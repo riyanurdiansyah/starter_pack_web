@@ -60,7 +60,7 @@ class FinancePage extends StatelessWidget {
                     ),
                     const Spacer(),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _c.savePrice,
                       child: AppTextNormal.labelBold(
                         "SAVE",
                         16,
@@ -287,28 +287,28 @@ class FinancePage extends StatelessWidget {
                                           if (number == null ||
                                               number <
                                                   (data
-                                                          .details[data.details
-                                                              .indexWhere((e) {
-                                                        return e.productId ==
-                                                            prod.id;
-                                                      })]
-                                                          .minPrice ??
-                                                      0) ||
+                                                      .details[data.details
+                                                          .indexWhere((e) {
+                                                    return e.productId ==
+                                                        prod.id;
+                                                  })]
+                                                      .minPrice) ||
                                               number >
                                                   (data
-                                                          .details[data.details
-                                                              .indexWhere((e) {
-                                                        return e.productId ==
-                                                            prod.id;
-                                                      })]
-                                                          .maxPrice ??
-                                                      0)) {
+                                                      .details[data.details
+                                                          .indexWhere((e) {
+                                                    return e.productId ==
+                                                        prod.id;
+                                                  })]
+                                                      .maxPrice)) {
                                             return "Price must be between R\$ ${data.details[data.details.indexWhere((e) {
-                                                  return e.productId == prod.id;
-                                                })].minPrice ?? 0} - R\$ ${data.details[data.details.indexWhere((e) {
-                                                  return e.productId == prod.id;
-                                                })].maxPrice ?? 0}";
+                                              return e.productId == prod.id;
+                                            })].minPrice} - R\$ ${data.details[data.details.indexWhere((e) {
+                                              return e.productId == prod.id;
+                                            })].maxPrice}";
                                           }
+                                        } else {
+                                          return "Price cant be empty";
                                         }
                                         return null;
                                       },

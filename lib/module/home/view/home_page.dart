@@ -158,6 +158,14 @@ class HomePage extends StatelessWidget {
                                     Colors.white,
                                   ),
                                 ),
+                                if (_c.indexTab.value == 1)
+                                  Expanded(
+                                    child: AppTextNormal.labelBold(
+                                      "ROLE",
+                                      14,
+                                      Colors.white,
+                                    ),
+                                  ),
                                 SizedBox(
                                   width: 70,
                                   child: AppTextNormal.labelBold(
