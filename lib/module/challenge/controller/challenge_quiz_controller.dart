@@ -63,6 +63,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<int> timeElapsedCountdown = 0.obs;
 
+  Rx<int> maxPoint = 0.obs;
+
   Timer? _timer;
 
   late Timer _timerCountdown;
@@ -168,7 +170,7 @@ class ChallengeQuizController extends GetxController {
     final session = sessionData.first;
     isHaveSession.value = true;
     id.value = session.sessionId;
-    timeQuiz.value = session.time * 60;
+    // timeQuiz.value = session.time * 60;
     timeElapsed.value = 0;
     listAnswer.value = session.answers;
     isFinished.value = session.isFinished;
@@ -185,6 +187,17 @@ class ChallengeQuizController extends GetxController {
         }
         _timer?.cancel();
       } else if (timeQuiz.value > 0) {
+        DateTime startDate = DateTime.parse(challenge.value.start);
+        DateTime endDate = DateTime.parse(challenge.value.end);
+        DateTime now = DateTime.now();
+
+        Duration difference = endDate.difference(now);
+
+        double hoursDifference = difference.inMinutes / 60;
+        maxPoint.value = (challenge.value.maxPoint -
+                ((challenge.value.maxPoint / 2) / hoursDifference))
+            .floor();
+
         timeQuiz.value--;
         timeElapsed.value++;
         if (timeElapsed.value % 10 == 0) {
@@ -326,10 +339,12 @@ class ChallengeQuizController extends GetxController {
           });
         }
       }
+
       timeQuiz.value = DateTime.parse(challenge.value.end)
-              .difference(DateTime.parse(challenge.value.start))
+              .difference(DateTime.now())
               .inMinutes *
           60;
+
       final responseDetails = await firestore
           .collection("questions")
           .where("challenge_id", isEqualTo: id.value)
@@ -355,20 +370,18 @@ class ChallengeQuizController extends GetxController {
       // listIncorrect.remove(index);
       if (!listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
-          point.value +=
-              challenge.value.maxPoint ~/ challenge.value.maxQuestion;
+          point.value += maxPoint ~/ challenge.value.maxQuestion;
         } else {
-          point.value += challenge.value.maxPoint ~/ multipleChoices.length;
+          point.value += maxPoint ~/ multipleChoices.length;
         }
       }
       listCorrect.add(indexNow.value);
     } else {
       if (listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
-          point.value -=
-              challenge.value.maxPoint ~/ challenge.value.maxQuestion;
+          point.value -= maxPoint ~/ challenge.value.maxQuestion;
         } else {
-          point.value -= challenge.value.maxPoint ~/ multipleChoices.length;
+          point.value -= maxPoint ~/ multipleChoices.length;
         }
         listCorrect.remove(indexNow.value);
       }

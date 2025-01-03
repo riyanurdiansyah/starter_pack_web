@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
 import '../../dashboard/model/demography_m.dart';
@@ -92,7 +93,40 @@ class FinanceController extends GetxController {
   }
 
   void savePrice() {
-    log("MASUK");
-    if (!formKey.currentState!.validate()) {}
+    if (formKey.currentState!.validate()) {
+      bool adaKosong = accessList.any((e) =>
+          (e["controller"] as List<TextEditingController>)
+              .any((x) => x.text.isEmpty));
+      // if (adaKosong) {
+      //   AppDialog.dialogSnackbar("All price fields must be filled.");
+      // } else {
+      final body = {
+        "priceId": const Uuid().v4(),
+        "groupId": userSession.value.groupId,
+        "areas": demographys.map((e) {
+          final demographyJson = e.toJson();
+
+          // Dapatkan daftar TextEditingController terkait untuk area ini
+          final controllers =
+              (accessList.firstWhere((x) => x["areaId"] == e.id)["controller"]
+                  as List<TextEditingController>);
+
+          demographyJson["products"] = productsOwn.map((product) {
+            // Cari indeks produk terkait
+            final index = productsOwn.indexOf(product);
+
+            // Tetapkan priceDistribute berdasarkan nilai controller yang sesuai
+            final price = double.tryParse(controllers[index].text) ?? 0;
+
+            return product.copyWith(priceDistribute: price).toJson();
+          }).toList();
+
+          return demographyJson;
+        }).toList(),
+      };
+
+      log(json.encode(body));
+      // }
+    }
   }
 }

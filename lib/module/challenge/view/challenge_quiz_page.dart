@@ -452,7 +452,7 @@ class ChallengeQuizPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               AppTextNormal.labelBold(
-                                "Congratulation! You've Reach the Finished Line ${_c.point.value}",
+                                "Congratulation! You've Reach the Finished Line",
                                 20,
                                 Colors.white,
                               ),
@@ -734,7 +734,7 @@ class ChallengeQuizPage extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     AppTextNormal.labelBold(
-                                      "Max Point : ${convertNumber(_c.challenge.value.maxPoint)}",
+                                      "Max Point : ${convertNumber(_c.maxPoint.value)}",
                                       12.5,
                                       Colors.white,
                                     ),
