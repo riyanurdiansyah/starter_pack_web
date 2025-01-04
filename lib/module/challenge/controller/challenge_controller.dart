@@ -61,7 +61,10 @@ class ChallengeController extends GetxController
       return ChallengeM.fromJson(e.data());
     }).toList();
 
-    challenges.sort((a, b) => a.no.compareTo(b.no));
+    // Sort challenges berdasarkan startDate
+    challenges.sort(
+        (a, b) => DateTime.parse(a.start).compareTo(DateTime.parse(b.start)));
+
     isHoveredList.value = List.generate(challenges.length, (index) => false);
   }
 

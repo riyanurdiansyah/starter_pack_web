@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/home/controller/home_controller.dart';
+import 'package:starter_pack_web/module/home/view/widget/challenge_board_page.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
@@ -105,6 +106,16 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (_c.boards[_c.indexTab.value] != "GROUP" &&
+                            _c.boards[_c.indexTab.value] != "USER")
+                          20.ph,
+                        if (_c.boards[_c.indexTab.value] != "GROUP" &&
+                            _c.boards[_c.indexTab.value] != "USER")
+                          AppTextNormal.labelBold(
+                            "${_c.challenges[_c.challenges.indexWhere((e) => e.id == _c.boards[_c.indexTab.value])].name} Board",
+                            26,
+                            Colors.white,
+                          ),
                         20.ph,
                         Obx(
                           () => Container(
@@ -151,14 +162,14 @@ class HomePage extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: AppTextNormal.labelBold(
-                                    _c.indexTab.value == 0
+                                    _c.boards[_c.indexTab.value] == "GROUP"
                                         ? "CURRENT BALANCE"
                                         : "TEAM",
                                     14,
                                     Colors.white,
                                   ),
                                 ),
-                                if (_c.indexTab.value == 1)
+                                if (_c.boards[_c.indexTab.value] == "USER")
                                   Expanded(
                                     child: AppTextNormal.labelBold(
                                       "ROLE",
@@ -169,7 +180,9 @@ class HomePage extends StatelessWidget {
                                 SizedBox(
                                   width: 70,
                                   child: AppTextNormal.labelBold(
-                                    "PROFIT",
+                                    _c.boards[_c.indexTab.value] == "GROUP"
+                                        ? "PROFIT"
+                                        : "POINT",
                                     14,
                                     Colors.white,
                                   ),
@@ -181,11 +194,16 @@ class HomePage extends StatelessWidget {
                         20.ph,
                         Obx(
                           () {
-                            if (_c.indexTab.value == 0) {
+                            if (_c.boards[_c.indexTab.value] == "GROUP") {
                               return TeamPage();
                             }
 
-                            return IndividuPage();
+                            if (_c.boards[_c.indexTab.value] == "USER") {
+                              return IndividuPage();
+                            }
+                            return ChallengeBoardPage(
+                              indexNow: _c.indexTab.value,
+                            );
                           },
                         )
                       ],
@@ -208,15 +226,16 @@ class HomePage extends StatelessWidget {
                     width: 50,
                     height: 50,
                     child: GestureDetector(
-                      onTap: _c.indexTab.value == 1
+                      onTap: _c.indexTab.value == (_c.boards.length - 1)
                           ? null
                           : () {
                               _c.indexTab.value++;
                             },
                       child: Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color:
-                            _c.indexTab.value == 1 ? Colors.grey : Colors.red,
+                        color: _c.indexTab.value == (_c.boards.length - 1)
+                            ? Colors.grey
+                            : Colors.red,
                         size: 35,
                       ),
                     ),

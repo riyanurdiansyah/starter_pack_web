@@ -301,3 +301,152 @@ class _ItemContainer extends StatelessWidget {
     );
   }
 }
+
+class AppPaginationBoard extends StatefulWidget {
+  const AppPaginationBoard({
+    super.key,
+    required this.currentPage,
+    required this.totalPage,
+    required this.onPageChanged,
+    this.decoration,
+    required this.onSearched,
+  });
+
+  final int currentPage;
+  final int totalPage;
+  final ValueChanged<int> onPageChanged;
+  final ValueChanged<String> onSearched;
+  final Decoration? decoration;
+
+  @override
+  State<AppPaginationBoard> createState() => _AppPaginationBoardState();
+}
+
+class _AppPaginationBoardState extends State<AppPaginationBoard> {
+  late int currentPage = widget.currentPage;
+  late int totalPage = widget.totalPage;
+  late TextEditingController controller = TextEditingController();
+
+  @override
+  void didUpdateWidget(covariant AppPaginationBoard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.currentPage != widget.currentPage ||
+        oldWidget.totalPage != widget.totalPage) {
+      setState(() {
+        currentPage = widget.currentPage;
+        totalPage = widget.totalPage;
+      });
+    }
+  }
+
+  void _updatePage(int page) {
+    setState(() {
+      currentPage = page;
+    });
+    widget.onPageChanged(page);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const Spacer(),
+          Container(
+            alignment: Alignment.center,
+            height: 35,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            decoration: widget.decoration ??
+                BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey.shade200,
+                  ),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+            child: AppTextNormal.labelW500(
+              currentPage.toString(),
+              14,
+              Colors.black,
+            ),
+          ),
+          const SizedBox(
+            width: 12,
+          ),
+          AppTextNormal.labelW500(
+            "dari",
+            14,
+            Colors.black,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          AppTextNormal.labelW500(
+            totalPage.toString(),
+            14,
+            Colors.black,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          InkWell(
+            onTap: currentPage <= 1
+                ? null
+                : () {
+                    _updatePage(currentPage - 1);
+                  },
+            child: Container(
+              alignment: Alignment.center,
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: currentPage > 1
+                    ? const Color(0xFFE5E6E9)
+                    : const Color(0xFFF1F2F4),
+              ),
+              child: Text(
+                '«',
+                style: GoogleFonts.sourceSans3(
+                  fontSize: 18,
+                  color: currentPage > 1 ? Colors.black : Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: currentPage >= totalPage
+                ? null
+                : () {
+                    _updatePage(currentPage + 1);
+                  },
+            child: Container(
+              alignment: Alignment.center,
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: currentPage < totalPage
+                    ? const Color(0xFFE5E6E9)
+                    : const Color(0xFFF1F2F4),
+              ),
+              child: Text(
+                '»',
+                style: GoogleFonts.sourceSans3(
+                  fontSize: 18,
+                  color: currentPage < totalPage
+                      ? Colors.black
+                      : Colors.grey.shade400,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

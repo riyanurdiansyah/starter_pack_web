@@ -53,13 +53,15 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: isMobile ? 40 : 10,
+                  top: isMobile ? 40 : 0,
                   left: isMobile ? 10 : null,
                   right: isMobile ? 10 : null,
-                  child: Center(
+                  child: SizedBox(
+                    height: 200,
                     child: Image.asset(
                       textImage,
                       width: isMobile ? size.width * 0.8 : size.width / 2.25,
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
                 ),

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
 
 import '../../../utils/app_constanta.dart';
+import '../../challenge/model/challenge_m.dart';
 import '../../challenge/model/quiz_session_m.dart';
 import '../../demography/model/distribute_m.dart';
 import '../../user/model/user_m.dart';
@@ -30,21 +31,80 @@ class HomeController extends GetxController {
 
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 12.obs;
+
+  RxList<int> currentPageChallenges = <int>[0, 0].obs;
+  RxList<int> dataPerPageChallenges = <int>[12, 12].obs;
   Rx<bool> isSearched = false.obs;
   Rx<bool> isLoading = false.obs;
 
   final RxList<DistributeM> distributes = <DistributeM>[].obs;
+
+  RxList<ChallengeM> challenges = <ChallengeM>[].obs;
+
+  RxList<List<UserM>> challengeUsers = <List<UserM>>[
+    [userEmpty],
+    [userEmpty],
+  ].obs;
+
+  RxList<String> boards = <String>[].obs;
 
   @override
   void onInit() async {
     changeLoading(true);
     await setup();
     await getDistribute();
-    await getSessionQuiz();
     await getGroups();
+    await getSessionQuiz();
     await getUsers();
+    await getChallenges();
+    // await getUsersChallenge();
     await changeLoading(false);
     super.onInit();
+  }
+
+  Future getChallenges() async {
+    final response = await firestore.collection("challenge").get();
+
+    challenges.value = response.docs.map((e) {
+      return ChallengeM.fromJson(e.data());
+    }).toList();
+
+    challenges.sort(
+        (a, b) => DateTime.parse(a.start).compareTo(DateTime.parse(b.start)));
+
+    for (var item in challenges) {
+      List<UserM> userData = [];
+      double pageTemp = 0;
+      boards.add(item.id);
+      for (var data in users) {
+        var resultQuiz = quizess.firstWhereOrNull(
+            (e) => e.quizId == item.id && e.username == data.username);
+        if (resultQuiz != null) {
+          data = data.copyWith(
+            point: resultQuiz.point,
+          );
+        } else {
+          data = data.copyWith(
+            point: 0,
+          );
+        }
+        userData.add(data);
+      }
+
+      for (int i = 0; i < userData.length; i++) {
+        pageTemp =
+            (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
+        userData[i] = userData[i].copyWith(
+          page: pageTemp.ceil(),
+        );
+      }
+      userData.sort((a, b) => a.nama.compareTo(b.nama));
+      userData.sort((a, b) => b.point.compareTo(a.point));
+      userData = userData.where((e) => e.kelompok != "PANITIA").toList();
+      challengeUsers.add(userData);
+      dataPerPageChallenges.add(12);
+      currentPageChallenges.add(1);
+    }
   }
 
   Future<List<DistributeM>> getDistribute() async {
@@ -94,6 +154,7 @@ class HomeController extends GetxController {
     }
 
     groups.sort((a, b) => b.profit.compareTo(a.profit));
+    boards.add("GROUP");
   }
 
   // Future insertDummy() async {
@@ -148,7 +209,32 @@ class HomeController extends GetxController {
         page: pageTemp.ceil(),
       );
     }
+    boards.add("USER");
   }
+
+  // Future getUsersChallenge() async {
+  //   double pageTemp = 0;
+  //   for (int i = 0; i < challengeUsers.length; i++) {
+  //     for(int j = 0; j < users.length; j++) {
+  //       if(challengeUsers[i].)
+  //     }
+  //     users[i] = users[i].copyWith(
+  //       point: quizess
+  //           .where((e) => e.username == users[i].username)
+  //           .fold<int>(0, (total, element) => total + element.point),
+  //     );
+  //   }
+
+  //   users.sort((a, b) => a.nama.compareTo(b.nama));
+  //   users.sort((a, b) => b.point.compareTo(a.point));
+  //   for (int i = 0; i < users.length; i++) {
+  //     pageTemp =
+  //         (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
+  //     users[i] = users[i].copyWith(
+  //       page: pageTemp.ceil(),
+  //     );
+  //   }
+  // }
 
   List<UserM> isUsingUsers() {
     if (isSearched.value) {
@@ -156,6 +242,10 @@ class HomeController extends GetxController {
     }
 
     return users.where((e) => e.page == currentPage.value).toList();
+  }
+
+  List<UserM> isUsingUsersChallenge(List<UserM> usersData) {
+    return usersData.where((e) => e.page == currentPage.value).toList();
   }
 
   int isTotalPage() {
@@ -197,7 +287,7 @@ class HomeController extends GetxController {
   }
 
   void onChangepage(int newValue) {
-    currentPage.value = newValue;
+    currentPageChallenges[indexTab.value] = newValue;
   }
 
   double calculateTotalProfit(String targetGroupId) {

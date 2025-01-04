@@ -89,6 +89,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<bool> isLastQuestion = false.obs;
 
+  // RxList<LeaderboardM> leaderboards;
+
   final Rx<GroupM> group = groupEmpty.obs;
   final RxList<int> listCorrect = <int>[].obs;
   // final RxList<int> listIncorrect = <int>[].obs;
@@ -153,7 +155,6 @@ class ChallengeQuizController extends GetxController {
 
     final sessions =
         response.docs.map((doc) => QuizSessionM.fromJson(doc.data())).toList();
-
     final sessionData = sessions
         .where(
             (e) => e.userId == user.value.id && e.quizId == challenge.value.id)
@@ -202,7 +203,9 @@ class ChallengeQuizController extends GetxController {
         timeElapsed.value++;
         if (timeElapsed.value % 10 == 0) {
           if (isFinished.value == false) {
-            saveSessionQuiz(false);
+            if (!challenge.value.type.toLowerCase().contains("wellness")) {
+              saveSessionQuiz(false);
+            }
           }
         }
       } else {
@@ -237,7 +240,7 @@ class ChallengeQuizController extends GetxController {
       time: isFinished ? 0 : timeQuiz.value / 60,
       point: point.value,
       isFinished: isFinished,
-      isRated: true,
+      isRated: false,
       type: challenge.value.type,
       username: user.value.username,
       page: 0,

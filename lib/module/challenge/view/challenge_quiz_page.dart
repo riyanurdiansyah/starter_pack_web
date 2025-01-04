@@ -600,9 +600,8 @@ class ChallengeQuizPage extends StatelessWidget {
                           child: Stack(
                             children: [
                               Positioned(
-                                bottom: 0, // Letakkan di bagian bawah
-                                left:
-                                    0, // Opsional jika ingin gambar sejajar dengan sisi kiri
+                                bottom: 0,
+                                left: 0,
                                 child: Container(
                                   alignment: Alignment.centerLeft,
                                   width: 250,

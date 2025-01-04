@@ -121,8 +121,9 @@ class PlayPage extends StatelessWidget {
                 ),
               ),
             Positioned(
-              top: isMobile ? 50 : 25,
+              top: 0,
               child: Container(
+                height: isMobile ? 150 : 180,
                 margin: EdgeInsets.symmetric(
                   horizontal: isMobile ? 20 : 80,
                 ),
@@ -130,6 +131,7 @@ class PlayPage extends StatelessWidget {
                 child: Image.asset(
                   textImage,
                   width: isMobile ? size.width / 2 : size.width / 3.2,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),
