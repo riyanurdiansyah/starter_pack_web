@@ -136,6 +136,7 @@ class DemographysetController extends GetxController {
     tcSeniors.text = oldDemography.seniors;
     tcImage.text = oldDemography.image;
     tcCost.text = oldDemography.cost.toString();
+    tcSpecial.text = oldDemography.specialCase;
     // tcMinPrice.text = oldDemography.minPrice.toString();
     // tcMaxPrice.text = oldDemography.maxPrice.toString();
   }
@@ -174,6 +175,7 @@ class DemographysetController extends GetxController {
           pregnantElevated: tcPregnantElevated.text,
           seniorsElevated: tcSeniorsElevated.text,
           cost: double.tryParse(tcCost.text) ?? oldDemography.cost,
+          specialCase: tcSpecial.text,
           // minPrice: double.tryParse(tcMinPrice.text) ?? oldDemography.minPrice,
           // maxPrice: double.tryParse(tcMaxPrice.text) ?? oldDemography.maxPrice,
           image: downlodUrl.isEmpty

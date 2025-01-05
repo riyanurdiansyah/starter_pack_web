@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
+import '../../../utils/app_dialog.dart';
 import '../../dashboard/model/demography_m.dart';
 import '../../user/model/user_m.dart';
 import '../model/produk_m.dart';
@@ -28,6 +28,8 @@ class FinanceController extends GetxController {
 
   Rx<UserM> userSession = userEmpty.obs;
 
+  final Rx<bool> isDone = false.obs;
+
   RxList<Map<String, dynamic>> accessList = <Map<String, dynamic>>[].obs;
 
   @override
@@ -36,6 +38,7 @@ class FinanceController extends GetxController {
     await getProducts();
     await getDemographys();
     await generateAccess();
+    await getLogFinance();
     super.onInit();
   }
 
@@ -44,6 +47,17 @@ class FinanceController extends GetxController {
     final user = pref.getString("user");
     if (user != null) {
       userSession.value = UserM.fromJson(json.decode(user));
+    }
+  }
+
+  Future getLogFinance() async {
+    final logAssign = await firestore
+        .collection("log")
+        .where("type", isEqualTo: "selling_price")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+    if (logAssign.docs.isNotEmpty) {
+      isDone.value = true;
     }
   }
 
@@ -92,41 +106,47 @@ class FinanceController extends GetxController {
     }).toList();
   }
 
-  void savePrice() {
+  void savePrice() async {
     if (formKey.currentState!.validate()) {
       bool adaKosong = accessList.any((e) =>
           (e["controller"] as List<TextEditingController>)
               .any((x) => x.text.isEmpty));
-      // if (adaKosong) {
-      //   AppDialog.dialogSnackbar("All price fields must be filled.");
-      // } else {
-      final body = {
-        "priceId": const Uuid().v4(),
-        "groupId": userSession.value.groupId,
-        "areas": demographys.map((e) {
-          final demographyJson = e.toJson();
+      if (adaKosong) {
+        AppDialog.dialogSnackbar("All price fields must be filled.");
+      } else {
+        final body = {
+          "priceId": const Uuid().v4(),
+          "groupId": userSession.value.groupId,
+          "areas": demographys.map((e) {
+            final demographyJson = e.toJson();
 
-          // Dapatkan daftar TextEditingController terkait untuk area ini
-          final controllers =
-              (accessList.firstWhere((x) => x["areaId"] == e.id)["controller"]
-                  as List<TextEditingController>);
+            final controllers =
+                (accessList.firstWhere((x) => x["id"] == e.id)["controller"]
+                    as List<TextEditingController>);
 
-          demographyJson["products"] = productsOwn.map((product) {
-            // Cari indeks produk terkait
-            final index = productsOwn.indexOf(product);
+            demographyJson["products"] = productsOwn.map((product) {
+              final index = productsOwn.indexOf(product);
 
-            // Tetapkan priceDistribute berdasarkan nilai controller yang sesuai
-            final price = double.tryParse(controllers[index].text) ?? 0;
+              final price = double.tryParse(controllers[index].text) ?? 0;
 
-            return product.copyWith(priceDistribute: price).toJson();
-          }).toList();
+              return product.copyWith(priceDistribute: price).toJson();
+            }).toList();
 
-          return demographyJson;
-        }).toList(),
-      };
-
-      log(json.encode(body));
-      // }
+            return demographyJson;
+          }).toList(),
+        };
+        await firestore
+            .collection("selling_price")
+            .doc(body["priceId"].toString())
+            .set(body);
+        final id = const Uuid().v4();
+        await firestore.collection("log").doc(id).set({
+          "logId": id,
+          "groupId": userSession.value.groupId,
+          "type": "selling_price",
+          "createdAt": DateTime.now().toIso8601String(),
+        });
+      }
     }
   }
 }

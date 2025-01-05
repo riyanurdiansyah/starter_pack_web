@@ -133,7 +133,11 @@ class DemographyM {
         "pregnant_elevated_class": pregnantElevated,
         "seniors_elevated_class": seniorsElevated,
         "cost": cost,
-        "details": List<dynamic>.from(details.map((x) => x.toJson())),
+      };
+
+  Map<String, dynamic> toJsonPRICE() => {
+        "id": id,
+        // "details": List<dynamic>.from(details.map((x) => x.toJson())),
       };
 }
 

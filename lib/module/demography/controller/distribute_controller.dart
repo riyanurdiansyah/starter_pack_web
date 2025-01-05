@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:starter_pack_web/module/demography/model/selling_price_m.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
@@ -32,6 +33,8 @@ class DistributeController extends GetxController {
 
   RxList<int> totalDistributed = <int>[].obs;
 
+  RxList<SellingPriceM> sellings = <SellingPriceM>[].obs;
+
   // RxList<TextEditingController> quantityControllers =
   //     <TextEditingController>[].obs;
 
@@ -43,6 +46,8 @@ class DistributeController extends GetxController {
     await getProducts();
     await getDemographys();
     await generateAccess();
+    await generateAccess();
+    await getSellingPrice();
     super.onInit();
   }
 
@@ -52,6 +57,58 @@ class DistributeController extends GetxController {
     if (user != null) {
       userSession.value = UserM.fromJson(json.decode(user));
     }
+  }
+
+  Future<List<SellingPriceM>> getSellingPrice() async {
+    final response = await firestore
+        .collection("selling_price")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+    sellings.value = response.docs.map((e) {
+      return SellingPriceM.fromJson(e.data());
+    }).toList();
+
+    // // Update productsOwn secara langsung
+    // for (var itemDemo in demographys) {
+    //   Product? itemProduct;
+    //   var itemSell = sellings
+    //       .firstWhereOrNull((x) => x.groupId == userSession.value.groupId);
+    //   if (itemSell != null) {
+    //     var prodSell =
+    //         itemSell.areas.firstWhereOrNull((y) => y.id == itemDemo.id);
+    //     if (prodSell != null) {
+    //       for (var i = 0; i < productsOwn.length; i++) {
+    //         final item = productsOwn[i];
+
+    //         try {
+    //           var data = sellings.firstWhereOrNull((e) =>
+    //               e.areas.firstWhereOrNull((y) =>
+    //                   y.id == itemDemo.id &&
+    //                   y.products.firstWhereOrNull((z) => z.id == item.id) !=
+    //                       null) !=
+    //               null);
+
+    //           itemProduct = data?.areas
+    //               .expand((x) => x.products)
+    //               .firstWhere((x) => x.id == item.id);
+
+    //           if (itemProduct != null) {
+    //             // log("MASUK");
+    //             productsOwn[i] = item.copyWith(
+    //               priceDistribute: itemProduct.priceDistribute.toDouble(),
+    //             );
+    //           }
+    //         } catch (e) {
+    //           itemProduct = null; // Tetapkan null jika tidak ditemukan
+    //         }
+    //       }
+    //     } else {
+    //       log("MASUK GA ADA ${itemDemo.id}");
+    //     }
+    //   }
+    // }
+
+    return sellings;
   }
 
   Future<List<DemographyM>> getDemographys() async {

@@ -356,13 +356,17 @@ class DistributePage extends StatelessWidget {
               // }),
 
               //batas
-              Obx(
-                () => Expanded(
+              Obx(() {
+                if (_c.sellings.isEmpty) {
+                  return const SizedBox();
+                }
+                return Expanded(
                   child: Form(
                     key: _c.formKey,
                     child: ListView(
-                      children: List.generate(_c.demographys.length, (index) {
-                        final data = _c.demographys[index];
+                      children:
+                          List.generate(_c.sellings[0].areas.length, (index) {
+                        final data = _c.sellings[0].areas[index];
                         return ExpansionTile(
                           title: Row(
                             children: [
@@ -378,9 +382,11 @@ class DistributePage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          children:
-                              List.generate(_c.productsOwn.length, (subindex) {
-                            final prod = _c.productsOwn[subindex];
+                          children: List.generate(
+                              _c.sellings[0].areas[index].products.length,
+                              (subindex) {
+                            final prod =
+                                _c.sellings[0].areas[index].products[subindex];
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 16.0),
                               child: Row(
@@ -400,12 +406,18 @@ class DistributePage extends StatelessWidget {
                                           16,
                                           Colors.black,
                                         ),
-                                        // const Spacer(),
-                                        // AppTextNormal.labelBold(
-                                        //   "Stok : ${prod.qty}",
-                                        //   16,
-                                        //   Colors.grey.shade600,
-                                        // ),
+                                        const Spacer(),
+                                        AppTextNormal.labelBold(
+                                          "Stock : ${_c.productsOwn.firstWhereOrNull((x) => x.id == prod.id)?.qty ?? 0}",
+                                          16,
+                                          Colors.grey.shade600,
+                                        ),
+                                        const Spacer(),
+                                        AppTextNormal.labelBold(
+                                          "Price : ${prod.priceDistribute}",
+                                          16,
+                                          Colors.grey.shade600,
+                                        ),
                                         20.pw,
                                       ],
                                     ),
@@ -513,8 +525,8 @@ class DistributePage extends StatelessWidget {
                       }),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
             ],
           ),
         ],

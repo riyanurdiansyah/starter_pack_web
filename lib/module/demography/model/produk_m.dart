@@ -79,4 +79,15 @@ class ProdukM {
         "priceDistribute": priceDistribute,
         "groups": List<String>.from(groups.map((x) => x)),
       };
+
+  Map<String, dynamic> toJsonPRICE() => {
+        "nama": nama,
+        "tipe": tipe,
+        "id": id,
+        "harga": harga,
+        // "image": image,
+        // "qty": qty,
+        "priceDistribute": priceDistribute,
+        // "groups": List<String>.from(groups.map((x) => x)),
+      };
 }
