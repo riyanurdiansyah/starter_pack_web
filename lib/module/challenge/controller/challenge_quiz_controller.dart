@@ -208,9 +208,9 @@ class ChallengeQuizController extends GetxController {
                     (hoursDifference / hoursDifferenceNow)))
             .floor();
 
-        if ((challenge.value.maxPoint / 2) > maxPoint.value) {
-          maxPoint.value = (challenge.value.maxPoint / 2).floor();
-        }
+        // if ((challenge.value.maxPoint / 2) > maxPoint.value) {
+        //   maxPoint.value = (challenge.value.maxPoint / 2).floor();
+        // }
 
         timeQuiz.value--;
         timeElapsed.value++;
