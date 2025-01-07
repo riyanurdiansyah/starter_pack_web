@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -203,14 +202,13 @@ class ChallengeQuizController extends GetxController {
 
         // Duration difference = endDate.difference(now);
         // double hoursDifference = difference.inMinutes / 60;
+        if (hoursDifferenceNow < hoursDifference) {
+          hoursDifferenceNow = hoursDifferenceNow + 1;
+        }
         maxPoint.value = ((challenge.value.maxPoint / 2) +
                 ((challenge.value.maxPoint / 2) *
                     (hoursDifferenceNow / hoursDifference)))
             .floor();
-
-        log("CEK TIME : $hoursDifferenceNow");
-        log("CEK TIME 2 : $hoursDifference");
-        log("CEK TIME 3 : ${maxPoint.value}");
         if ((challenge.value.maxPoint / 2) > maxPoint.value) {
           maxPoint.value = (challenge.value.maxPoint / 2).floor();
         }
