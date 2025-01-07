@@ -125,9 +125,9 @@ class PlayController extends GetxController {
             updateNews(news[0]);
             AppDialog.dialogNews(news[0]);
           } else {
-            final newsAll = news.where((e) => e.isForAll == true).toList();
-            updateNews(newsAll[0]);
-            AppDialog.dialogNews(newsAll[0]);
+            // final newsAll = news.where((e) => e.isForAll == true).toList();
+            // updateNews(newsAll[0]);
+            // AppDialog.dialogNews(newsAll[0]);
           }
         }
         return true;

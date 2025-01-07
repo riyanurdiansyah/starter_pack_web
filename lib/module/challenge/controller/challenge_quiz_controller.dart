@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -104,6 +105,7 @@ class ChallengeQuizController extends GetxController {
   @override
   void onClose() {
     if (_timer != null) {
+      log("KE CLOSE");
       _timer?.cancel();
     }
     super.onClose();
@@ -356,7 +358,7 @@ class ChallengeQuizController extends GetxController {
         multipleChoices.value = responseDetails.docs
             .map((doc) => MultipleChoiceM.fromJson(doc.data()))
             .toList();
-
+        multipleChoices.shuffle();
         if (multipleChoices.length > 10) {
           listAnswer.value = List.generate(
               10, (index) => AnswerM(indexAnswer: 99, isCorrect: false));
