@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -45,9 +46,8 @@ class DistributeController extends GetxController {
     await setup();
     await getProducts();
     await getDemographys();
-    await generateAccess();
-    await generateAccess();
     await getSellingPrice();
+    await generateAccess();
     super.onInit();
   }
 
@@ -142,35 +142,39 @@ class DistributeController extends GetxController {
   }
 
   Future generateAccess() async {
-    accessList.value = List.generate(demographys.length, (index) {
-      final data = demographys[index];
+    accessList.value = List.generate(sellings[0].areas.length, (index) {
+      final data = sellings[0].areas[index];
       return {
         "id": data.id,
         "name": data.name,
-        "controller": List.generate(productsOwn.length, (subindex) {
+        "controller": List.generate(data.products.length, (subindex) {
           return TextEditingController(text: "0");
         }),
-        "controller_price": List.generate(productsOwn.length, (subindex) {
+        "controller_price": List.generate(data.products.length, (subindex) {
           return TextEditingController(text: "0");
         }),
       };
     });
+
+    log(accessList.map((e) => e["controller"]).toString());
   }
 
   void incrementQuantity(int index, int subindex) {
     AppSound.playHover();
-    if (productsOwn[subindex].priceDistribute == 0) {
+    if (sellings[0].areas[index].products[subindex].priceDistribute == 0) {
       AppDialog.dialogSnackbar(
           "Please determine the distribution price for this product first!!");
     } else {
       var qTc =
           accessList[index]["controller"][subindex] as TextEditingController;
       int currentQty = int.parse(qTc.text);
-      if (productsOwn[subindex].qty > 0) {
+      if (sellings[0].areas[index].products[subindex].qty > 0) {
         totalDistributed[subindex] = totalDistributed[subindex] + 1;
         qTc.text = (currentQty + 1).toString();
-        productsOwn[subindex] =
-            productsOwn[subindex].copyWith(qty: productsOwn[subindex].qty - 1);
+        sellings[0].areas[index].products[subindex] = sellings[0]
+            .areas[index]
+            .products[subindex]
+            .copyWith(qty: sellings[0].areas[index].products[subindex].qty - 1);
       }
     }
   }
@@ -180,7 +184,7 @@ class DistributeController extends GetxController {
     var qTc =
         accessList[index]["controller"][subindex] as TextEditingController;
     int currentQty = int.parse(qTc.text);
-    if (currentQty > 0 && productsOwn[index].qty > 0) {
+    if (currentQty > 0 && sellings[0].areas[index].products[subindex].qty > 0) {
       totalDistributed[subindex] = totalDistributed[subindex] - 1;
       qTc.text = (currentQty - 1).toString();
       productsOwn[subindex] =

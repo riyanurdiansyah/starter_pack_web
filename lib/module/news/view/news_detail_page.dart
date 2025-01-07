@@ -52,9 +52,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
           );
         }
         if (_c.news.value == newsEmpty) {
-          return Container(
-            color: Colors.red,
-          );
+          return Container();
         }
 
         final random = Random();

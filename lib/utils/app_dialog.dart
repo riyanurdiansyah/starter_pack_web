@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/module/user/controller/user_controller.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
+import 'package:starter_pack_web/utils/app_constanta.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 
@@ -31,7 +33,6 @@ import '../middleware/app_route.dart';
 import '../module/dashboard/model/multiple_choice_m.dart';
 import '../module/user/model/group_m.dart';
 import '../module/user/model/role_m.dart';
-import 'app_constanta.dart';
 import 'app_decoration.dart';
 import 'app_text.dart';
 import 'app_validator.dart';
@@ -48,7 +49,7 @@ class AppDialog {
     );
   }
 
-  static dialogNews() {
+  static dialogNews(NewsM news) {
     final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
 
     final c = Get.find<PlayController>();
@@ -89,6 +90,7 @@ class AppDialog {
                   child: SizedBox(
                     width: size.width / 2.5,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnimatedTextKit(
                           repeatForever: false,
@@ -99,7 +101,7 @@ class AppDialog {
                           },
                           animatedTexts: [
                             TypewriterAnimatedText(
-                              loremIpsum,
+                              news.content,
                               textStyle: const TextStyle(
                                 fontFamily: 'Bigail',
                                 fontWeight: FontWeight.bold,
@@ -112,35 +114,39 @@ class AppDialog {
                             ),
                           ],
                         ),
-                        Obx(
-                          () {
-                            if (c.isShow.value) {
-                              return IconButton(
-                                icon: const Icon(Icons.check,
-                                    color: Colors.green),
-                                onPressed: () {
-                                  // Aksi ketika tombol ditekan
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text("Button Pressed!")),
-                                  );
-                                },
-                              );
-                            }
+                        // Obx(
+                        //   () {
+                        //     if (c.isShow.value) {
+                        //       return IconButton(
+                        //         icon: const Icon(Icons.check,
+                        //             color: Colors.green),
+                        //         onPressed: () {
+                        //           // Aksi ketika tombol ditekan
+                        //           ScaffoldMessenger.of(context).showSnackBar(
+                        //             const SnackBar(
+                        //                 content: Text("Button Pressed!")),
+                        //           );
+                        //         },
+                        //       );
+                        //     }
 
-                            return const SizedBox();
-                          },
-                        )
+                        //     return const SizedBox();
+                        //   },
+                        // )
                       ],
                     ),
                   ),
                 ),
                 Positioned(
-                  right: 0,
+                  right: 50,
                   bottom: 0,
-                  child: Image.asset(
-                    driverImage,
-                    filterQuality: FilterQuality.high,
+                  child: Expanded(
+                    child: Image.asset(
+                      imageBOD[c.random.nextInt(4)],
+                      filterQuality: FilterQuality.high,
+                      fit: BoxFit.fitHeight,
+                      width: 250,
+                    ),
                   ),
                 ),
               ],
@@ -158,6 +164,7 @@ class AppDialog {
     final size = MediaQuery.of(navigatorKey.currentContext!).size;
     if (oldNews != null) {
       c.setDataToDialog(oldNews);
+      log(oldNews.toJson().toString());
     }
     return showDialog(
       context: navigatorKey.currentContext!,
@@ -273,55 +280,34 @@ class AppDialog {
                       ),
                     ),
                   ),
-                  18.ph,
+                  16.ph,
                   AppTextNormal.labelW700(
                     "Content",
                     14,
                     Colors.black,
                   ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        width: 0.2,
-                        color: Colors.black,
-                      ),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(4),
-                        topRight: Radius.circular(4),
-                      ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcData,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: GoogleFonts.poppins(
+                      height: 1.4,
                     ),
-                    child: QuillSimpleToolbar(
-                      controller: c.controller,
-                      configurations: const QuillSimpleToolbarConfigurations(
-                        showClipboardCopy: false,
-                        showCodeBlock: false,
-                        showInlineCode: false,
-                        showClearFormat: false,
-                        showSearchButton: false,
+                    minLines: 4,
+                    maxLines: 50,
+                    decoration: InputDecoration(
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        wordSpacing: 4,
                       ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          width: 0.2,
-                          color: Colors.black,
-                        )),
-                    child: QuillEditor(
-                      focusNode: c.editorFocusNode,
-                      scrollController: c.editorScrollController,
-                      controller: c.controller,
-                      configurations: const QuillEditorConfigurations(
-                        placeholder: 'Start writing your notes...',
-                        padding: EdgeInsets.all(16),
-                        embedBuilders: [],
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
@@ -1972,6 +1958,7 @@ class AppDialog {
                 subtitle ?? "Are you sure you want to delete this item?",
                 14,
                 Colors.grey.shade600,
+                maxLines: 3,
               ),
               26.ph,
               Row(

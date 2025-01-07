@@ -76,6 +76,12 @@ class PlayPage extends StatelessWidget {
         }
         return Stack(
           children: [
+            StreamBuilder<bool>(
+                // Memanggil stream dari controller yang sudah dikonversi ke model
+                stream: _c.groupStream(),
+                builder: (context, AsyncSnapshot<bool> snapshot) {
+                  return const SizedBox();
+                }),
             SizedBox(
               width: double.infinity,
               height: size.height,

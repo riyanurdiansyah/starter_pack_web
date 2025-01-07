@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
+import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../dashboard/controller/audio_controller.dart';
@@ -23,6 +26,8 @@ class PlayController extends GetxController {
   final Rx<bool> isPlayingMusic = true.obs;
 
   final Rx<bool> isShow = false.obs;
+
+  final random = Random();
 
   final Rx<UserM> user = UserM(
     id: "",
@@ -104,5 +109,36 @@ class PlayController extends GetxController {
         isPlayingMusic.value = true;
       }
     }
+  }
+
+  Stream<bool> groupStream() {
+    return FirebaseFirestore.instance
+        .collection('news')
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        List<NewsM> news =
+            snapshot.docs.map((e) => NewsM.fromJson(e.data())).toList();
+        news = news.where((e) => !e.users.contains(user.value.id)).toList();
+        if (news.isNotEmpty) {
+          if (user.value.roleId == 100 || user.value.roleId == 109) {
+            updateNews(news[0]);
+            AppDialog.dialogNews(news[0]);
+          }
+        }
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  void updateNews(NewsM news) async {
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection('news').doc(news.id);
+
+    await docRef.update({
+      'users': FieldValue.arrayUnion([user.value.id])
+    });
   }
 }

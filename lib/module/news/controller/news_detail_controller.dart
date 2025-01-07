@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -51,8 +49,8 @@ class NewsDetailController extends GetxController {
         .get();
     if (response.docs.isNotEmpty) {
       news.value = NewsM.fromJson(response.docs.first.data());
-      controller.document =
-          quill.Document.fromJson(json.decode(news.value.content));
+      // controller.document =
+      //     quill.Document.fromJson(json.decode(news.value.content));
     }
   }
 
