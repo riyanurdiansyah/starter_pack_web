@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -155,8 +154,6 @@ class DistributeController extends GetxController {
         }),
       };
     });
-
-    log(accessList.map((e) => e["controller"]).toString());
   }
 
   void incrementQuantity(int index, int subindex) {

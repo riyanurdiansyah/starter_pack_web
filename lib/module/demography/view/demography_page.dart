@@ -165,20 +165,26 @@ class _DemographyPageState extends State<DemographyPage>
                   );
                 }),
               ),
-              Positioned(
-                left: 150,
-                bottom: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.goNamed(AppRouteName.distribute);
-                  },
-                  child: AppTextNormal.labelBold(
-                    "DISTRIBUTE",
-                    16,
-                    Colors.red,
-                  ),
-                ),
-              ),
+              Obx(() {
+                if (_c.userSession.value.roleId == 101 ||
+                    _c.userSession.value.roleId == 109) {
+                  return Positioned(
+                    left: 150,
+                    bottom: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.goNamed(AppRouteName.distribute);
+                      },
+                      child: AppTextNormal.labelBold(
+                        "DISTRIBUTE",
+                        16,
+                        Colors.red,
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox();
+              }),
               Obx(() {
                 if (_c.selectedIndex.value == 99) {
                   return const SizedBox();
