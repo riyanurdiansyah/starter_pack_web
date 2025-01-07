@@ -146,6 +146,7 @@ class FinanceController extends GetxController {
           "type": "selling_price",
           "createdAt": DateTime.now().toIso8601String(),
         });
+        await getLogFinance();
       }
     }
   }

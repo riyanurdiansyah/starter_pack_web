@@ -185,9 +185,9 @@ class ChallengeQuizController extends GetxController {
     isStarting.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (DateTime.now().isAfter(DateTime.parse(challenge.value.end))) {
-        if (isFinished.value == false) {
-          saveSessionQuiz(true);
-        }
+        // if (isFinished.value == false) {
+        //   saveSessionQuiz(true);
+        // }
         _timer?.cancel();
       } else if (timeQuiz.value > 0) {
         DateTime startDate = DateTime.parse(challenge.value.start);

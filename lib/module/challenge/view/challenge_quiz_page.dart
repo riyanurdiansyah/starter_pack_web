@@ -933,28 +933,34 @@ class ChallengeQuizPage extends StatelessWidget {
                                         ),
                                       ),
                                     10.pw,
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: isMobile ? 0 : 14),
-                                        height: 45,
-                                        child: ElevatedButton(
-                                          onPressed: _c.submitChallenge,
-                                          style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
+                                    Obx(() {
+                                      if ((_c.indexNow.value + 1) ==
+                                          (_c.multipleChoices.length)) {
+                                        return Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: isMobile ? 0 : 14),
+                                            height: 45,
+                                            child: ElevatedButton(
+                                              onPressed: _c.submitChallenge,
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                backgroundColor: colorPointRank,
+                                              ),
+                                              child: AppTextNormal.labelBold(
+                                                "SUBMIT",
+                                                16,
+                                                Colors.white,
+                                              ),
                                             ),
-                                            backgroundColor: colorPointRank,
                                           ),
-                                          child: AppTextNormal.labelBold(
-                                            "SUBMIT",
-                                            16,
-                                            Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                        );
+                                      }
+                                      return const SizedBox();
+                                    }),
                                     10.pw,
                                     if (isMobile)
                                       Container(

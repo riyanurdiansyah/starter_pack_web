@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
 import 'package:starter_pack_web/utils/app_color.dart';
-import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 import 'package:starter_pack_web/utils/app_sound.dart';
@@ -353,12 +352,12 @@ class _HoverTextItemState extends State<HoverTextItem> {
           if (widget.start.isEmpty) {
             context.goNamed(widget.route);
           } else {
-            if (DateTime.parse(widget.start).isBefore(DateTime.now())) {
-              context.goNamed(widget.route);
-            } else {
-              AppDialog.dialogSnackbar(
-                  "This feature is not accessible yet, but stay tuned—something exciting is on its way!");
-            }
+            // if (DateTime.parse(widget.start).isBefore(DateTime.now())) {
+            context.goNamed(widget.route);
+            // } else {
+            //   AppDialog.dialogSnackbar(
+            //       "This feature is not accessible yet, but stay tuned—something exciting is on its way!");
+            // }
           }
         },
         child: AnimatedContainer(
