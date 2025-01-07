@@ -70,8 +70,12 @@ class LoginController extends GetxController {
               pref.setString("user", json.encode(user.toJson()));
               saveSessionToCookie(user.id);
               isLoading.value = false;
-              audioC.playMusic();
-              navigatorKey.currentContext!.goNamed(AppRouteName.play);
+              if (tcPassword.text == tcUsername.text) {
+                navigatorKey.currentContext!.goNamed(AppRouteName.reset);
+              } else {
+                audioC.playMusic();
+                navigatorKey.currentContext!.goNamed(AppRouteName.play);
+              }
             } else {
               AppDialog.dialogSignin();
               errorMessage.value = "Incorrect password";

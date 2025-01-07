@@ -35,7 +35,9 @@ import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
 import 'package:starter_pack_web/module/demography/view/finance_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
+import 'package:starter_pack_web/module/login/controller/reset_controller.dart';
 import 'package:starter_pack_web/module/login/view/login_page.dart';
+import 'package:starter_pack_web/module/login/view/reset_pass_page.dart';
 import 'package:starter_pack_web/module/news/controller/news_controller.dart';
 import 'package:starter_pack_web/module/news/controller/news_detail_controller.dart';
 import 'package:starter_pack_web/module/news/view/news_page.dart';
@@ -132,6 +134,18 @@ GoRouter router = GoRouter(
       pageBuilder: (context, state) {
         Get.put(LoginController());
         return NoTransitionPage(child: LoginPage());
+      },
+    ),
+    GoRoute(
+      path: "/${AppRouteName.reset}",
+      name: AppRouteName.reset,
+      onExit: (_, __) {
+        Get.delete<ResetController>();
+        return true;
+      },
+      pageBuilder: (context, state) {
+        Get.put(ResetController());
+        return NoTransitionPage(child: ResetPassPage());
       },
     ),
     GoRoute(

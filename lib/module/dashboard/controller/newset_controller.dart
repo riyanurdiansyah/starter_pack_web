@@ -109,6 +109,7 @@ class NewsetController extends GetxController {
       }
       final id = const Uuid().v4();
       NewsM newsm = NewsM(
+        isForAll: false,
         id: oldNews == null ? id : oldNews.id,
         title: tcTitle.text,
         content: tcData.text,

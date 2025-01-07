@@ -16,6 +16,7 @@ class NewsM {
   final String date;
   final int page;
   final List<String> users;
+  final bool isForAll;
 
   NewsM({
     required this.id,
@@ -25,6 +26,7 @@ class NewsM {
     required this.date,
     required this.page,
     required this.users,
+    required this.isForAll,
   });
 
   NewsM copyWith({
@@ -35,6 +37,7 @@ class NewsM {
     String? date,
     int? page,
     List<String>? users,
+    bool? isForAll,
   }) =>
       NewsM(
         id: id ?? this.id,
@@ -44,6 +47,7 @@ class NewsM {
         date: date ?? this.date,
         page: page ?? this.page,
         users: users ?? this.users,
+        isForAll: isForAll ?? this.isForAll,
       );
 
   factory NewsM.fromJson(Map<String, dynamic> json) => NewsM(
@@ -52,6 +56,7 @@ class NewsM {
         title: json["title"],
         image: json["image"],
         date: json["date"],
+        isForAll: json["isForAll"] ?? false,
         page: 0,
         users: json["users"] == null
             ? []
@@ -64,6 +69,7 @@ class NewsM {
         "title": title,
         "image": image,
         "date": date,
+        "isForAll": isForAll,
         "users": List<String>.from(users.map((x) => x)),
       };
 }
