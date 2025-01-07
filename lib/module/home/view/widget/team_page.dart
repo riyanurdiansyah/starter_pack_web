@@ -86,12 +86,12 @@ class TeamPage extends StatelessWidget {
                                       Colors.black,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 100,
-                                    child: IconRank(
-                                      oldRank: data.rankOld ?? 99,
-                                      thenRank: data.rank ?? 99,
-                                    ),
+                                    // child: IconRank(
+                                    //   oldRank: data.rankOld ?? 99,
+                                    //   thenRank: data.rank ?? 99,
+                                    // ),
                                   ),
                                   SizedBox(
                                     width: 80,

@@ -90,6 +90,8 @@ class GameController extends GetxController {
     final response = await firestore
         .collection("quiz_session")
         .where("isRated", isEqualTo: false)
+        .where("isFinished", isEqualTo: true)
+        .where("type", isEqualTo: "WELLNESS")
         .get();
 
     if (response.docs.isEmpty) {
