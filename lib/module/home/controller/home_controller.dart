@@ -143,17 +143,27 @@ class HomeController extends GetxController {
     oldGroups.value = List.from(groups);
     thenGroups.value = List.from(groups);
 
+    groups.sort((a, b) => b.profit.compareTo(a.profit));
+    groups.sort((a, b) => b.point.compareTo(a.point));
     oldGroups.sort((a, b) => b.pointBefore.compareTo(a.pointBefore));
     thenGroups.sort((a, b) => b.point.compareTo(a.point));
 
+    bool allPointsZero = groups.every((group) => group.point == 0);
+
     for (int i = 0; i < groups.length; i++) {
-      groups[i] = groups[i].copyWith(
-        rank: thenGroups.indexWhere((x) => x.id == groups[i].id) + 1,
-        rankOld: oldGroups.indexWhere((x) => x.id == groups[i].id) + 1,
-      );
+      if (allPointsZero) {
+        groups[i] = groups[i].copyWith(
+          rank: 0,
+          rankOld: 0,
+        );
+      } else {
+        groups[i] = groups[i].copyWith(
+          rank: thenGroups.indexWhere((x) => x.id == groups[i].id) + 1,
+          rankOld: oldGroups.indexWhere((x) => x.id == groups[i].id) + 1,
+        );
+      }
     }
 
-    groups.sort((a, b) => b.profit.compareTo(a.profit));
     boards.add("GROUP");
   }
 
@@ -290,9 +300,11 @@ class HomeController extends GetxController {
     currentPageChallenges[indexTab.value] = newValue;
   }
 
+  void onChangepageIndividu(int newValue) {
+    currentPage.value = newValue;
+  }
+
   double calculateTotalProfit(String targetGroupId) {
-    // log("CEK DATA : $targetGroupId");
-    // log("CEK DATA : ${distributes.where((e) => e.groupId == targetGroupId).length}");
     return distributes
         .where((distribute) =>
             distribute.groupId == targetGroupId) // Filter berdasarkan groupId

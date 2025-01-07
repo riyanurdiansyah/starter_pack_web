@@ -179,7 +179,7 @@ class IndividuPage extends StatelessWidget {
                 child: AppPagination(
                   currentPage: _c.currentPage.value,
                   totalPage: _c.isTotalPage(),
-                  onPageChanged: _c.onChangepage,
+                  onPageChanged: _c.onChangepageIndividu,
                   onSearched: _c.onSearched,
                 ),
               )
