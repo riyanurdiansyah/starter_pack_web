@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -105,7 +104,6 @@ class ChallengeQuizController extends GetxController {
   @override
   void onClose() {
     if (_timer != null) {
-      log("KE CLOSE");
       _timer?.cancel();
     }
     super.onClose();
@@ -152,6 +150,7 @@ class ChallengeQuizController extends GetxController {
         .get();
 
     if (response.docs.isEmpty) {
+      multipleChoices.shuffle();
       return;
     }
 
@@ -194,14 +193,22 @@ class ChallengeQuizController extends GetxController {
         DateTime endDate = DateTime.parse(challenge.value.end);
         DateTime now = DateTime.now();
 
-        Duration difference = endDate.difference(now);
+        Duration difference = endDate.difference(startDate);
+        Duration differenceNow = endDate.difference(now);
 
-        double hoursDifference = difference.inMinutes / 60;
+// Mendapatkan perbedaan dalam jam
+        int hoursDifference = difference.inHours;
+        int hoursDifferenceNow = differenceNow.inHours;
+
+        // Duration difference = endDate.difference(now);
+
+        // double hoursDifference = difference.inMinutes / 60;
         maxPoint.value = (challenge.value.maxPoint -
-                ((challenge.value.maxPoint / 2) / hoursDifference))
+                ((challenge.value.maxPoint / 2) /
+                    (hoursDifference / hoursDifferenceNow)))
             .floor();
 
-        if ((challenge.value.maxPoint / 2) < maxPoint.value) {
+        if ((challenge.value.maxPoint / 2) > maxPoint.value) {
           maxPoint.value = (challenge.value.maxPoint / 2).floor();
         }
 
@@ -210,13 +217,13 @@ class ChallengeQuizController extends GetxController {
         if (timeElapsed.value % 10 == 0) {
           if (isFinished.value == false) {
             if (!challenge.value.type.toLowerCase().contains("wellness")) {
-              saveSessionQuiz(false);
+              // saveSessionQuiz(false);
             }
           }
         }
       } else {
         if (isFinished.value == false) {
-          saveSessionQuiz(true);
+          // saveSessionQuiz(true);
         }
         _timer?.cancel();
       }
@@ -362,7 +369,6 @@ class ChallengeQuizController extends GetxController {
         multipleChoices.value = responseDetails.docs
             .map((doc) => MultipleChoiceM.fromJson(doc.data()))
             .toList();
-        multipleChoices.shuffle();
         if (multipleChoices.length > 10) {
           listAnswer.value = List.generate(
               10, (index) => AnswerM(indexAnswer: 99, isCorrect: false));

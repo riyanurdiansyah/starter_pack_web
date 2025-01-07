@@ -146,7 +146,7 @@ class TeamPage extends StatelessWidget {
                                   Expanded(
                                     flex: 2,
                                     child: AppTextNormal.labelBold(
-                                      "R\$ ${formatToThousandK(data.point)}",
+                                      "R\$ ${convertNumber(data.point)}",
                                       14,
                                       Colors.black,
                                     ),
