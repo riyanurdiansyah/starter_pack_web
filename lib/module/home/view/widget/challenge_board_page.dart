@@ -20,8 +20,9 @@ class ChallengeBoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return SizedBox(
-      width: size.width / 1.5,
+      width: isMobile ? size.width : size.width / 1.5,
       child: Obx(
         () {
           return Column(
@@ -41,7 +42,8 @@ class ChallengeBoardPage extends StatelessWidget {
                   return Row(
                     children: [
                       if (index == 0 &&
-                          _c.currentPageChallenges[_c.indexTab.value] == 1)
+                          _c.currentPageChallenges[_c.indexTab.value] == 1 &&
+                          !isMobile)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Image.asset(
@@ -50,7 +52,8 @@ class ChallengeBoardPage extends StatelessWidget {
                           ),
                         ),
                       if (index == 1 &&
-                          _c.currentPageChallenges[_c.indexTab.value] == 1)
+                          _c.currentPageChallenges[_c.indexTab.value] == 1 &&
+                          !isMobile)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Image.asset(
@@ -59,7 +62,8 @@ class ChallengeBoardPage extends StatelessWidget {
                           ),
                         ),
                       if (index == 2 &&
-                          _c.currentPageChallenges[_c.indexTab.value] == 1)
+                          _c.currentPageChallenges[_c.indexTab.value] == 1 &&
+                          !isMobile)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Image.asset(
@@ -69,11 +73,13 @@ class ChallengeBoardPage extends StatelessWidget {
                           ),
                         ),
                       if (index > 2 &&
-                          _c.currentPageChallenges[_c.indexTab.value] == 1)
+                          _c.currentPageChallenges[_c.indexTab.value] == 1 &&
+                          !isMobile)
                         const SizedBox(
                           width: 30,
                         ),
-                      if (_c.currentPageChallenges[_c.indexTab.value] > 1)
+                      if (_c.currentPageChallenges[_c.indexTab.value] > 1 &&
+                          !isMobile)
                         const SizedBox(
                           width: 30,
                         ),
@@ -89,8 +95,8 @@ class ChallengeBoardPage extends StatelessWidget {
                                     ? colorGold
                                     : colorCardRank,
                               ),
-                              margin:
-                                  const EdgeInsets.only(bottom: 10, left: 20),
+                              margin: EdgeInsets.only(
+                                  bottom: 10, left: isMobile ? 0 : 20),
                               alignment: Alignment.center,
                               height: 45,
                               child: InkWell(
@@ -106,10 +112,11 @@ class ChallengeBoardPage extends StatelessWidget {
                                         Colors.black,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 80,
-                                    ),
-                                    10.pw,
+                                    if (!isMobile)
+                                      const SizedBox(
+                                        width: 80,
+                                      ),
+                                    if (!isMobile) 10.pw,
                                     Expanded(
                                       flex: 2,
                                       child: Column(

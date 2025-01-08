@@ -36,6 +36,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return Obx(() {
       if (_c.isLoading.value) {
         return Container(
@@ -59,45 +60,48 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.black.withOpacity(0.8),
         body: Row(
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: 250,
+            if (!isMobile)
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 250,
+                ),
               ),
-            ),
-            Expanded(
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: (_) {
-                  // _c.isHovered.value = true;
-                },
-                onExit: (_) {
-                  // _c.isHovered.value = false;
-                },
-                child: Obx(
-                  () => SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: GestureDetector(
-                      onTap: _c.indexTab.value == 0
-                          ? null
-                          : () {
-                              _c.indexTab.value--;
-                            },
-                      child: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color:
-                            _c.indexTab.value == 0 ? Colors.grey : Colors.red,
-                        size: 35,
+            if (!isMobile)
+              Expanded(
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  onEnter: (_) {
+                    // _c.isHovered.value = true;
+                  },
+                  onExit: (_) {
+                    // _c.isHovered.value = false;
+                  },
+                  child: Obx(
+                    () => SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: GestureDetector(
+                        onTap: _c.indexTab.value == 0
+                            ? null
+                            : () {
+                                _c.indexTab.value--;
+                              },
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color:
+                              _c.indexTab.value == 0 ? Colors.grey : Colors.red,
+                          size: 35,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
             Expanded(
               flex: 10,
               child: Container(
+                margin: isMobile ? const EdgeInsets.only(top: 50) : null,
                 alignment: Alignment.topCenter,
                 width: size.width,
                 child: SingleChildScrollView(
@@ -119,9 +123,11 @@ class HomePage extends StatelessWidget {
                         20.ph,
                         Obx(
                           () => Container(
-                            margin: const EdgeInsets.only(left: 50),
+                            margin: isMobile
+                                ? null
+                                : const EdgeInsets.only(left: 50),
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            width: size.width / 1.6,
+                            width: isMobile ? size.width : size.width / 1.6,
                             height: 40,
                             color: colorElectricViolet,
                             child: Row(
@@ -130,19 +136,20 @@ class HomePage extends StatelessWidget {
                                   width: 50,
                                   child: AppTextNormal.labelBold(
                                     "RANK",
-                                    14,
+                                    isMobile ? 10 : 14,
                                     Colors.white,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 100,
-                                  child: AppTextNormal.labelBold(
-                                    "",
-                                    14,
-                                    Colors.white,
+                                if (!isMobile)
+                                  SizedBox(
+                                    width: 100,
+                                    child: AppTextNormal.labelBold(
+                                      "",
+                                      14,
+                                      Colors.white,
+                                    ),
                                   ),
-                                ),
-                                if (_c.indexTab.value == 0)
+                                if (_c.indexTab.value == 0 && !isMobile)
                                   SizedBox(
                                     width: 80,
                                     child: AppTextNormal.labelBold(
@@ -169,7 +176,8 @@ class HomePage extends StatelessWidget {
                                     Colors.white,
                                   ),
                                 ),
-                                if (_c.boards[_c.indexTab.value] == "USER")
+                                if (_c.boards[_c.indexTab.value] == "USER" &&
+                                    !isMobile)
                                   Expanded(
                                     child: AppTextNormal.labelBold(
                                       "ROLE",
@@ -212,45 +220,115 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: (_) {
-                  // _c.isHovered.value = true;
-                },
-                onExit: (_) {
-                  // _c.isHovered.value = false;
-                },
-                child: Obx(
-                  () => SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: GestureDetector(
-                      onTap: _c.indexTab.value == (_c.boards.length - 1)
-                          ? null
-                          : () {
-                              _c.indexTab.value++;
-                            },
-                      child: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: _c.indexTab.value == (_c.boards.length - 1)
-                            ? Colors.grey
-                            : Colors.red,
-                        size: 35,
+            if (!isMobile)
+              Expanded(
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  onEnter: (_) {
+                    // _c.isHovered.value = true;
+                  },
+                  onExit: (_) {
+                    // _c.isHovered.value = false;
+                  },
+                  child: Obx(
+                    () => SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: GestureDetector(
+                        onTap: _c.indexTab.value == (_c.boards.length - 1)
+                            ? null
+                            : () {
+                                _c.indexTab.value++;
+                              },
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: _c.indexTab.value == (_c.boards.length - 1)
+                              ? Colors.grey
+                              : Colors.red,
+                          size: 35,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: 250,
+            if (!isMobile)
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 250,
+                ),
               ),
-            ),
           ],
         ),
+        bottomNavigationBar: !isMobile
+            ? null
+            : Row(
+                children: [
+                  Expanded(
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      onEnter: (_) {
+                        // _c.isHovered.value = true;
+                      },
+                      onExit: (_) {
+                        // _c.isHovered.value = false;
+                      },
+                      child: Obx(
+                        () => SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: GestureDetector(
+                            onTap: _c.indexTab.value == 0
+                                ? null
+                                : () {
+                                    _c.indexTab.value--;
+                                  },
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: _c.indexTab.value == 0
+                                  ? Colors.grey
+                                  : Colors.red,
+                              size: 35,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      onEnter: (_) {
+                        // _c.isHovered.value = true;
+                      },
+                      onExit: (_) {
+                        // _c.isHovered.value = false;
+                      },
+                      child: Obx(
+                        () => SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: GestureDetector(
+                            onTap: _c.indexTab.value == (_c.boards.length - 1)
+                                ? null
+                                : () {
+                                    _c.indexTab.value++;
+                                  },
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: _c.indexTab.value == (_c.boards.length - 1)
+                                  ? Colors.grey
+                                  : Colors.red,
+                              size: 35,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       );
     });
   }

@@ -18,8 +18,9 @@ class IndividuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return SizedBox(
-      width: size.width / 1.5,
+      width: isMobile ? size.width : size.width / 1.5,
       child: Obx(
         () {
           return Column(
@@ -29,7 +30,7 @@ class IndividuPage extends StatelessWidget {
                   final data = _c.isUsingUsers()[index];
                   return Row(
                     children: [
-                      if (index == 0 && _c.currentPage.value == 1)
+                      if (index == 0 && _c.currentPage.value == 1 && !isMobile)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Image.asset(
@@ -37,7 +38,7 @@ class IndividuPage extends StatelessWidget {
                             width: 30,
                           ),
                         ),
-                      if (index == 1 && _c.currentPage.value == 1)
+                      if (index == 1 && _c.currentPage.value == 1 && !isMobile)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Image.asset(
@@ -45,7 +46,7 @@ class IndividuPage extends StatelessWidget {
                             width: 30,
                           ),
                         ),
-                      if (index == 2 && _c.currentPage.value == 1)
+                      if (index == 2 && _c.currentPage.value == 1 && !isMobile)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Image.asset(
@@ -54,11 +55,11 @@ class IndividuPage extends StatelessWidget {
                             color: Colors.brown,
                           ),
                         ),
-                      if (index > 2 && _c.currentPage.value == 1)
+                      if (index > 2 && _c.currentPage.value == 1 && !isMobile)
                         const SizedBox(
                           width: 30,
                         ),
-                      if (_c.currentPage.value > 1)
+                      if (_c.currentPage.value > 1 && !isMobile)
                         const SizedBox(
                           width: 30,
                         ),
@@ -74,8 +75,8 @@ class IndividuPage extends StatelessWidget {
                                     ? colorGold
                                     : colorCardRank,
                               ),
-                              margin:
-                                  const EdgeInsets.only(bottom: 10, left: 20),
+                              margin: EdgeInsets.only(
+                                  bottom: 10, left: isMobile ? 0 : 20),
                               alignment: Alignment.center,
                               height: 45,
                               child: InkWell(
@@ -91,10 +92,11 @@ class IndividuPage extends StatelessWidget {
                                         Colors.black,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 80,
-                                    ),
-                                    10.pw,
+                                    if (!isMobile)
+                                      const SizedBox(
+                                        width: 80,
+                                      ),
+                                    if (!isMobile) 10.pw,
                                     Expanded(
                                       flex: 2,
                                       child: Column(
@@ -105,9 +107,10 @@ class IndividuPage extends StatelessWidget {
                                         children: [
                                           AppTextNormal.labelBold(
                                             data.nama,
-                                            14,
+                                            isMobile ? 10 : 14,
                                             Colors.black,
                                             letterSpacing: 3.5,
+                                            maxLines: 5,
                                           ),
                                         ],
                                       ),
@@ -120,17 +123,18 @@ class IndividuPage extends StatelessWidget {
                                                     (e) => e.id == data.groupId)
                                                 ?.alias ??
                                             "-",
-                                        14,
+                                        isMobile ? 10 : 14,
                                         Colors.black,
                                       ),
                                     ),
-                                    Expanded(
-                                      child: AppTextNormal.labelBold(
-                                        data.role,
-                                        14,
-                                        Colors.black,
+                                    if (!isMobile)
+                                      Expanded(
+                                        child: AppTextNormal.labelBold(
+                                          data.role,
+                                          14,
+                                          Colors.black,
+                                        ),
                                       ),
-                                    ),
                                     Container(
                                       width: 70,
                                       padding: const EdgeInsets.all(6),
@@ -174,15 +178,27 @@ class IndividuPage extends StatelessWidget {
               //     },
               //   ),
               // ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: AppPagination(
-                  currentPage: _c.currentPage.value,
-                  totalPage: _c.isTotalPage(),
-                  onPageChanged: _c.onChangepageIndividu,
-                  onSearched: _c.onSearched,
+
+              if (isMobile)
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0),
+                  child: AppPaginationBoard(
+                    currentPage: _c.currentPage.value,
+                    totalPage: _c.isTotalPage(),
+                    onPageChanged: _c.onChangepageIndividu,
+                    onSearched: _c.onSearched,
+                  ),
                 ),
-              )
+              if (!isMobile)
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0),
+                  child: AppPagination(
+                    currentPage: _c.currentPage.value,
+                    totalPage: _c.isTotalPage(),
+                    onPageChanged: _c.onChangepageIndividu,
+                    onSearched: _c.onSearched,
+                  ),
+                )
             ],
           );
         },

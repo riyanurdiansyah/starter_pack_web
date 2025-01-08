@@ -380,7 +380,7 @@ class _AppPaginationBoardState extends State<AppPaginationBoard> {
           AppTextNormal.labelW500(
             "dari",
             14,
-            Colors.black,
+            Colors.white,
           ),
           const SizedBox(
             width: 8,
@@ -388,7 +388,7 @@ class _AppPaginationBoardState extends State<AppPaginationBoard> {
           AppTextNormal.labelW500(
             totalPage.toString(),
             14,
-            Colors.black,
+            Colors.white,
           ),
           const SizedBox(
             width: 8,

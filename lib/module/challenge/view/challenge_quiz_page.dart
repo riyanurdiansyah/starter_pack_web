@@ -714,12 +714,12 @@ class ChallengeQuizPage extends StatelessWidget {
                                 child: AppTextNormal.labelBold(
                                   _c.multipleChoices[_c.indexNow.value]
                                       .question,
-                                  14,
+                                  isMobile ? 12.5 : 14,
                                   Colors.white,
                                   letterSpacing: 2.5,
                                   textAlign: TextAlign.center,
                                   height: 1.6,
-                                  maxLines: 3,
+                                  maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),

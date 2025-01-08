@@ -35,14 +35,14 @@ const bgProdName = "assets/images/bg_prod_name.png";
 const bgLogin = "assets/images/bg_login.png";
 const bgLoginPotrait = "assets/images/bg_login_potrait.png";
 
-// const gbSigninGif =
-//     "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";
+const gbSigninGif =
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fgif%2Flogin%20(1).gif?alt=media";
 
 const andyImg = "assets/images/andy.png";
 const totokImg = "assets/images/totok.png";
 const putuImg = "assets/images/putu.png";
 const desyImg = "assets/images/desy.png";
 
-const bgVidLogin = "assets/images/bg_login.mp4";
+const bgVidLogin = "assets/images/bg_login.gif";
 
 const loadingGif = "assets/gif/loading.gif";

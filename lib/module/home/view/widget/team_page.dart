@@ -18,8 +18,9 @@ class TeamPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return SizedBox(
-      width: size.width / 1.5,
+      width: isMobile ? size.width : size.width / 1.5,
       child: Obx(
         () {
           return Column(
@@ -30,7 +31,7 @@ class TeamPage extends StatelessWidget {
                 final data = _c.groups[index];
                 return Row(
                   children: [
-                    if (index == 0)
+                    if (index == 0 && !isMobile)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Image.asset(
@@ -38,7 +39,7 @@ class TeamPage extends StatelessWidget {
                           width: 30,
                         ),
                       ),
-                    if (index == 1)
+                    if (index == 1 && !isMobile)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Image.asset(
@@ -46,7 +47,7 @@ class TeamPage extends StatelessWidget {
                           width: 30,
                         ),
                       ),
-                    if (index == 2)
+                    if (index == 2 && !isMobile)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Image.asset(
@@ -55,7 +56,7 @@ class TeamPage extends StatelessWidget {
                           color: Colors.brown,
                         ),
                       ),
-                    if (index > 2)
+                    if (index > 2 && !isMobile)
                       const SizedBox(
                         width: 30,
                       ),
@@ -70,7 +71,8 @@ class TeamPage extends StatelessWidget {
                                   ? colorGold
                                   : colorCardRank,
                             ),
-                            margin: const EdgeInsets.only(bottom: 10, left: 20),
+                            margin: EdgeInsets.only(
+                                bottom: 10, left: isMobile ? 0 : 20),
                             alignment: Alignment.center,
                             height: 45,
                             child: InkWell(
@@ -86,27 +88,29 @@ class TeamPage extends StatelessWidget {
                                       Colors.black,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 100,
-                                    // child: IconRank(
-                                    //   oldRank: data.rankOld ?? 99,
-                                    //   thenRank: data.rank ?? 99,
-                                    // ),
-                                  ),
-                                  SizedBox(
-                                    width: 80,
-                                    child: CachedNetworkImage(
-                                      imageUrl: data.image,
-                                      width: 25,
-                                      fit: BoxFit.cover,
-                                      httpHeaders: const {
-                                        'Access-Control-Allow-Origin': '*'
-                                      },
-                                      errorWidget: (context, url, error) =>
-                                          const SizedBox(),
+                                  if (!isMobile)
+                                    const SizedBox(
+                                      width: 100,
+                                      // child: IconRank(
+                                      //   oldRank: data.rankOld ?? 99,
+                                      //   thenRank: data.rank ?? 99,
+                                      // ),
                                     ),
-                                  ),
-                                  10.pw,
+                                  if (!isMobile)
+                                    SizedBox(
+                                      width: 80,
+                                      child: CachedNetworkImage(
+                                        imageUrl: data.image,
+                                        width: 25,
+                                        fit: BoxFit.cover,
+                                        httpHeaders: const {
+                                          'Access-Control-Allow-Origin': '*'
+                                        },
+                                        errorWidget: (context, url, error) =>
+                                            const SizedBox(),
+                                      ),
+                                    ),
+                                  if (!isMobile) 10.pw,
                                   Expanded(
                                     flex: 2,
                                     child: Column(
@@ -120,6 +124,7 @@ class TeamPage extends StatelessWidget {
                                           12.5,
                                           Colors.black,
                                           letterSpacing: 3.5,
+                                          maxLines: 5,
                                         ),
                                         // 5.ph,
                                         // Row(
