@@ -201,7 +201,8 @@ class HomeController extends GetxController {
       return UserM.fromJson(e.data());
     }).toList();
 
-    users.value = users.where((e) => e.kelompokId != 20).toList();
+    users.value =
+        users.where((e) => e.kelompokId != 20 && e.roleId != 109).toList();
 
     double pageTemp = 0;
     for (int i = 0; i < users.length; i++) {
