@@ -8,6 +8,8 @@ import 'package:starter_pack_web/utils/app_images.dart';
 import 'package:starter_pack_web/utils/app_sound.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
+import '../../../utils/app_dialog.dart';
+
 class PlayPage extends StatelessWidget {
   PlayPage({super.key});
 
@@ -352,12 +354,12 @@ class _HoverTextItemState extends State<HoverTextItem> {
           if (widget.start.isEmpty) {
             context.goNamed(widget.route);
           } else {
-            // if (DateTime.parse(widget.start).isBefore(DateTime.now())) {
-            context.goNamed(widget.route);
-            // } else {
-            //   AppDialog.dialogSnackbar(
-            //       "This feature is not accessible yet, but stay tuned—something exciting is on its way!");
-            // }
+            if (DateTime.parse(widget.start).isBefore(DateTime.now())) {
+              context.goNamed(widget.route);
+            } else {
+              AppDialog.dialogSnackbar(
+                  "This feature is not accessible yet, but stay tuned—something exciting is on its way!");
+            }
           }
         },
         child: AnimatedContainer(
