@@ -158,6 +158,7 @@ class FinanceController extends GetxController {
           "logId": id,
           "groupId": userSession.value.groupId,
           "type": "selling_price",
+          "createdBy": userSession.value.username,
           "createdAt": DateTime.now().toIso8601String(),
         });
 

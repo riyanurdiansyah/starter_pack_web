@@ -138,13 +138,18 @@ class CartController extends GetxController {
             .update({
           "point": groupData.value.point -
               products.fold(
-                  0, (total, product) => total + (product.qty * product.harga)),
+                  0,
+                  (total, product) =>
+                      (total + (product.qty * product.harga)) -
+                      product.discount +
+                      product.charge)
         });
 
         await firestore.collection("log").doc(id).set({
           "logId": id,
           "groupId": userSession.value.groupId,
           "type": "production",
+          "createdBy": userSession.value.username,
           "createdAt": DateTime.now().toIso8601String(),
         });
       },

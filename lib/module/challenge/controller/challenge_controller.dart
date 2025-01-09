@@ -60,7 +60,6 @@ class ChallengeController extends GetxController
     challenges.value = response.docs.map((e) {
       return ChallengeM.fromJson(e.data());
     }).toList();
-
     // Sort challenges berdasarkan startDate
     challenges.sort(
         (a, b) => DateTime.parse(a.start).compareTo(DateTime.parse(b.start)));

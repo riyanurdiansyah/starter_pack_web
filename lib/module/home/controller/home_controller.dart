@@ -242,7 +242,7 @@ class HomeController extends GetxController {
       users[i] = users[i].copyWith(
         point: quizess
             .where((e) => e.username == users[i].username)
-            .fold<int>(0, (total, element) => total + element.point),
+            .fold<double>(0, (total, element) => total + element.point),
       );
     }
 

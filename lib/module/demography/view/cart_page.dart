@@ -467,19 +467,72 @@ class CartPage extends StatelessWidget {
                                   ),
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
+                                    // log("VAL : $value");
+                                    // int lengthProduct = _c.products
+                                    //     .where((x) => x.qty > 0)
+                                    //     .toList()
+                                    //     .length;
                                     int? newQty = int.tryParse(value);
+                                    double discount = 0;
+                                    // double charge = 0;
+
                                     if (newQty != null) {
+                                      if (newQty >= 1000) {
+                                        discount = newQty *
+                                            ((_c.products[_c.indexImg.value]
+                                                                .harga *
+                                                            0.8) +
+                                                        _c.products
+                                                            .where((x) =>
+                                                                x.qty > 0)
+                                                            .toList()
+                                                            .length >
+                                                    1
+                                                ? 0.4 *
+                                                    _c.products
+                                                        .where((x) => x.qty > 0)
+                                                        .toList()
+                                                        .length
+                                                : 0);
+                                      } else {
+                                        discount = 0;
+                                      }
+
                                       _c.products[_c.indexImg.value] = _c
                                           .products[_c.indexImg.value]
                                           .copyWith(
-                                        qty: newQty,
-                                      );
+                                              qty: newQty, discount: discount);
                                     } else {
                                       _c.products[_c.indexImg.value] = _c
                                           .products[_c.indexImg.value]
                                           .copyWith(
                                         qty: 0,
+                                        discount: 0,
                                       );
+                                    }
+                                    if (_c.products
+                                            .where((x) => x.qty > 0)
+                                            .toList()
+                                            .length >
+                                        1) {
+                                      for (int i = 0;
+                                          i < _c.products.length;
+                                          i++) {
+                                        if (_c.products[i].qty > 0) {
+                                          final charge = _c.products[i].qty *
+                                              ((0.4 *
+                                                  (_c.products
+                                                          .where(
+                                                              (x) => x.qty > 0)
+                                                          .toList()
+                                                          .length -
+                                                      1)));
+                                          _c.products[i] =
+                                              _c.products[i].copyWith(
+                                            charge: charge,
+                                          );
+                                        }
+                                      }
                                     }
                                   },
                                   decoration: const InputDecoration(
@@ -596,25 +649,52 @@ class CartPage extends StatelessWidget {
                                                         Colors.grey.shade600,
                                                       ),
                                                     ),
-                                                    8.ph,
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 8),
-                                                      child: AppTextNormal
-                                                          .labelW600(
-                                                        "\$${convertNumber(data.harga)}  x  ${data.qty}",
-                                                        16,
-                                                        Colors.grey.shade600,
+                                                    if (data.qty >= 1000) 8.ph,
+                                                    if (data.qty >= 1000)
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 8),
+                                                        child: AppTextNormal
+                                                            .labelW600(
+                                                          "Discount \$${convertNumber(data.discount)}",
+                                                          16,
+                                                          Colors.green.shade600,
+                                                        ),
                                                       ),
-                                                    ),
+                                                    if (_c.products
+                                                            .where((x) =>
+                                                                x.qty > 0)
+                                                            .toList()
+                                                            .length >
+                                                        1)
+                                                      8.ph,
+                                                    if (_c.products
+                                                            .where((x) =>
+                                                                x.qty > 0)
+                                                            .toList()
+                                                            .length >
+                                                        1)
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 8),
+                                                        child: AppTextNormal
+                                                            .labelW600(
+                                                          "Cost \$${convertNumber(data.charge)}",
+                                                          16,
+                                                          Colors.red.shade600,
+                                                        ),
+                                                      ),
                                                   ],
                                                 ),
                                               ),
                                               Expanded(
                                                 flex: 2,
                                                 child: AppTextNormal.labelBold(
-                                                  "\$${convertNumber((data.harga * data.qty).toInt())}",
+                                                  "\$${convertNumber((data.harga * data.qty) - data.discount + data.charge)}",
                                                   22,
                                                   colorPointRank,
                                                   textAlign: TextAlign.end,
@@ -649,7 +729,7 @@ class CartPage extends StatelessWidget {
                                           Expanded(
                                             flex: 2,
                                             child: AppTextNormal.labelBold(
-                                              "\$${convertNumber(_c.products.fold(0, (total, product) => total + (product.qty * product.harga)))}",
+                                              "\$${convertNumber(_c.products.fold(0, (total, product) => (total + (product.qty * product.harga)) - product.discount + product.charge))}",
                                               22,
                                               colorPointRank,
                                               textAlign: TextAlign.end,

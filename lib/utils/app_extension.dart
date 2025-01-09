@@ -9,7 +9,7 @@ extension PaddingExtension on num {
   SizedBox get pw => SizedBox(width: toDouble());
 }
 
-String convertNumber(int num) {
+String convertNumber(num num) {
   return NumberFormat.decimalPattern('id').format(num);
 }
 

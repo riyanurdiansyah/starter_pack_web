@@ -108,7 +108,7 @@ class GameController extends GetxController {
     data = data.copyWith(
       isRated: true,
       isFinished: true,
-      point: int.parse(tcPoint.text),
+      point: double.parse(tcPoint.text),
     );
     try {
       final body = {

@@ -39,7 +39,7 @@ class ChallengeQuizController extends GetxController {
 
   Rx<bool> isComingSoon = false.obs;
 
-  Rx<int> point = 0.obs;
+  Rx<double> point = 0.0.obs;
 
   Rx<int> indexNow = 0.obs;
 
@@ -244,7 +244,7 @@ class ChallengeQuizController extends GetxController {
 
   Future saveSessionQuiz(bool isFinished) async {
     final uuid = const Uuid().v4();
-    final batch = firestore.batch();
+    // final batch = firestore.batch();
 
     try {
       // Buat data QuizSessionM
@@ -256,7 +256,7 @@ class ChallengeQuizController extends GetxController {
         groupId: user.value.groupId,
         answers: listAnswer,
         time: isFinished ? 0 : timeQuiz.value / 60,
-        point: point.value,
+        point: point.value.roundToDouble(),
         isFinished: isFinished,
         isRated: false,
         type: challenge.value.type,
@@ -313,11 +313,11 @@ class ChallengeQuizController extends GetxController {
       });
 
       // Snackbar success
-      AppDialog.dialogSnackbar("Quiz submit successfully.");
+      // AppDialog.dialogSnackbar("Quiz submit successfully.");
     } catch (e) {
       // Handle errors and display a failure message
-      AppDialog.dialogSnackbar(
-          "Failed to submit quiz session: ${e.toString()}");
+      // AppDialog.dialogSnackbar(
+      //     "Failed to submit quiz session: ${e.toString()}");
     }
   }
 
@@ -392,18 +392,22 @@ class ChallengeQuizController extends GetxController {
       // listIncorrect.remove(index);
       if (!listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
-          point.value += maxPoint ~/ challenge.value.maxQuestion;
+          point.value += double.parse(
+              (maxPoint / challenge.value.maxQuestion).toStringAsFixed(2));
         } else {
-          point.value += maxPoint ~/ multipleChoices.length;
+          point.value += double.parse(
+              (maxPoint ~/ multipleChoices.length).toStringAsFixed(2));
         }
       }
       listCorrect.add(indexNow.value);
     } else {
       if (listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
-          point.value -= maxPoint ~/ challenge.value.maxQuestion;
+          point.value -= double.parse(
+              (maxPoint ~/ challenge.value.maxQuestion).toStringAsFixed(2));
         } else {
-          point.value -= maxPoint ~/ multipleChoices.length;
+          point.value -= double.parse(
+              (maxPoint ~/ multipleChoices.length).toStringAsFixed(2));
         }
         listCorrect.remove(indexNow.value);
       }

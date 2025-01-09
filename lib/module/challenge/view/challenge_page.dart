@@ -144,11 +144,7 @@ class ChallengePage extends StatelessWidget {
                                     children: [
                                       ColorFiltered(
                                         colorFilter: ColorFilter.mode(
-                                          _c.isHoveredList[displayIndex] &&
-                                                  DateTime.parse(_c
-                                                          .challenges[index]
-                                                          .start)
-                                                      .isBefore(DateTime.now())
+                                          _c.isHoveredList[displayIndex]
                                               ? Colors.transparent
                                               : Colors.grey,
                                           BlendMode.saturation,

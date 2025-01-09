@@ -19,7 +19,7 @@ class UserM {
   final int kelompokId;
   final int page;
   final String groupId;
-  final int point;
+  final double point;
 
   UserM({
     required this.id,
@@ -46,7 +46,7 @@ class UserM {
     int? kelompokId,
     int? page,
     String? groupId,
-    int? point,
+    double? point,
   }) =>
       UserM(
         id: id ?? this.id,

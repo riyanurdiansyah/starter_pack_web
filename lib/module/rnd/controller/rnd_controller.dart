@@ -152,6 +152,7 @@ class RndController extends GetxController {
           "logId": id,
           "groupId": userSession.value.groupId,
           "type": "rnd",
+          "createdBy": userSession.value.username,
           "week": filteredCase?.name ?? "",
           "createdAt": DateTime.now().toIso8601String(),
         });

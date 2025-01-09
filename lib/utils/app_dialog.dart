@@ -89,53 +89,55 @@ class AppDialog {
                   top: 200,
                   left: 50,
                   bottom: 0,
-                  child: SizedBox(
-                    width: size.width / 2.5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AnimatedTextKit(
-                          repeatForever: false,
-                          isRepeatingAnimation: false,
-                          onFinished: () {
-                            c.playTyping(true);
-                            c.isShow.value = true;
-                          },
-                          animatedTexts: [
-                            TypewriterAnimatedText(
-                              news.content,
-                              textStyle: const TextStyle(
-                                fontFamily: 'Bigail',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.white,
-                                letterSpacing: 1.4,
-                                height: 2,
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: size.width / 2.5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AnimatedTextKit(
+                            repeatForever: false,
+                            isRepeatingAnimation: false,
+                            onFinished: () {
+                              c.playTyping(true);
+                              c.isShow.value = true;
+                            },
+                            animatedTexts: [
+                              TypewriterAnimatedText(
+                                news.content,
+                                textStyle: const TextStyle(
+                                  fontFamily: 'Bigail',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  letterSpacing: 1.4,
+                                  height: 2,
+                                ),
+                                speed: const Duration(milliseconds: 30),
                               ),
-                              speed: const Duration(milliseconds: 30),
-                            ),
-                          ],
-                        ),
-                        // Obx(
-                        //   () {
-                        //     if (c.isShow.value) {
-                        //       return IconButton(
-                        //         icon: const Icon(Icons.check,
-                        //             color: Colors.green),
-                        //         onPressed: () {
-                        //           // Aksi ketika tombol ditekan
-                        //           ScaffoldMessenger.of(context).showSnackBar(
-                        //             const SnackBar(
-                        //                 content: Text("Button Pressed!")),
-                        //           );
-                        //         },
-                        //       );
-                        //     }
+                            ],
+                          ),
+                          // Obx(
+                          //   () {
+                          //     if (c.isShow.value) {
+                          //       return IconButton(
+                          //         icon: const Icon(Icons.check,
+                          //             color: Colors.green),
+                          //         onPressed: () {
+                          //           // Aksi ketika tombol ditekan
+                          //           ScaffoldMessenger.of(context).showSnackBar(
+                          //             const SnackBar(
+                          //                 content: Text("Button Pressed!")),
+                          //           );
+                          //         },
+                          //       );
+                          //     }
 
-                        //     return const SizedBox();
-                        //   },
-                        // )
-                      ],
+                          //     return const SizedBox();
+                          //   },
+                          // )
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -162,6 +162,7 @@ class AssignController extends GetxController {
             "logId": id,
             "groupId": user.value.groupId,
             "type": "assign",
+            "createdBy": user.value.username,
             "createdAt": DateTime.now().toIso8601String(),
           });
         },

@@ -11,7 +11,7 @@ class QuizSessionM {
   final String image;
   final List<AnswerM> answers;
   final double time;
-  final int point;
+  final double point;
   final bool isFinished;
   final bool isRated;
   final String createdAt;
@@ -47,7 +47,7 @@ class QuizSessionM {
     String? image,
     List<AnswerM>? answers,
     double? time,
-    int? point,
+    double? point,
     bool? isFinished,
     bool? isRated,
     String? createdAt,

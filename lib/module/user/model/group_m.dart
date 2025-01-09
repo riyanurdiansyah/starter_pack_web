@@ -17,8 +17,8 @@ class GroupM {
   final String id;
   final String image;
   final String name;
-  final int point;
-  final int pointBefore;
+  final double point;
+  final double pointBefore;
   final String updatedDate;
   final int? rank;
   final int? rankOld;
@@ -48,8 +48,8 @@ class GroupM {
     String? id,
     String? image,
     String? name,
-    int? point,
-    int? pointBefore,
+    double? point,
+    double? pointBefore,
     String? updatedDate,
     int? rank,
     int? rankOld,
