@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -41,6 +44,8 @@ class DemographysetController extends GetxController {
   final RxList<ProdukM> products = <ProdukM>[].obs;
 
   FilePickerResult? filePickerResult;
+
+  // RxList<TextEditingController> tcProducts = <TextEditingController>[].obs;
 
   //Core Lifestyle
   //Elevated Class
@@ -137,6 +142,11 @@ class DemographysetController extends GetxController {
     tcImage.text = oldDemography.image;
     tcCost.text = oldDemography.cost.toString();
     tcSpecial.text = oldDemography.specialCase;
+    for (var i = 0; i < oldDemography.details.length; i++) {
+      tcProducts[i]![0].text = oldDemography.details[i].productId;
+      tcProducts[i]![2].text = oldDemography.details[i].minPrice.toString();
+      tcProducts[i]![3].text = oldDemography.details[i].maxPrice.toString();
+    }
     // tcMinPrice.text = oldDemography.minPrice.toString();
     // tcMaxPrice.text = oldDemography.maxPrice.toString();
   }
@@ -144,14 +154,15 @@ class DemographysetController extends GetxController {
   void updateDemography(DemographyM? oldDemography) async {
     try {
       List<DetailProductDemography> details = [];
-      for (int i = 0; i < tcProducts.keys.toList().length; i++) {
-        details.add(DetailProductDemography(
-            productId: tcProducts[i]![0].text,
-            minPrice: double.tryParse(tcProducts[i]![2].text) ?? 0,
-            maxPrice: double.tryParse(tcProducts[i]![3].text) ?? 0));
-      }
       String downlodUrl = "";
       if (oldDemography != null) {
+        for (int i = 0; i < oldDemography.details.length; i++) {
+          details.add(DetailProductDemography(
+              productId: tcProducts[i]![0].text,
+              minPrice: double.tryParse(tcProducts[i]![2].text) ?? 0,
+              maxPrice: double.tryParse(tcProducts[i]![3].text) ?? 0));
+        }
+
         if (oldDemography.image != tcImage.text) {
           final fileBytes = filePickerResult?.files.single.bytes;
           final fileName = filePickerResult?.files.single.name;
@@ -165,6 +176,7 @@ class DemographysetController extends GetxController {
 
           downlodUrl = await snapshot.ref.getDownloadURL();
         }
+        log(json.encode(details));
         oldDemography = oldDemography.copyWith(
           name: tcName.text,
           data: tcData.text,

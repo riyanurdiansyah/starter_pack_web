@@ -577,6 +577,17 @@ class RndPage extends StatelessWidget {
                           },
                         ),
                       ),
+                      if (_c.indexSelecteds.length > 1)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: AppTextNormal.labelW600(
+                            "Warning:\n\nType Product yang terpilih = ${_c.indexSelecteds.length} jenis\nMaka biaya production per product +${((_c.indexSelecteds.length - 1) * 0.4)} /unit",
+                            10.5,
+                            Colors.red,
+                            maxLines: 6,
+                          ),
+                        ),
+                      18.ph,
                       SizedBox(
                         width: double.infinity,
                         child: Obx(() {
@@ -596,7 +607,7 @@ class RndPage extends StatelessWidget {
                                         AppDialog.dialogDelete(
                                           title: "Save Product",
                                           subtitle:
-                                              "Are you sure you want to save this product?\nThe data cannot be changed later.",
+                                              "Are you sure you want to save this product? The data cannot be changed later.",
                                           callback: () {
                                             context.pop();
                                             _c.saveProduct();
@@ -626,6 +637,41 @@ class RndPage extends StatelessWidget {
                 ),
               );
             }),
+            Positioned(
+              bottom: 25,
+              right: 0,
+              child: InkWell(
+                onTap: () {
+                  AppDialog.dialogInfo(
+                      '''Jumlah tipe produk yang diproduksi memengaruhi biaya tambahan per unit. Jika hanya satu tipe produk yang diproduksi, tidak ada biaya tambahan per unit (0). Ketika jumlah tipe produk yang diproduksi adalah dua, biaya tambahan per unit adalah 0,4/pc. Jika jumlah tipe produk yang diproduksi ada tiga, biaya tambahan per unit naik menjadi 0,8/pc.\nJumlah tipe produk = 1: Biaya tambahan per unit = 0.
+Jumlah tipe produk = 2: Biaya tambahan per unit = 0,4/pc
+Jumlah tipe produk = 3: Biaya tambahan per unit = 0,8/pc
+Namun biaya ini hanya akan dikenakan pada saat production sesuai dengan jumlah tipe yang di produksi.''');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    margin: const EdgeInsets.all(4),
+                    child: const Icon(
+                      Icons.info_outline,
+                      size: 50,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       );

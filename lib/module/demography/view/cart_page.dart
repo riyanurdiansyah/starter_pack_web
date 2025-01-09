@@ -596,6 +596,18 @@ class CartPage extends StatelessWidget {
                                                         Colors.grey.shade600,
                                                       ),
                                                     ),
+                                                    8.ph,
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8),
+                                                      child: AppTextNormal
+                                                          .labelW600(
+                                                        "\$${convertNumber(data.harga)}  x  ${data.qty}",
+                                                        16,
+                                                        Colors.grey.shade600,
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
                                               ),

@@ -244,74 +244,80 @@ class ChallengeQuizController extends GetxController {
 
   Future saveSessionQuiz(bool isFinished) async {
     final uuid = const Uuid().v4();
-    var data = QuizSessionM(
-      userId: user.value.id,
-      multipleChoices: multipleChoices,
-      quizId: challenge.value.id,
-      sessionId: uuid,
-      groupId: user.value.groupId,
-      answers: listAnswer,
-      time: isFinished ? 0 : timeQuiz.value / 60,
-      point: point.value,
-      isFinished: isFinished,
-      isRated: false,
-      type: challenge.value.type,
-      username: user.value.username,
-      page: 0,
-      image: "",
-      createdAt: DateTime.now().toIso8601String(),
-    );
+    final batch = firestore.batch();
 
-    if (isFinished) {
-      var responseGroup =
-          await firestore.collection('group').doc(user.value.groupId).get();
-      if (!responseGroup.exists) {
-        AppDialog.dialogSnackbar("User group is not found");
-        return;
-      }
-      group.value = GroupM.fromJson(responseGroup.data()!);
-
-      group.value = group.value.copyWith(
-        pointBefore: group.value.point,
-        point: group.value.point + point.value,
+    try {
+      // Buat data QuizSessionM
+      var data = QuizSessionM(
+        userId: user.value.id,
+        multipleChoices: multipleChoices,
+        quizId: challenge.value.id,
+        sessionId: uuid,
+        groupId: user.value.groupId,
+        answers: listAnswer,
+        time: isFinished ? 0 : timeQuiz.value / 60,
+        point: point.value,
+        isFinished: isFinished,
+        isRated: false,
+        type: challenge.value.type,
+        username: user.value.username,
+        page: 0,
+        image: "",
+        createdAt: DateTime.now().toIso8601String(),
       );
-      await firestore
-          .collection("group")
-          .doc(group.value.id)
-          .update(group.toJson());
-    }
 
-    final response = await firestore.collection("quiz_session").get();
-    if (response.docs.isEmpty) {
-      await firestore
-          .collection("quiz_session")
-          .doc(data.sessionId)
-          .set(data.toJson());
-    } else {
-      final sessions = response.docs
-          .map((doc) => QuizSessionM.fromJson(doc.data()))
-          .toList();
-      final sessionData = sessions
-          .where((e) =>
-              e.userId == user.value.id && e.quizId == challenge.value.id)
-          .toList();
-      if (sessionData.isEmpty) {
-        await firestore
+      await firestore.runTransaction((transaction) async {
+        // Update group points if the quiz is finished
+        if (isFinished) {
+          final groupDoc =
+              firestore.collection('group').doc(user.value.groupId);
+
+          final responseGroup = await transaction.get(groupDoc);
+          if (!responseGroup.exists) {
+            throw Exception("User group is not found");
+          }
+
+          final groupData = GroupM.fromJson(responseGroup.data()!);
+          final updatedGroup = groupData.copyWith(
+            pointBefore: groupData.point,
+            point: groupData.point + point.value,
+          );
+
+          transaction.update(groupDoc, updatedGroup.toJson());
+        }
+
+        // Check and update quiz session
+        final sessionQuery = await firestore
             .collection("quiz_session")
-            .doc(data.sessionId)
-            .set(data.toJson());
-      } else {
-        data = data.copyWith(
-          sessionId: sessionData.first.sessionId,
-          multipleChoices: multipleChoices,
-          answers: listAnswer,
-          time: timeQuiz.value / 60,
-        );
-        await firestore
-            .collection("quiz_session")
-            .doc(data.sessionId)
-            .update(data.toJson());
-      }
+            .where('userId', isEqualTo: user.value.id)
+            .where('quizId', isEqualTo: challenge.value.id)
+            .get();
+
+        if (sessionQuery.docs.isEmpty) {
+          // If no session exists, create a new one
+          final newSessionDoc =
+              firestore.collection("quiz_session").doc(data.sessionId);
+          transaction.set(newSessionDoc, data.toJson());
+        } else {
+          // If session exists, update it
+          final existingSession = sessionQuery.docs.first;
+          data = data.copyWith(
+            sessionId: existingSession.id,
+            multipleChoices: multipleChoices,
+            answers: listAnswer,
+            time: timeQuiz.value / 60,
+          );
+
+          transaction.update(existingSession.reference, data.toJson());
+        }
+      });
+
+      // Snackbar success
+      AppDialog.dialogSnackbar("Quiz submit successfully.");
+    } catch (e) {
+      // Handle errors and display a failure message
+      AppDialog.dialogSnackbar(
+          "Failed to submit quiz session: ${e.toString()}");
     }
   }
 

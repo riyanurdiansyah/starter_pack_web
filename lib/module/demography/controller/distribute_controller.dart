@@ -194,36 +194,33 @@ class DistributeController extends GetxController {
       final id = const Uuid().v4();
       Map<String, AreaM> groupedAreas = {};
 
-      // Grup area dan produk berdasarkan input user
       for (int i = 0; i < demographys.length; i++) {
         for (int j = 0; j < productsOwn.length; j++) {
-          final priceTc =
-              (accessList[i]["controller_price"][j] as TextEditingController)
-                  .text;
-          final qtyTc =
-              (accessList[i]["controller"][j] as TextEditingController).text;
+          final priceTc = sellings[0].areas[i].products[j].priceDistribute;
+          var qTc = accessList[i]["controller"][j] as TextEditingController;
+          int currentQty = int.parse(qTc.text);
 
-          if (qtyTc.trim().isNotEmpty && priceTc.trim().isNotEmpty) {
-            final areaId = demographys[i].id;
-            final product = ProductDistributeM(
-              productId: productsOwn[j].id,
-              productName: "${productsOwn[j].nama} - ${productsOwn[j].tipe}",
-              pricePerProduct: double.parse(priceTc),
-              qty: int.parse(qtyTc),
-              sold: 0,
-              profit: 0,
+          // if (qtyTc.trim().isNotEmpty) {
+          final areaId = demographys[i].id;
+          final product = ProductDistributeM(
+            productId: productsOwn[j].id,
+            productName: "${productsOwn[j].nama} - ${productsOwn[j].tipe}",
+            pricePerProduct: priceTc.toDouble(),
+            qty: currentQty,
+            sold: 0,
+            profit: 0,
+          );
+
+          if (groupedAreas.containsKey(areaId)) {
+            groupedAreas[areaId]!.products.add(product);
+          } else {
+            groupedAreas[areaId] = AreaM(
+              areaId: areaId,
+              areaName: demographys[i].name,
+              products: [product],
             );
-
-            if (groupedAreas.containsKey(areaId)) {
-              groupedAreas[areaId]!.products.add(product);
-            } else {
-              groupedAreas[areaId] = AreaM(
-                areaId: areaId,
-                areaName: demographys[i].name,
-                products: [product],
-              );
-            }
           }
+          // }
         }
       }
 
@@ -231,54 +228,54 @@ class DistributeController extends GetxController {
 
       DistributeM dataDistribute;
 
-      // final snapshot = await firestore
-      //     .collection("distribution")
-      //     .where("groupId", isEqualTo: userSession.value.groupId)
-      //     .get();
+      final snapshot = await firestore
+          .collection("distribution")
+          .where("groupId", isEqualTo: userSession.value.groupId)
+          .get();
 
-      // if (snapshot.docs.isNotEmpty) {
-      //   dataDistribute = DistributeM.fromJson(snapshot.docs[0].data());
+      if (snapshot.docs.isNotEmpty) {
+        dataDistribute = DistributeM.fromJson(snapshot.docs[0].data());
 
-      //   for (var newArea in groupedAreasList) {
-      //     final existingAreaIndex = dataDistribute.areas.indexWhere(
-      //         (existingArea) => existingArea.areaId == newArea.areaId);
+        for (var newArea in groupedAreasList) {
+          final existingAreaIndex = dataDistribute.areas.indexWhere(
+              (existingArea) => existingArea.areaId == newArea.areaId);
 
-      //     if (existingAreaIndex != -1) {
-      //       final existingArea = dataDistribute.areas[existingAreaIndex];
+          if (existingAreaIndex != -1) {
+            final existingArea = dataDistribute.areas[existingAreaIndex];
 
-      //       for (var newProduct in newArea.products) {
-      //         final existingProductIndex = existingArea.products.indexWhere(
-      //             (existingProduct) =>
-      //                 existingProduct.productId == newProduct.productId);
+            for (var newProduct in newArea.products) {
+              final existingProductIndex = existingArea.products.indexWhere(
+                  (existingProduct) =>
+                      existingProduct.productId == newProduct.productId);
 
-      //         if (existingProductIndex != -1) {
-      //           final existingProduct =
-      //               existingArea.products[existingProductIndex];
+              if (existingProductIndex != -1) {
+                final existingProduct =
+                    existingArea.products[existingProductIndex];
 
-      //           existingArea.products[existingProductIndex] =
-      //               existingProduct.copyWith(
-      //             qty: existingProduct.qty + newProduct.qty,
-      //             pricePerProduct: newProduct.pricePerProduct,
-      //           );
-      //         } else {
-      //           existingArea.products.add(newProduct);
-      //         }
-      //       }
-      //       dataDistribute.areas[existingAreaIndex] = existingArea;
-      //     } else {
-      //       dataDistribute.areas.add(newArea);
-      //     }
-      //   }
-      // } else {
-      // Jika data belum ada di Firestore
-      dataDistribute = DistributeM(
-        distributeId: id,
-        groupId: userSession.value.groupId,
-        groupName: userSession.value.kelompok,
-        areas: groupedAreasList,
-        page: 0,
-      );
-      // }
+                existingArea.products[existingProductIndex] =
+                    existingProduct.copyWith(
+                  qty: existingProduct.qty + newProduct.qty,
+                  pricePerProduct: newProduct.pricePerProduct,
+                );
+              } else {
+                existingArea.products.add(newProduct);
+              }
+            }
+            dataDistribute.areas[existingAreaIndex] = existingArea;
+          } else {
+            dataDistribute.areas.add(newArea);
+          }
+        }
+      } else {
+        // Jika data belum ada di Firestore
+        dataDistribute = DistributeM(
+          distributeId: id,
+          groupId: userSession.value.groupId,
+          groupName: userSession.value.kelompok,
+          areas: groupedAreasList,
+          page: 0,
+        );
+      }
 
       // Simpan data ke Firestore
       await firestore.runTransaction((trx) async {

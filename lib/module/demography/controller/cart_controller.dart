@@ -163,7 +163,7 @@ class CartController extends GetxController {
         .where("groups", arrayContains: userSession.value.groupId)
         .get();
     products.value = response.docs.map((e) {
-      return ProdukM.fromJson(e.data()).copyWith(harga: 0);
+      return ProdukM.fromJson(e.data());
     }).toList();
     products.sort((a, b) => a.nama.compareTo(b.nama));
     quantityControllers.value = List.generate(products.length, (index) {

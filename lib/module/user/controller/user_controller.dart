@@ -35,6 +35,8 @@ class UserController extends GetxController {
 
   final tcUsername = TextEditingController();
 
+  final tcPassword = TextEditingController();
+
   final tcKelompok = TextEditingController();
 
   final tcRole = TextEditingController();
@@ -165,7 +167,9 @@ class UserController extends GetxController {
               ? user.groupId
               : selectedGroup.value.id,
           page: 0,
-          password: user.password,
+          password: tcPassword.text.isEmpty
+              ? user.password
+              : hashPassword(tcPassword.text),
         );
         await documentRef.update(user.toJson());
       } else {

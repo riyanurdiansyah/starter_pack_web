@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_pack_web/module/demography/controller/distribute_controller.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
+import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../../../utils/app_color.dart';
 import '../../../utils/app_decoration.dart';
@@ -18,10 +19,19 @@ class DistributePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.8),
       body: Stack(
         children: [
+          SizedBox(
+            width: double.infinity,
+            height: size.height,
+            child: Image.asset(
+              bgDistribution,
+              fit: BoxFit.fill,
+            ),
+          ),
           Column(
             children: [
               Padding(
@@ -358,7 +368,50 @@ class DistributePage extends StatelessWidget {
               //batas
               Obx(() {
                 if (_c.sellings.isEmpty) {
-                  return const SizedBox();
+                  return SizedBox(
+                    width: double.infinity,
+                    height: size.height / 1.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppTextNormal.labelBold(
+                          "Your team member in the Sales role has not yet\ndecided on the price for the product.",
+                          20,
+                          Colors.white,
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          height: 1.4,
+                          letterSpacing: 2.5,
+                          shadows: [
+                            const Shadow(
+                              offset:
+                                  Offset(-1.5, -1.5), // Bayangan ke kiri atas
+                              color: Colors.black,
+                              blurRadius: 1.0,
+                            ),
+                            const Shadow(
+                              offset:
+                                  Offset(1.5, -1.5), // Bayangan ke kanan atas
+                              color: Colors.black,
+                              blurRadius: 1.0,
+                            ),
+                            const Shadow(
+                              offset:
+                                  Offset(1.5, 1.5), // Bayangan ke kanan bawah
+                              color: Colors.black,
+                              blurRadius: 1.0,
+                            ),
+                            const Shadow(
+                              offset:
+                                  Offset(-1.5, 1.5), // Bayangan ke kiri bawah
+                              color: Colors.black,
+                              blurRadius: 1.0,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
                 }
                 return Expanded(
                   child: Form(

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,6 +19,7 @@ import 'package:starter_pack_web/module/dashboard/controller/group_controller.da
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
+import 'package:starter_pack_web/module/demography/model/produk_m.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
@@ -31,6 +32,7 @@ import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../middleware/app_route.dart';
 import '../module/dashboard/model/multiple_choice_m.dart';
+import '../module/product/controller/product_controller.dart';
 import '../module/user/model/group_m.dart';
 import '../module/user/model/role_m.dart';
 import 'app_decoration.dart';
@@ -157,6 +159,115 @@ class AppDialog {
     );
   }
 
+  static dialogInfo(String text) {
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+
+    final random = Random();
+    showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), // Rounded corners
+          ),
+          child: Container(
+            color: Colors.white,
+            width: size.width / 1.6,
+            height: size.height / 1.51,
+            child: Stack(
+              children: [
+                Image.asset(
+                  bgInfo,
+                  fit: BoxFit.fill,
+                  filterQuality: FilterQuality.high,
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 200,
+                  left: 50,
+                  bottom: 0,
+                  child: SizedBox(
+                    width: size.width / 2.5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedTextKit(
+                          repeatForever: false,
+                          isRepeatingAnimation: false,
+                          onFinished: () {},
+                          animatedTexts: [
+                            TypewriterAnimatedText(
+                              text,
+                              textStyle: const TextStyle(
+                                fontFamily: 'Bigail',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.white,
+                                letterSpacing: 1.4,
+                                height: 2,
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(
+                                        -1.5, -1.5), // Bayangan ke kiri atas
+                                    color: Colors.black,
+                                    blurRadius: 1.0,
+                                  ),
+                                  Shadow(
+                                    offset: Offset(
+                                        1.5, -1.5), // Bayangan ke kanan atas
+                                    color: Colors.black,
+                                    blurRadius: 1.0,
+                                  ),
+                                  Shadow(
+                                    offset: Offset(
+                                        1.5, 1.5), // Bayangan ke kanan bawah
+                                    color: Colors.black,
+                                    blurRadius: 1.0,
+                                  ),
+                                  Shadow(
+                                    offset: Offset(
+                                        -1.5, 1.5), // Bayangan ke kiri bawah
+                                    color: Colors.black,
+                                    blurRadius: 1.0,
+                                  ),
+                                ],
+                              ),
+                              speed: const Duration(milliseconds: 30),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 50,
+                  bottom: 0,
+                  child: Image.asset(
+                    imageBOD[random.nextInt(4)],
+                    filterQuality: FilterQuality.high,
+                    fit: BoxFit.fitHeight,
+                    width: 250,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   static dialogAddNews({
     NewsM? oldNews,
   }) {
@@ -164,7 +275,6 @@ class AppDialog {
     final size = MediaQuery.of(navigatorKey.currentContext!).size;
     if (oldNews != null) {
       c.setDataToDialog(oldNews);
-      log(oldNews.toJson().toString());
     }
     return showDialog(
       context: navigatorKey.currentContext!,
@@ -1314,6 +1424,41 @@ class AppDialog {
                   onChanged: uC.onSelectGroup,
                 ),
                 const SizedBox(
+                  height: 16,
+                ),
+                AppTextNormal.labelW700(
+                  "Password",
+                  14,
+                  Colors.black,
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextFormField(
+                  controller: uC.tcPassword,
+                  validator: (val) => AppValidator.requiredField(val!),
+                  style: GoogleFonts.poppins(
+                    height: 1.4,
+                  ),
+                  decoration: InputDecoration(
+                    // filled: oldUser != null,
+                    // fillColor: oldUser != null ? Colors.grey.shade200 : null,
+                    hintStyle: GoogleFonts.poppins(
+                      fontSize: 14,
+                      wordSpacing: 4,
+                    ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade500),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(
                   height: 35,
                 ),
                 SizedBox(
@@ -1557,69 +1702,69 @@ class AppDialog {
                     ),
                   ),
                   16.ph,
-                  AppTextNormal.labelW700(
-                    "Image",
-                    14,
-                    Colors.black,
-                  ),
-                  12.ph,
-                  TextFormField(
-                    controller: c.tcImage,
-                    validator: (val) => AppValidator.requiredField(val!),
-                    style: TextStyle(
-                      fontFamily: 'Bigail',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
-                    ),
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final result = await pickFile();
+                  // AppTextNormal.labelW700(
+                  //   "Image",
+                  //   14,
+                  //   Colors.black,
+                  // ),
+                  // 12.ph,
+                  // TextFormField(
+                  //   controller: c.tcImage,
+                  //   validator: (val) => AppValidator.requiredField(val!),
+                  //   style: TextStyle(
+                  //     fontFamily: 'Bigail',
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 14,
+                  //     color: Colors.grey.shade600,
+                  //   ),
+                  //   readOnly: true,
+                  //   decoration: InputDecoration(
+                  //     suffixIcon: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: ElevatedButton(
+                  //         onPressed: () async {
+                  //           final result = await pickFile();
 
-                            c.filePickerResult = result;
+                  //           c.filePickerResult = result;
 
-                            if (result != null) {
-                              c.tcImage.text = result.files.single.name;
-                            } else {
-                              c.tcImage.clear();
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            backgroundColor: Colors.grey.shade500,
-                          ),
-                          child: AppTextNormal.labelBold(
-                            "Choose File",
-                            14,
-                            Colors.white,
-                          ),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 12),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+                  //           if (result != null) {
+                  //             c.tcImage.text = result.files.single.name;
+                  //           } else {
+                  //             c.tcImage.clear();
+                  //           }
+                  //         },
+                  //         style: ElevatedButton.styleFrom(
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(6),
+                  //           ),
+                  //           backgroundColor: Colors.grey.shade500,
+                  //         ),
+                  //         child: AppTextNormal.labelBold(
+                  //           "Choose File",
+                  //           14,
+                  //           Colors.white,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     contentPadding: const EdgeInsets.symmetric(
+                  //         vertical: 0, horizontal: 12),
+                  //     disabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey.shade300),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     border: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey.shade300),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(color: Colors.grey.shade300),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 16,
+                  // ),
                   AppTextNormal.labelW700(
                     "Data",
                     14,
@@ -2362,6 +2507,115 @@ class AppDialog {
               imageUrl: url,
               fit: BoxFit.cover,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogProduk(ProdukM? oldProduk) {
+    final c = Get.find<ProductController>();
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+
+    if (oldProduk != null) {
+      c.setValueProduk(oldProduk);
+    }
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: size.width / 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              18.ph,
+              AppTextNormal.labelW700(
+                "Price",
+                14,
+                Colors.black,
+              ),
+              8.ph,
+              TextFormField(
+                controller: c.tcPrice,
+                validator: (val) => AppValidator.requiredField(val!),
+                style: GoogleFonts.poppins(
+                  height: 1.4,
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: InputDecoration(
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    wordSpacing: 4,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade500),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              35.ph,
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              )),
+                          onPressed: () {
+                            context.pop();
+                          },
+                          child: AppTextNormal.labelBold(
+                            "CANCEL",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 18,
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: colorPrimaryDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          onPressed: () {
+                            context.pop();
+                            c.updateProduk(oldProduk!);
+                          },
+                          child: AppTextNormal.labelBold(
+                            "SAVE",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

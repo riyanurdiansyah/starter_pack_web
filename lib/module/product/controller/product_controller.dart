@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/demography/model/produk_m.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 
 class ProductController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -14,6 +16,8 @@ class ProductController extends GetxController {
 
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 8.obs;
+
+  final tcPrice = TextEditingController();
 
   @override
   void onInit() async {
@@ -77,5 +81,23 @@ class ProductController extends GetxController {
       productsSearch.value = productsTemp;
       productsSearch.sort((a, b) => a.nama.compareTo(b.nama));
     }
+  }
+
+  void setValueProduk(ProdukM oldProduk) {
+    tcPrice.text = oldProduk.harga.toString();
+  }
+
+  void updateProduk(ProdukM oldProduk) {
+    final String newPrice = tcPrice.text.trim();
+    final int newPriceDouble = int.parse(newPrice);
+    final ProdukM newProduk = oldProduk.copyWith(harga: newPriceDouble);
+    firestore
+        .collection('produk')
+        .doc(oldProduk.id)
+        .update(newProduk.toJson())
+        .then((value) {
+      AppDialog.dialogSnackbar("Update Successfully");
+      getProducts();
+    });
   }
 }

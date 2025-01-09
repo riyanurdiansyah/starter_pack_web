@@ -157,7 +157,7 @@ class RndController extends GetxController {
         });
       });
 
-      // Jika transaksi sukses
+      await getProducts();
       getLogRND();
       AppDialog.dialogSnackbar("Data has been saved");
     } catch (e) {

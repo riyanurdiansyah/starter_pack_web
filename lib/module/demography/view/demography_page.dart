@@ -8,6 +8,7 @@ import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
+import '../../../utils/app_color.dart';
 import '../../../utils/app_dialog.dart';
 
 class DemographyPage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _DemographyPageState extends State<DemographyPage>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final isMobile = size.width < 600;
     return Obx(() {
       if (_c.isLoading.value) {
         return Container(
@@ -243,6 +245,25 @@ class _DemographyPageState extends State<DemographyPage>
                               height: 1.6,
                               letterSpacing: 1.2,
                             ),
+                          25.ph,
+                          if (_c.selectedIndex.value != 99)
+                            AppTextNormal.labelBold(
+                              "CASE",
+                              26,
+                              Colors.white,
+                            ),
+                          18.ph,
+                          if (_c.selectedIndex.value != 99)
+                            AppTextNormal.labelW600(
+                              _c.demographys[_c.selectedIndex.value]
+                                  .specialCase,
+                              18,
+                              Colors.white,
+                              maxLines: 100,
+                              height: 1.6,
+                              letterSpacing: 1.2,
+                            ),
+                          20.ph,
                           20.ph,
                           ElevatedButton(
                             onPressed: () {
@@ -260,6 +281,39 @@ class _DemographyPageState extends State<DemographyPage>
                   ),
                 );
               }),
+              Obx(
+                () => Container(
+                  width: 180,
+                  padding: EdgeInsets.only(top: isMobile ? 35 : 18.0, left: 0),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    onEnter: (_) {
+                      _c.isHovered.value = true;
+                    },
+                    onExit: (_) {
+                      _c.isHovered.value = false;
+                    },
+                    child: InkWell(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        alignment: Alignment.center,
+                        color: Colors.black26,
+                        height: 45,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: AppTextNormal.labelBold(
+                            "HOME",
+                            26,
+                            _c.isHovered.value
+                                ? colorElectricViolet
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

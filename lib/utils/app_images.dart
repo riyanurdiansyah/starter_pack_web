@@ -32,7 +32,9 @@ const bgSales = "assets/images/bg_sales.png";
 const bgProd = "assets/images/bg_prod.png";
 const bgProdName = "assets/images/bg_prod_name.png";
 
+const bgDistribution = "assets/images/bg_distribution.png";
 const bgLogin = "assets/images/bg_login.png";
+const bgInfo = "assets/images/bg_info.png";
 const bgLoginPotrait = "assets/images/bg_login_potrait.png";
 
 const gbSigninGif =

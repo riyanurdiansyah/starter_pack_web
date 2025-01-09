@@ -115,7 +115,6 @@ class FinanceController extends GetxController {
         AppDialog.dialogSnackbar("All price fields must be filled.");
       } else {
         final body = {
-          "priceId": const Uuid().v4(),
           "groupId": userSession.value.groupId,
           "areas": demographys.map((e) {
             final demographyJson = e.toJson();
@@ -135,10 +134,25 @@ class FinanceController extends GetxController {
             return demographyJson;
           }).toList(),
         };
-        await firestore
+
+        // Periksa dokumen dengan groupId
+        final querySnapshot = await firestore
             .collection("selling_price")
-            .doc(body["priceId"].toString())
-            .set(body);
+            .where("groupId", isEqualTo: userSession.value.groupId)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          // Dokumen ditemukan, lakukan update
+          final docId = querySnapshot.docs.first.id;
+          await firestore.collection("selling_price").doc(docId).update(body);
+        } else {
+          // Dokumen tidak ditemukan, buat dokumen baru
+          final newId = const Uuid().v4();
+          body["priceId"] = newId;
+          await firestore.collection("selling_price").doc(newId).set(body);
+        }
+
+        // Log perubahan
         final id = const Uuid().v4();
         await firestore.collection("log").doc(id).set({
           "logId": id,
@@ -146,6 +160,7 @@ class FinanceController extends GetxController {
           "type": "selling_price",
           "createdAt": DateTime.now().toIso8601String(),
         });
+
         await getLogFinance();
       }
     }

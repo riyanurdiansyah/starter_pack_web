@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/demography/model/produk_m.dart';
 import 'package:starter_pack_web/module/product/controller/product_controller.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
+import 'package:starter_pack_web/utils/app_extension.dart';
 
 import '../../../utils/app_color.dart';
-import '../../../utils/app_dialog.dart';
 import '../../../utils/app_text.dart';
 
 class ProductPage extends StatelessWidget {
@@ -75,19 +74,19 @@ class ProductPage extends StatelessWidget {
                             ),
                             Expanded(
                               child: AppTextNormal.labelW500(
-                                "\$${data.harga}",
+                                "\$${convertNumber(data.harga)}",
                                 16,
                                 colorPrimaryDark,
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                            const SizedBox(
+                            50.pw,
+                            SizedBox(
                               width: 25,
                               height: 25,
                               child: InkWell(
-                                // onTap: () => AppDialog.dialogChallenge(
-                                //     oldChallenge: data),
-                                child: Icon(
+                                onTap: () => AppDialog.dialogProduk(data),
+                                child: const Icon(
                                   Icons.mode_edit_rounded,
                                   color: colorPointRank,
                                   size: 20,
@@ -95,58 +94,7 @@ class ProductPage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 2,
-                              height: 30,
-                              color: Colors.grey.shade200,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            SizedBox(
-                              width: 25,
-                              height: 25,
-                              child: InkWell(
-                                onTap: () =>
-                                    AppDialog.dialogDelete(callback: () {
-                                  context.pop();
-                                  // _c.deleteData(data);
-                                }),
-                                child: const Icon(
-                                  Icons.delete_rounded,
-                                  color: Colors.red,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 2,
-                              height: 30,
-                              color: Colors.grey.shade200,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            SizedBox(
-                              width: 25,
-                              height: 25,
-                              child: InkWell(
-                                onTap: () => context.goNamed(
-                                    AppRouteName.update,
-                                    pathParameters: {
-                                      "id": data.id,
-                                    }),
-                                child: const Icon(
-                                  Icons.double_arrow_rounded,
-                                  color: colorPrimaryDark,
-                                  size: 20,
-                                ),
-                              ),
+                              width: 30,
                             ),
                           ],
                         ),
@@ -165,7 +113,7 @@ class ProductPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
-        onPressed: () => AppDialog.dialogChallenge(),
+        onPressed: () {},
         backgroundColor: Colors.blue,
         child: AppTextNormal.labelW600(
           "+",

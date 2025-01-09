@@ -57,7 +57,41 @@ class HomeController extends GetxController {
     await getSessionQuiz();
     await getUsers();
     await getChallenges();
-    // await getUsersChallenge();
+
+//     final response = await firestore.collection("quiz_session").get();
+
+// // Buat list dari QuizSessionM
+//     final listQuizSessions =
+//         response.docs.map((doc) => QuizSessionM.fromJson(doc.data())).toList();
+
+// // Ambil daftar unik groupId
+//     final uniqueGroupIds = listQuizSessions.map((quiz) => quiz.groupId).toSet();
+
+// // Hitung total poin untuk setiap groupId
+//     final groupPoints = uniqueGroupIds.map((groupId) {
+//       final totalPoints = listQuizSessions
+//           .where((quiz) => quiz.groupId == groupId)
+//           .fold(0, (sum, quiz) => sum + quiz.point);
+
+//       return {
+//         'groupId': groupId,
+//         'totalPoints': totalPoints,
+//       };
+//     }).toList();
+
+// // Perbarui nilai point di dalam groups
+//     for (var i = 0; i < groups.length; i++) {
+//       final groupPoint = groupPoints.firstWhere(
+//         (e) => e['groupId'] == groups[i].id,
+//         orElse: () => {'groupId': groups[i].id, 'totalPoints': 0},
+//       );
+
+//       groups[i] = groups[i].copyWith(
+//         point:
+//             100000 + (int.tryParse("${groupPoint['totalPoints'] ?? 0}") ?? 0),
+//       );
+//     }
+
     await changeLoading(false);
     super.onInit();
   }
@@ -91,6 +125,8 @@ class HomeController extends GetxController {
         userData.add(data);
       }
 
+      userData.sort((a, b) => a.nama.compareTo(b.nama));
+      userData.sort((a, b) => b.point.compareTo(a.point));
       for (int i = 0; i < userData.length; i++) {
         pageTemp =
             (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
@@ -98,8 +134,6 @@ class HomeController extends GetxController {
           page: pageTemp.ceil(),
         );
       }
-      userData.sort((a, b) => a.nama.compareTo(b.nama));
-      userData.sort((a, b) => b.point.compareTo(a.point));
       userData = userData.where((e) => e.kelompok != "PANITIA").toList();
       challengeUsers.add(userData);
       dataPerPageChallenges.add(12);
@@ -200,9 +234,8 @@ class HomeController extends GetxController {
     users.value = response.docs.map((e) {
       return UserM.fromJson(e.data());
     }).toList();
-
     users.value =
-        users.where((e) => e.kelompokId != 20 && e.roleId != 109).toList();
+        users.where((e) => e.kelompokId < 20 && e.roleId != 109).toList();
 
     double pageTemp = 0;
     for (int i = 0; i < users.length; i++) {
@@ -287,6 +320,7 @@ class HomeController extends GetxController {
             (e) =>
                 e.nama.toLowerCase().contains(query.toLowerCase()) ||
                 e.kelompok.toLowerCase().contains(query.toLowerCase()) ||
+                e.groupId.toLowerCase().contains(query.toLowerCase()) ||
                 e.username.toLowerCase().contains(query.toLowerCase()),
           )
           .toList();

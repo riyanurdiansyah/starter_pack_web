@@ -351,7 +351,7 @@ class _HoverTextItemState extends State<HoverTextItem> {
             _c.logout();
             return;
           }
-          if (widget.start.isEmpty) {
+          if (widget.start.isEmpty || _c.user.value.roleId == 109) {
             context.goNamed(widget.route);
           } else {
             if (DateTime.parse(widget.start).isBefore(DateTime.now())) {
