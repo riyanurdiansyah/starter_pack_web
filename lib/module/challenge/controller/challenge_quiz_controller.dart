@@ -244,11 +244,11 @@ class ChallengeQuizController extends GetxController {
 
   Future saveSessionQuiz(bool isFinished) async {
     final uuid = const Uuid().v4();
-    // final batch = firestore.batch();
 
     try {
       // Buat data QuizSessionM
       var data = QuizSessionM(
+        updatedAt: DateTime.now().toIso8601String(),
         userId: user.value.id,
         multipleChoices: multipleChoices,
         quizId: challenge.value.id,
@@ -265,7 +265,6 @@ class ChallengeQuizController extends GetxController {
         image: "",
         createdAt: DateTime.now().toIso8601String(),
       );
-
       await firestore.runTransaction((transaction) async {
         // Update group points if the quiz is finished
         if (isFinished) {
@@ -277,13 +276,12 @@ class ChallengeQuizController extends GetxController {
             throw Exception("User group is not found");
           }
 
-          final groupData = GroupM.fromJson(responseGroup.data()!);
-          final updatedGroup = groupData.copyWith(
-            pointBefore: groupData.point,
-            point: groupData.point + point.value,
-          );
-
-          transaction.update(groupDoc, updatedGroup.toJson());
+          // Increment group points by the quiz point
+          transaction.update(groupDoc, {
+            'point_before': point.value.round(),
+            'point': FieldValue.increment(
+                point.value.roundToDouble()), // Increment point by the value
+          });
         }
 
         // Check and update quiz session
@@ -644,6 +642,7 @@ class ChallengeQuizController extends GetxController {
             isRated: false,
             type: challenge.value.type,
             image: downloadUrl,
+            updatedAt: DateTime.now().toIso8601String(),
             createdAt: DateTime.now().toIso8601String(),
           );
           await firestore

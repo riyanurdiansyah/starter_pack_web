@@ -15,6 +15,7 @@ class QuizSessionM {
   final bool isFinished;
   final bool isRated;
   final String createdAt;
+  final String updatedAt;
   final String type;
   final int page;
 
@@ -32,6 +33,7 @@ class QuizSessionM {
     required this.isFinished,
     required this.isRated,
     required this.createdAt,
+    required this.updatedAt,
     required this.type,
     required this.page,
   });
@@ -51,6 +53,7 @@ class QuizSessionM {
     bool? isFinished,
     bool? isRated,
     String? createdAt,
+    String? updatedAt,
     String? type,
     int? page,
   }) {
@@ -68,6 +71,7 @@ class QuizSessionM {
       isFinished: isFinished ?? this.isFinished,
       isRated: isRated ?? this.isRated,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       type: type ?? this.type,
       page: page ?? this.page,
     );
@@ -92,6 +96,7 @@ class QuizSessionM {
       isFinished: json['isFinished'],
       isRated: json['isRated'] ?? false,
       createdAt: json['createdAt'] ?? "",
+      updatedAt: json['updatedAt'] ?? "",
       type: json['type'] ?? "",
       page: 0,
     );
@@ -112,6 +117,7 @@ class QuizSessionM {
       'isFinished': isFinished,
       'isRated': isRated,
       'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'image': image,
       'type': type,
     };
