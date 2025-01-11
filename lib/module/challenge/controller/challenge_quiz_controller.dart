@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +51,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<bool> isStarting = false.obs;
 
+  Rx<bool> isSubmitting = false.obs;
+
   final Rx<bool> isQuestFinished = false.obs;
 
   Rx<bool> isHaveSession = false.obs;
@@ -89,6 +93,8 @@ class ChallengeQuizController extends GetxController {
 
   Rx<bool> isLastQuestion = false.obs;
 
+  Rx<DateTime> dateNow = DateTime.now().obs;
+
   // RxList<LeaderboardM> leaderboards;
 
   final Rx<GroupM> group = groupEmpty.obs;
@@ -96,6 +102,7 @@ class ChallengeQuizController extends GetxController {
   // final RxList<int> listIncorrect = <int>[].obs;
   @override
   void onInit() async {
+    await getDateServer();
     pref = await SharedPreferences.getInstance();
     await refreshAll();
     super.onInit();
@@ -181,20 +188,18 @@ class ChallengeQuizController extends GetxController {
   }
 
   void startTimer() {
+    if (isStarting.value) return;
     isStarting.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (DateTime.now().isAfter(DateTime.parse(challenge.value.end))) {
-        // if (isFinished.value == false) {
-        //   saveSessionQuiz(true);
-        // }
+      if (dateNow.value.isAfter(DateTime.parse(challenge.value.end))) {
         _timer?.cancel();
       } else if (timeQuiz.value > 0) {
         DateTime startDate = DateTime.parse(challenge.value.start);
         DateTime endDate = DateTime.parse(challenge.value.end);
-        DateTime now = DateTime.now();
+        // DateTime now = dateNow.value;
 
         Duration difference = endDate.difference(startDate);
-        Duration differenceNow = endDate.difference(now);
+        Duration differenceNow = endDate.difference(dateNow.value);
 
 // Mendapatkan perbedaan dalam jam
         int hoursDifference = difference.inHours;
@@ -248,7 +253,7 @@ class ChallengeQuizController extends GetxController {
     try {
       // Buat data QuizSessionM
       var data = QuizSessionM(
-        updatedAt: DateTime.now().toIso8601String(),
+        updatedAt: dateNow.value.toIso8601String(),
         userId: user.value.id,
         multipleChoices: multipleChoices,
         quizId: challenge.value.id,
@@ -263,27 +268,9 @@ class ChallengeQuizController extends GetxController {
         username: user.value.username,
         page: 0,
         image: "",
-        createdAt: DateTime.now().toIso8601String(),
+        createdAt: dateNow.value.toIso8601String(),
       );
       await firestore.runTransaction((transaction) async {
-        // Update group points if the quiz is finished
-        if (isFinished) {
-          final groupDoc =
-              firestore.collection('group').doc(user.value.groupId);
-
-          final responseGroup = await transaction.get(groupDoc);
-          if (!responseGroup.exists) {
-            throw Exception("User group is not found");
-          }
-
-          // Increment group points by the quiz point
-          transaction.update(groupDoc, {
-            'point_before': point.value.round(),
-            'point': FieldValue.increment(
-                point.value.roundToDouble()), // Increment point by the value
-          });
-        }
-
         // Check and update quiz session
         final sessionQuery = await firestore
             .collection("quiz_session")
@@ -291,13 +278,34 @@ class ChallengeQuizController extends GetxController {
             .where('quizId', isEqualTo: challenge.value.id)
             .get();
 
+        if (isFinished) {
+          final sessions =
+              QuizSessionM.fromJson(sessionQuery.docs.first.data());
+          if (!sessions.isFinished) {
+            final groupDoc =
+                firestore.collection('group').doc(user.value.groupId);
+
+            final responseGroup = await transaction.get(groupDoc);
+            if (!responseGroup.exists) {
+              throw Exception("User group is not found");
+            }
+
+            final groupData = GroupM.fromJson(responseGroup.data()!);
+
+            // Increment group points by the quiz point
+            transaction.update(groupDoc, {
+              'point_before': groupData.point,
+              'point': FieldValue.increment(
+                  point.value.roundToDouble()), // Increment point by the value
+            });
+          }
+        }
+
         if (sessionQuery.docs.isEmpty) {
-          // If no session exists, create a new one
           final newSessionDoc =
               firestore.collection("quiz_session").doc(data.sessionId);
           transaction.set(newSessionDoc, data.toJson());
         } else {
-          // If session exists, update it
           final existingSession = sessionQuery.docs.first;
           data = data.copyWith(
             sessionId: existingSession.id,
@@ -305,6 +313,7 @@ class ChallengeQuizController extends GetxController {
             answers: listAnswer,
             time: timeQuiz.value / 60,
           );
+          // Update group points if the quiz is finished
 
           transaction.update(existingSession.reference, data.toJson());
         }
@@ -325,7 +334,7 @@ class ChallengeQuizController extends GetxController {
 
   void startCountdown() {
     DateTime targetTime = DateTime.parse("2024-11-22T16:04:00.000");
-    DateTime now = DateTime.now();
+    DateTime now = dateNow.value;
   }
 
   // Widget formatDuration() {
@@ -340,9 +349,9 @@ class ChallengeQuizController extends GetxController {
         await firestore.collection("challenge").doc(id.value).get();
     if (response.exists) {
       challenge.value = ChallengeM.fromJson(response.data()!);
-      if (DateTime.now().isBefore(DateTime.parse(challenge.value.start))) {
+      if (dateNow.value.isBefore(DateTime.parse(challenge.value.start))) {
         remainingTime.value =
-            DateTime.parse(challenge.value.start).difference(DateTime.now());
+            DateTime.parse(challenge.value.start).difference(dateNow.value);
         if (remainingTime.value.isNegative) {
           remainingTime.value = Duration.zero;
           isComingSoon.value = false;
@@ -362,7 +371,7 @@ class ChallengeQuizController extends GetxController {
       }
 
       timeQuiz.value = DateTime.parse(challenge.value.end)
-              .difference(DateTime.now())
+              .difference(dateNow.value)
               .inMinutes *
           60;
 
@@ -390,22 +399,20 @@ class ChallengeQuizController extends GetxController {
       // listIncorrect.remove(index);
       if (!listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
-          point.value += double.parse(
-              (maxPoint / challenge.value.maxQuestion).toStringAsFixed(2));
+          point.value +=
+              (maxPoint / challenge.value.maxQuestion).ceilToDouble();
         } else {
-          point.value += double.parse(
-              (maxPoint ~/ multipleChoices.length).toStringAsFixed(2));
+          point.value += (maxPoint / multipleChoices.length).ceilToDouble();
         }
       }
       listCorrect.add(indexNow.value);
     } else {
       if (listCorrect.contains(indexNow.value)) {
         if (multipleChoices.length >= challenge.value.maxQuestion) {
-          point.value -= double.parse(
-              (maxPoint ~/ challenge.value.maxQuestion).toStringAsFixed(2));
+          point.value -=
+              (maxPoint / challenge.value.maxQuestion).ceilToDouble();
         } else {
-          point.value -= double.parse(
-              (maxPoint ~/ multipleChoices.length).toStringAsFixed(2));
+          point.value -= (maxPoint / multipleChoices.length).ceilToDouble();
         }
         listCorrect.remove(indexNow.value);
       }
@@ -642,8 +649,8 @@ class ChallengeQuizController extends GetxController {
             isRated: false,
             type: challenge.value.type,
             image: downloadUrl,
-            updatedAt: DateTime.now().toIso8601String(),
-            createdAt: DateTime.now().toIso8601String(),
+            updatedAt: dateNow.value.toIso8601String(),
+            createdAt: dateNow.value.toIso8601String(),
           );
           await firestore
               .collection("quiz_session")
@@ -701,10 +708,35 @@ class ChallengeQuizController extends GetxController {
   }
 
   void submitChallengeOK() async {
+    if (isSubmitting.value) return;
+    onChangeSubmitting(true);
     _timer?.cancel();
     timeQuiz.value = 0;
-    // navigatorKey.currentContext!.pop();
     await saveSessionQuiz(true);
     await getSessionQuiz();
+    await onChangeSubmitting(false);
+  }
+
+  Future onChangeSubmitting(bool val) async {
+    isSubmitting.value = val;
+  }
+
+  Future getDateServer() async {
+    try {
+      final HttpsCallable callable =
+          FirebaseFunctions.instance.httpsCallable('getServerTime');
+      final result = await callable.call();
+      dateNow.value = DateTime.parse(result.data["time"]);
+      startGlobalTime();
+    } catch (e) {
+      log("CEK ERROR : $e");
+    }
+  }
+
+  void startGlobalTime() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      // Increment the time by 1 second each time
+      dateNow.value = dateNow.value.add(const Duration(seconds: 1));
+    });
   }
 }

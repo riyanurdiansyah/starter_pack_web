@@ -225,113 +225,6 @@ class ChallengeQuizPage extends StatelessWidget {
             );
           }
 
-          if (DateTime.now().isAfter(DateTime.parse(_c.challenge.value.end))) {
-            return Container(
-              width: double.infinity,
-              color: Colors.red,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppTextNormal.labelBold(
-                    "The time to complete the challenge has run out",
-                    20,
-                    Colors.white,
-                    textAlign: TextAlign.center,
-                  ),
-                  45.ph,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () => context.pop(),
-                        style: ButtonStyle(
-                          side: WidgetStateProperty.all(
-                            BorderSide(
-                              color: Colors.grey.shade200,
-                            ), // Ganti warna dan lebar sesuai kebutuhan
-                          ),
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  16), // Custom border radius
-                            ),
-                          ),
-                        ),
-                        child: AppTextNormal.labelBold(
-                          "Back",
-                          14,
-                          Colors.grey.shade200,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }
-          if (!_c.isStarting.value && !_c.isHaveSession.value) {
-            return SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppTextNormal.labelBold(
-                    "Welcome to the ${_c.challenge.value.name}",
-                    isMobile ? 18 : 25,
-                    Colors.white,
-                    letterSpacing: 8,
-                    maxLines: 10,
-                    height: 1.5,
-                    textAlign: TextAlign.center,
-                  ),
-                  45.ph,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () => context.pop(),
-                        style: ButtonStyle(
-                          side: WidgetStateProperty.all(
-                            BorderSide(
-                              color: Colors.grey.shade200,
-                            ), // Ganti warna dan lebar sesuai kebutuhan
-                          ),
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  16), // Custom border radius
-                            ),
-                          ),
-                        ),
-                        child: AppTextNormal.labelBold(
-                          "Back",
-                          14,
-                          Colors.grey.shade200,
-                        ),
-                      ),
-                      18.pw,
-                      ElevatedButton(
-                        onPressed: () async {
-                          _c.startTimer();
-                          await _c.saveSessionQuiz(false);
-                          await _c.getSessionQuiz();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorGold,
-                        ),
-                        child: AppTextNormal.labelBold(
-                          "START",
-                          14,
-                          Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }
-
           if (_c.isFinished.value &&
               (_c.challenge.value.type == "MULTIPLE CHOICE" ||
                   _c.challenge.value.type == "TRUE/FALSE")) {
@@ -476,6 +369,113 @@ class ChallengeQuizPage extends StatelessWidget {
                   ),
                 ),
               ],
+            );
+          }
+          if (_c.dateNow.value
+              .isAfter(DateTime.parse(_c.challenge.value.end))) {
+            return Container(
+              width: double.infinity,
+              color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppTextNormal.labelBold(
+                    "The time to complete the challenge has run out",
+                    20,
+                    Colors.white,
+                    textAlign: TextAlign.center,
+                  ),
+                  45.ph,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () => context.pop(),
+                        style: ButtonStyle(
+                          side: WidgetStateProperty.all(
+                            BorderSide(
+                              color: Colors.grey.shade200,
+                            ), // Ganti warna dan lebar sesuai kebutuhan
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  16), // Custom border radius
+                            ),
+                          ),
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "Back",
+                          14,
+                          Colors.grey.shade200,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
+          if (!_c.isStarting.value && !_c.isHaveSession.value) {
+            return SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppTextNormal.labelBold(
+                    "Welcome to the ${_c.challenge.value.name}",
+                    isMobile ? 18 : 25,
+                    Colors.white,
+                    letterSpacing: 8,
+                    maxLines: 10,
+                    height: 1.5,
+                    textAlign: TextAlign.center,
+                  ),
+                  45.ph,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () => context.pop(),
+                        style: ButtonStyle(
+                          side: WidgetStateProperty.all(
+                            BorderSide(
+                              color: Colors.grey.shade200,
+                            ), // Ganti warna dan lebar sesuai kebutuhan
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  16), // Custom border radius
+                            ),
+                          ),
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "Back",
+                          14,
+                          Colors.grey.shade200,
+                        ),
+                      ),
+                      18.pw,
+                      ElevatedButton(
+                        onPressed: () async {
+                          _c.startTimer();
+                          await _c.saveSessionQuiz(false);
+                          await _c.getSessionQuiz();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorGold,
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "START",
+                          14,
+                          Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             );
           }
           if (_c.isFinished.value &&
