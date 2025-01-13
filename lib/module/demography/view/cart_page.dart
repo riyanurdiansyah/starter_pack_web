@@ -649,8 +649,8 @@ class CartPage extends StatelessWidget {
                                                         Colors.grey.shade600,
                                                       ),
                                                     ),
-                                                    if (data.qty >= 1000) 8.ph,
-                                                    if (data.qty >= 1000)
+                                                    if (data.qty >= 10000) 8.ph,
+                                                    if (data.qty >= 10000)
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets

@@ -15,6 +15,8 @@ class ProdukM {
   final List<String> groups;
   final double priceDistribute;
   final int page;
+  final double minPrice;
+  final double maxPrice;
   final double charge;
   final double discount;
 
@@ -29,6 +31,8 @@ class ProdukM {
     required this.groups,
     required this.priceDistribute,
     required this.page,
+    required this.minPrice,
+    required this.maxPrice,
     required this.charge,
     required this.discount,
   });
@@ -44,6 +48,8 @@ class ProdukM {
     List<String>? groups,
     double? priceDistribute,
     int? page,
+    double? minPrice,
+    double? maxPrice,
     double? charge,
     double? discount,
   }) =>
@@ -58,6 +64,8 @@ class ProdukM {
         groups: groups ?? this.groups,
         priceDistribute: priceDistribute ?? this.priceDistribute,
         page: page ?? this.page,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
         charge: charge ?? this.charge,
         discount: discount ?? this.discount,
       );
@@ -74,6 +82,8 @@ class ProdukM {
         charge: 0,
         discount: 0,
         priceDistribute: json["priceDistribute"] ?? 0,
+        minPrice: json["minPrice"] ?? 0,
+        maxPrice: json["maxPrice"] ?? 0,
         groups: json["groups"] == null
             ? []
             : List<String>.from(json["groups"].map((x) => x)),
@@ -86,6 +96,8 @@ class ProdukM {
         "harga": harga,
         "image": image,
         "qty": qty,
+        "minPrice": minPrice,
+        "maxPrice": maxPrice,
         "priceDistribute": priceDistribute,
         "groups": List<String>.from(groups.map((x) => x)),
       };

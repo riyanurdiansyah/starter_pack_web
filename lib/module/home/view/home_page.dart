@@ -189,7 +189,7 @@ class HomePage extends StatelessWidget {
                                   width: 70,
                                   child: AppTextNormal.labelBold(
                                     _c.boards[_c.indexTab.value] == "GROUP"
-                                        ? "PROFIT"
+                                        ? "REVENUE"
                                         : "POINT",
                                     14,
                                     Colors.white,
