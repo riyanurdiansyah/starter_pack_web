@@ -35,14 +35,21 @@ class DistributeController extends GetxController {
 
   RxList<SellingPriceM> sellings = <SellingPriceM>[].obs;
 
+  RxList<AreaM> areas = <AreaM>[].obs;
+
+  Rx<int> indexArea = 0.obs;
+
   // RxList<TextEditingController> quantityControllers =
   //     <TextEditingController>[].obs;
 
   RxList<Map<String, dynamic>> accessList = <Map<String, dynamic>>[].obs;
 
+  final Rx<DistributeM> distributes = distributeEmpty.obs;
+
   @override
   void onInit() async {
     await setup();
+    await getDistribute();
     await getProducts();
     await getDemographys();
     await getSellingPrice();
@@ -56,6 +63,27 @@ class DistributeController extends GetxController {
     if (user != null) {
       userSession.value = UserM.fromJson(json.decode(user));
     }
+  }
+
+  Future getDistribute() async {
+    final response = await firestore
+        .collection("distribution")
+        .where(
+          "groupId",
+          isEqualTo: userSession.value.groupId,
+        )
+        .get();
+
+    if (response.docs.isNotEmpty) {
+      distributes.value = DistributeM.fromJson(response.docs[0].data());
+    }
+  }
+
+  void onchangeTC(int val, int index) {
+    distributes.value.areas[indexArea.value].products[index] =
+        distributes.value.areas[indexArea.value].products[index].copyWith(
+      qty: distributes.value.areas[indexArea.value].products[index].qty + val,
+    );
   }
 
   Future<List<SellingPriceM>> getSellingPrice() async {
@@ -141,19 +169,54 @@ class DistributeController extends GetxController {
   }
 
   Future generateAccess() async {
-    accessList.value = List.generate(sellings[0].areas.length, (index) {
-      final data = sellings[0].areas[index];
-      return {
-        "id": data.id,
-        "name": data.name,
+    for (var data in distributes.value.areas) {
+      accessList.add({
+        "id": data.areaId,
+        "name": data.areaName,
         "controller": List.generate(data.products.length, (subindex) {
           return TextEditingController(text: "0");
         }),
         "controller_price": List.generate(data.products.length, (subindex) {
           return TextEditingController(text: "0");
         }),
-      };
-    });
+      });
+
+      areas.add(
+        AreaM(
+          areaId: data.areaId,
+          areaName: data.areaName,
+          products: List.generate(data.products.length, (subindex) {
+            final dataProduct = data.products[subindex];
+            return ProductDistributeM(
+              productId: dataProduct.productId,
+              productName: dataProduct.productName,
+              pricePerProduct: dataProduct.pricePerProduct,
+              qty: dataProduct.qty,
+              sold: dataProduct.sold,
+              profit: dataProduct.profit,
+              qtyToWH: dataProduct.qtyToWH,
+            );
+          }),
+        ),
+      );
+    }
+    // accessList.value = List.generate(sellings[0].areas.length, (index) {
+    //   final data = sellings[0].areas[index];
+    //   return {
+    //     "id": data.id,
+    //     "name": data.name,
+    //     "controller": List.generate(data.products.length, (subindex) {
+    //       return TextEditingController(text: "0");
+    //     }),
+    //     "controller_price": List.generate(data.products.length, (subindex) {
+    //       return TextEditingController(text: "0");
+    //     }),
+    //   };
+    // });
+
+    // areas.value = List.generate(demographys.length, (i) {
+    //   return
+    // });
   }
 
   void incrementQuantity(int index, int subindex) {
@@ -209,6 +272,7 @@ class DistributeController extends GetxController {
             qty: currentQty,
             sold: 0,
             profit: 0,
+            qtyToWH: 0,
           );
 
           if (groupedAreas.containsKey(areaId)) {

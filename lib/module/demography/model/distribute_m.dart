@@ -98,6 +98,7 @@ class ProductDistributeM {
   final String productName;
   final double pricePerProduct;
   final int qty;
+  final int qtyToWH;
   final int sold;
   final double profit;
 
@@ -106,6 +107,7 @@ class ProductDistributeM {
     required this.productName,
     required this.pricePerProduct,
     required this.qty,
+    required this.qtyToWH,
     required this.sold,
     required this.profit,
   });
@@ -115,6 +117,7 @@ class ProductDistributeM {
     String? productName,
     double? pricePerProduct,
     int? qty,
+    int? qtyToWH,
     int? sold,
     double? profit,
   }) =>
@@ -123,6 +126,7 @@ class ProductDistributeM {
         productName: productName ?? this.productName,
         pricePerProduct: pricePerProduct ?? this.pricePerProduct,
         qty: qty ?? this.qty,
+        qtyToWH: qtyToWH ?? this.qtyToWH,
         sold: sold ?? this.sold,
         profit: profit ?? this.profit,
       );
@@ -132,7 +136,8 @@ class ProductDistributeM {
         productId: json["productId"],
         productName: json["productName"],
         pricePerProduct: json["pricePerProduct"],
-        qty: json["qty"],
+        qty: json["qty"] ?? 0,
+        qtyToWH: json["qtyToWH"] ?? 0,
         sold: json["sold"] ?? 0,
         profit: json["profit"] ?? 0,
       );
@@ -143,6 +148,7 @@ class ProductDistributeM {
         "pricePerProduct": pricePerProduct,
         "qty": qty,
         "sold": sold,
+        "qtyToWH": qtyToWH,
         "profit": profit,
       };
 }
