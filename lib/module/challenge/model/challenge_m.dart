@@ -23,6 +23,7 @@ class ChallengeM {
   final int time;
   final int maxQuestion;
   final int maxPoint;
+  final bool isRevenue;
 
   ChallengeM({
     required this.route,
@@ -37,6 +38,7 @@ class ChallengeM {
     required this.time,
     required this.maxQuestion,
     required this.maxPoint,
+    required this.isRevenue,
   });
 
   ChallengeM copyWith({
@@ -52,6 +54,7 @@ class ChallengeM {
     int? time,
     int? maxQuestion,
     int? maxPoint,
+    bool? isRevenue,
   }) =>
       ChallengeM(
         route: route ?? this.route,
@@ -66,6 +69,7 @@ class ChallengeM {
         time: time ?? this.time,
         maxQuestion: maxQuestion ?? this.maxQuestion,
         maxPoint: maxPoint ?? this.maxPoint,
+        isRevenue: isRevenue ?? this.isRevenue,
       );
 
   factory ChallengeM.fromJson(Map<String, dynamic> json) => ChallengeM(
@@ -81,6 +85,7 @@ class ChallengeM {
         time: json["time"] ?? 0,
         maxQuestion: json["maxQuestion"] ?? 0,
         maxPoint: json["maxPoint"] ?? 0,
+        isRevenue: json["isRevenue"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -95,5 +100,6 @@ class ChallengeM {
         "time": time,
         "maxQuestion": maxQuestion,
         "maxPoint": maxPoint,
+        "isRevenue": isRevenue,
       };
 }

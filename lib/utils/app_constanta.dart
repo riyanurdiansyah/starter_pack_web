@@ -38,6 +38,7 @@ final groupEmpty = GroupM(
   name: "",
   point: 0,
   pointBefore: 0,
+  revenue: 0,
   page: 0,
   updatedDate: DateTime.now().toIso8601String(),
 );
@@ -55,6 +56,7 @@ final challengeEmpty = ChallengeM(
   time: 0,
   maxQuestion: 0,
   maxPoint: 0,
+  isRevenue: false,
 );
 
 final imageBOD = [

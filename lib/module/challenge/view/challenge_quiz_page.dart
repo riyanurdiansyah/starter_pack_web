@@ -481,12 +481,157 @@ class ChallengeQuizPage extends StatelessWidget {
           if (_c.isFinished.value &&
               (_c.challenge.value.type == "WELLNESS" ||
                   _c.challenge.value.type == "WELLNESS GROUP")) {
-            return Center(
-              child: AppTextNormal.labelBold(
-                "Quiz is Finished",
-                20,
-                Colors.white,
-              ),
+            if (_c.point.value.toInt() == 0) {
+              return Center(
+                child: AppTextNormal.labelBold(
+                  "Your submission is under review",
+                  20,
+                  Colors.white,
+                ),
+              );
+            }
+
+            return Stack(
+              children: [
+                SizedBox(
+                  width: size.width,
+                  height: size.height,
+                  child: Image.asset(
+                    quizPlayImage,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                Align(
+                  // top: 20,
+                  // left: 20,
+                  alignment: Alignment.topLeft,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    onEnter: (_) {
+                      // AppSound.playHover();
+                      // _c.isHovered.value = true;
+                    },
+                    onExit: (_) {
+                      // _c.isHovered.value = false;
+                    },
+                    child: InkWell(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            top: isMiniMobile
+                                ? 25
+                                : isMobile
+                                    ? 80
+                                    : 30,
+                            left: 20),
+                        alignment: Alignment.center,
+                        height: 45,
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: AppTextNormal.labelBold(
+                            "BACK",
+                            26,
+                            Colors.grey,
+                            shadows: [
+                              const Shadow(
+                                offset:
+                                    Offset(-1.5, -1.5), // Bayangan ke kiri atas
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                              const Shadow(
+                                offset:
+                                    Offset(1.5, -1.5), // Bayangan ke kanan atas
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                              const Shadow(
+                                offset:
+                                    Offset(1.5, 1.5), // Bayangan ke kanan bawah
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                              const Shadow(
+                                offset:
+                                    Offset(-1.5, 1.5), // Bayangan ke kiri bawah
+                                color: Colors.black,
+                                blurRadius: 1.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: size.height,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colorElectricViolet.withOpacity(0.6),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
+                          child: Image.asset(
+                            helmetImg,
+                            width: 250,
+                          ),
+                        ),
+                      ),
+                      35.ph,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(35),
+                          color: colorElectricViolet.withOpacity(0.6),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 22, horizontal: 30),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(35),
+                            color: Colors.grey.withOpacity(0.8),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AppTextNormal.labelBold(
+                                "Congratulation! You've Reach the Finished Line",
+                                20,
+                                Colors.white,
+                              ),
+                              10.ph,
+                              AppTextNormal.labelBold(
+                                "You Scored",
+                                14,
+                                Colors.white,
+                              ),
+                              8.ph,
+                              AppTextNormal.labelBold(
+                                "${_c.point.value}",
+                                20,
+                                Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             );
           }
 

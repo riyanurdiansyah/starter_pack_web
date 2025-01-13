@@ -11,6 +11,7 @@ class GroupController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final RxList<GroupM> groups = <GroupM>[].obs;
   final RxList<GroupM> groupsSearch = <GroupM>[].obs;
+
   final Rx<bool> isSearched = false.obs;
 
   Rx<int> currentPage = 1.obs;
@@ -127,17 +128,19 @@ class GroupController extends GetxController {
 
           final downloadUrl = await snapshot.ref.getDownloadURL();
           final data = GroupM(
-              alias: tcGroupName.text,
-              country: "",
-              profit: 0,
-              groupId: newGroupId,
-              id: id,
-              image: downloadUrl.split("&token")[0],
-              name: tcGroupName.text,
-              point: 0,
-              pointBefore: 0,
-              updatedDate: DateTime.now().toIso8601String(),
-              page: 0);
+            alias: tcGroupName.text,
+            country: "",
+            profit: 0,
+            groupId: newGroupId,
+            id: id,
+            image: downloadUrl.split("&token")[0],
+            name: tcGroupName.text,
+            point: 0,
+            pointBefore: 0,
+            updatedDate: DateTime.now().toIso8601String(),
+            page: 0,
+            revenue: 0,
+          );
           await firestore.collection("group").doc(id).set(data.toJson());
         },
       ).then((_) {
@@ -188,6 +191,7 @@ class GroupController extends GetxController {
             pointBefore: oldGroup.pointBefore,
             updatedDate: DateTime.now().toIso8601String(),
             page: 0,
+            revenue: oldGroup.revenue,
           );
           await firestore
               .collection("group")

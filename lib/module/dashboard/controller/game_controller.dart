@@ -30,12 +30,32 @@ class GameController extends GetxController {
 
   TextEditingController tcPoint = TextEditingController();
 
+  final RxList<GroupM> groups = <GroupM>[].obs;
+
+  final Rx<bool> isLoading = false.obs;
+
   @override
   void onInit() async {
+    onChangeLoading(true);
     pref = await SharedPreferences.getInstance();
+    await getGroups();
     await getUser();
     await getSessionQuiz();
+    await onChangeLoading(false);
     super.onInit();
+  }
+
+  Future onChangeLoading(bool val) async {
+    isLoading.value = val;
+  }
+
+  Future<List<GroupM>> getGroups() async {
+    final response = await firestore.collection("group").get();
+    groups.value = response.docs.map((e) {
+      return GroupM.fromJson(e.data());
+    }).toList();
+    groups.sort((a, b) => a.groupId.compareTo(b.groupId));
+    return groups;
   }
 
   Future getUser() async {
@@ -108,7 +128,7 @@ class GameController extends GetxController {
     data = data.copyWith(
       isRated: true,
       isFinished: true,
-      point: double.parse(tcPoint.text),
+      point: data.isRevenue ? data.point : double.parse(tcPoint.text),
     );
     try {
       final body = {
@@ -119,22 +139,6 @@ class GameController extends GetxController {
         "point": int.parse(tcPoint.text),
         "createdAt": DateTime.now().toIso8601String(),
       };
-
-      // var responseList = await firestore.collection('group').get();
-      // if (responseList.docs.isNotEmpty) {
-      //   var listGroup = responseList.docs.map((e) async {
-      //     var dataGroup = GroupM.fromJson(e.data());
-      //     dataGroup = dataGroup.copyWith(
-      //       pointBefore: dataGroup.point,
-      //       point: dataGroup.point,
-      //     );
-      //     await firestore
-      //         .collection("group")
-      //         .doc(group.value.id)
-      //         .update(group.toJson());
-      //     return dataGroup;
-      //   }).toList();
-      // }
       var response =
           await firestore.collection('group').doc(data.groupId).get();
       if (!response.exists) {

@@ -268,6 +268,8 @@ class ChallengeQuizController extends GetxController {
         username: user.value.username,
         page: 0,
         image: "",
+        remark: tcRemark.text,
+        isRevenue: challenge.value.isRevenue,
         createdAt: dateNow.value.toIso8601String(),
       );
       await firestore.runTransaction((transaction) async {
@@ -649,6 +651,8 @@ class ChallengeQuizController extends GetxController {
             isRated: false,
             type: challenge.value.type,
             image: downloadUrl,
+            isRevenue: false,
+            remark: tcRemark.text,
             updatedAt: dateNow.value.toIso8601String(),
             createdAt: dateNow.value.toIso8601String(),
           );

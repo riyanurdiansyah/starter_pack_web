@@ -178,10 +178,14 @@ class AppDialog {
             height: size.height / 1.51,
             child: Stack(
               children: [
-                Image.asset(
-                  bgInfo,
-                  fit: BoxFit.fill,
-                  filterQuality: FilterQuality.high,
+                SizedBox(
+                  width: size.width / 1.6,
+                  height: size.height / 1.51,
+                  child: Image.asset(
+                    bgInfo,
+                    fit: BoxFit.fill,
+                    filterQuality: FilterQuality.high,
+                  ),
                 ),
                 Positioned(
                   right: 0,
@@ -198,57 +202,59 @@ class AppDialog {
                   top: 200,
                   left: 50,
                   bottom: 0,
-                  child: SizedBox(
-                    width: size.width / 2.5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AnimatedTextKit(
-                          repeatForever: false,
-                          isRepeatingAnimation: false,
-                          onFinished: () {},
-                          animatedTexts: [
-                            TypewriterAnimatedText(
-                              text,
-                              textStyle: const TextStyle(
-                                fontFamily: 'Bigail',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.white,
-                                letterSpacing: 1.4,
-                                height: 2,
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(
-                                        -1.5, -1.5), // Bayangan ke kiri atas
-                                    color: Colors.black,
-                                    blurRadius: 1.0,
-                                  ),
-                                  Shadow(
-                                    offset: Offset(
-                                        1.5, -1.5), // Bayangan ke kanan atas
-                                    color: Colors.black,
-                                    blurRadius: 1.0,
-                                  ),
-                                  Shadow(
-                                    offset: Offset(
-                                        1.5, 1.5), // Bayangan ke kanan bawah
-                                    color: Colors.black,
-                                    blurRadius: 1.0,
-                                  ),
-                                  Shadow(
-                                    offset: Offset(
-                                        -1.5, 1.5), // Bayangan ke kiri bawah
-                                    color: Colors.black,
-                                    blurRadius: 1.0,
-                                  ),
-                                ],
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: size.width / 2.5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AnimatedTextKit(
+                            repeatForever: false,
+                            isRepeatingAnimation: false,
+                            onFinished: () {},
+                            animatedTexts: [
+                              TypewriterAnimatedText(
+                                text,
+                                textStyle: const TextStyle(
+                                  fontFamily: 'Bigail',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  letterSpacing: 1.4,
+                                  height: 2,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(
+                                          -1.5, -1.5), // Bayangan ke kiri atas
+                                      color: Colors.black,
+                                      blurRadius: 1.0,
+                                    ),
+                                    Shadow(
+                                      offset: Offset(
+                                          1.5, -1.5), // Bayangan ke kanan atas
+                                      color: Colors.black,
+                                      blurRadius: 1.0,
+                                    ),
+                                    Shadow(
+                                      offset: Offset(
+                                          1.5, 1.5), // Bayangan ke kanan bawah
+                                      color: Colors.black,
+                                      blurRadius: 1.0,
+                                    ),
+                                    Shadow(
+                                      offset: Offset(
+                                          -1.5, 1.5), // Bayangan ke kiri bawah
+                                      color: Colors.black,
+                                      blurRadius: 1.0,
+                                    ),
+                                  ],
+                                ),
+                                speed: const Duration(milliseconds: 30),
                               ),
-                              speed: const Duration(milliseconds: 30),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

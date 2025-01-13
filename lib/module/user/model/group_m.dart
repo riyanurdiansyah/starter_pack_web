@@ -24,6 +24,7 @@ class GroupM {
   final int? rankOld;
   final int page;
   final int profit;
+  final double revenue;
 
   GroupM({
     required this.alias,
@@ -39,6 +40,7 @@ class GroupM {
     this.rankOld,
     required this.page,
     required this.profit,
+    required this.revenue,
   });
 
   GroupM copyWith({
@@ -55,6 +57,7 @@ class GroupM {
     int? rankOld,
     int? page,
     int? profit,
+    double? revenue,
   }) =>
       GroupM(
         alias: alias ?? this.alias,
@@ -70,6 +73,7 @@ class GroupM {
         rankOld: rankOld ?? this.rankOld,
         page: page ?? this.page,
         profit: profit ?? this.profit,
+        revenue: revenue ?? this.revenue,
       );
 
   factory GroupM.fromJson(Map<String, dynamic> json) => GroupM(
@@ -86,6 +90,7 @@ class GroupM {
         rankOld: 0,
         page: 0,
         profit: 0,
+        revenue: 0,
       );
 
   Map<String, dynamic> toJson() => {

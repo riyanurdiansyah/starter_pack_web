@@ -17,7 +17,9 @@ class QuizSessionM {
   final String createdAt;
   final String updatedAt;
   final String type;
+  final String remark;
   final int page;
+  final bool isRevenue;
 
   QuizSessionM({
     required this.userId,
@@ -35,7 +37,9 @@ class QuizSessionM {
     required this.createdAt,
     required this.updatedAt,
     required this.type,
+    required this.remark,
     required this.page,
+    required this.isRevenue,
   });
 
   // copyWith method
@@ -55,7 +59,9 @@ class QuizSessionM {
     String? createdAt,
     String? updatedAt,
     String? type,
+    String? remark,
     int? page,
+    bool? isRevenue,
   }) {
     return QuizSessionM(
       userId: userId ?? this.userId,
@@ -73,7 +79,9 @@ class QuizSessionM {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       type: type ?? this.type,
+      remark: remark ?? this.remark,
       page: page ?? this.page,
+      isRevenue: isRevenue ?? this.isRevenue,
     );
   }
 
@@ -95,8 +103,10 @@ class QuizSessionM {
       point: json['point'],
       isFinished: json['isFinished'],
       isRated: json['isRated'] ?? false,
+      isRevenue: json['isRevenue'] ?? false,
       createdAt: json['createdAt'] ?? "",
       updatedAt: json['updatedAt'] ?? "",
+      remark: json['remark'] ?? "",
       type: json['type'] ?? "",
       page: 0,
     );
@@ -119,6 +129,8 @@ class QuizSessionM {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'image': image,
+      'remark': remark,
+      'isRevenue': isRevenue,
       'type': type,
     };
   }

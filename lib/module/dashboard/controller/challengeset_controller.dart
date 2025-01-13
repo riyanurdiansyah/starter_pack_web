@@ -130,6 +130,7 @@ class ChallengesetController extends GetxController {
         start: selectedDate?.toIso8601String() ?? "",
         end: selectedEndDate?.toIso8601String() ?? "",
         page: 0,
+        isRevenue: false,
         time: int.parse(tcTime.text),
         maxPoint: int.parse(tcMaxPoint.text),
         maxQuestion: int.parse(tcMaxQuestion.text),

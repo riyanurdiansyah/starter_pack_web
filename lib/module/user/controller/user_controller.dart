@@ -215,6 +215,7 @@ class UserController extends GetxController {
       alias: "",
       country: "",
       profit: 0,
+      revenue: 0,
       groupId: oldUser.kelompokId,
       id: "",
       image: "",
@@ -228,6 +229,7 @@ class UserController extends GetxController {
     selectedGroup.value = GroupM(
       alias: "",
       country: "",
+      revenue: 0,
       groupId: oldUser.kelompokId,
       id: "",
       image: "",

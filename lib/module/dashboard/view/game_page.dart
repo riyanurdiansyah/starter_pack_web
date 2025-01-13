@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/quiz_session_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/game_controller.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
@@ -23,11 +24,20 @@ class GamePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Obx(
-              () => Container(
+            Obx(() {
+              if (_c.isLoading.value) {
+                return const SizedBox();
+              }
+              return Container(
                 color: Colors.white,
                 child: AppDataTable<QuizSessionM>(
-                  headers: const ["Image", "Username"],
+                  headers: const [
+                    "Image",
+                    "Username",
+                    "Group",
+                    "Remark",
+                    "Uploaded At"
+                  ],
                   datas: _c.isUsingGame(),
                   currentPage: _c.currentPage.value,
                   totalPage: _c.isTotalPage(),
@@ -56,6 +66,34 @@ class GamePage extends StatelessWidget {
                             Expanded(
                               child: AppTextNormal.labelW500(
                                 data.username,
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                _c.groups
+                                    .where((e) => e.id == data.groupId)
+                                    .first
+                                    .alias,
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                data.remark,
+                                16,
+                                colorPrimaryDark,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              child: AppTextNormal.labelW500(
+                                DateFormat("dd MMM yyyy HH:mm:ss")
+                                    .format(DateTime.parse(data.createdAt)),
                                 16,
                                 colorPrimaryDark,
                                 textAlign: TextAlign.center,
@@ -117,8 +155,8 @@ class GamePage extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
