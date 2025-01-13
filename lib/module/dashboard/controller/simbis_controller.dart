@@ -128,7 +128,7 @@ class SimbisController extends GetxController {
         "model": "gpt-4o-mini",
         "response_format": {"type": "json_object"},
         "temperature": 0.5,
-        "max_tokens": 5000,
+        "max_tokens": 16000,
         "messages": [
           {
             "role": "system",
@@ -181,6 +181,7 @@ class SimbisController extends GetxController {
       );
       // final dataJSON = json
       //     .decode();
+      // log("CEK DATA : ${response.data}");
       final dataJSON = jsonDecode(
               response.data["choices"][0]["message"]["content"])["result"]
           as List<dynamic>;
