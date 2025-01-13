@@ -19,6 +19,9 @@ class DistributeController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final RxList<DemographyM> demographys = <DemographyM>[].obs;
   Rx<bool> isHovered = false.obs;
+
+  Rx<bool> isLoading = false.obs;
+
   final RxList<ProdukM> products = <ProdukM>[].obs;
   final RxList<ProdukM> productsOwn = <ProdukM>[].obs;
 
@@ -42,12 +45,18 @@ class DistributeController extends GetxController {
 
   @override
   void onInit() async {
+    onChangeLoading(true);
     await setup();
     await getProducts();
     await getDemographys();
     await getSellingPrice();
     await generateAccess();
+    await onChangeLoading(false);
     super.onInit();
+  }
+
+  Future onChangeLoading(bool val) async {
+    isLoading.value = val;
   }
 
   Future setup() async {

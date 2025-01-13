@@ -477,7 +477,7 @@ class CartPage extends StatelessWidget {
                                     // double charge = 0;
 
                                     if (newQty != null) {
-                                      if (newQty >= 1000) {
+                                      if (newQty >= 10000) {
                                         discount = newQty *
                                             ((_c.products[_c.indexImg.value]
                                                                 .harga *
@@ -683,7 +683,7 @@ class CartPage extends StatelessWidget {
                                                                 horizontal: 8),
                                                         child: AppTextNormal
                                                             .labelW600(
-                                                          "Cost \$${convertNumber(data.charge)}",
+                                                          "Additional Cost \$${convertNumber(data.charge)}",
                                                           16,
                                                           Colors.red.shade600,
                                                         ),
@@ -810,7 +810,7 @@ class CartPage extends StatelessWidget {
                                                 ),
                                               ),
                                               child: AppTextNormal.labelBold(
-                                                "SAVE",
+                                                "SUBMIT",
                                                 22,
                                                 Colors.white,
                                                 letterSpacing: 1.8,
@@ -832,7 +832,42 @@ class CartPage extends StatelessWidget {
                 );
               }
               return const SizedBox();
-            })
+            }),
+            Positioned(
+              bottom: 25,
+              right: 0,
+              child: InkWell(
+                onTap: () {
+                  AppDialog.dialogInfo(
+                      '''Jumlah tipe produk yang diproduksi memengaruhi biaya tambahan per unit. Jika hanya satu tipe produk yang diproduksi, tidak ada biaya tambahan per unit (0). Ketika jumlah tipe produk yang diproduksi adalah dua, biaya tambahan per unit adalah 0,4/pc. Jika jumlah tipe produk yang diproduksi ada tiga, biaya tambahan per unit naik menjadi 0,8/pc.\nJumlah tipe produk = 1: Biaya tambahan per unit = 0.
+Jumlah tipe produk = 2: Biaya tambahan per unit = 0,4/pc
+Jumlah tipe produk = 3: Biaya tambahan per unit = 0,8/pc
+Namun biaya ini hanya akan dikenakan pada saat production sesuai dengan jumlah tipe yang di produksi.''');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    margin: const EdgeInsets.all(4),
+                    child: const Icon(
+                      Icons.info_outline,
+                      size: 50,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       );
