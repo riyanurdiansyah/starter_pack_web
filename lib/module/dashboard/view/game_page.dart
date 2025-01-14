@@ -88,6 +88,8 @@ class GamePage extends StatelessWidget {
                                 16,
                                 colorPrimaryDark,
                                 textAlign: TextAlign.center,
+                                maxLines: 10,
+                                height: 1.25,
                               ),
                             ),
                             Expanded(

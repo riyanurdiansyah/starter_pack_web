@@ -24,7 +24,7 @@ class GameController extends GetxController {
   final Rx<GroupM> group = groupEmpty.obs;
 
   Rx<int> currentPage = 1.obs;
-  Rx<int> dataPerPage = 5.obs;
+  Rx<int> dataPerPage = 4.obs;
 
   final Rx<UserM> user = userEmpty.obs;
 
@@ -66,9 +66,9 @@ class GameController extends GetxController {
 
   List<QuizSessionM> isUsingGame() {
     if (isSearched.value) {
-      return quizessSearch;
+      return quizessSearch.where((e) => e.page == currentPage.value).toList();
     }
-    return quizess;
+    return quizess.where((e) => e.page == currentPage.value).toList();
   }
 
   int isTotalPage() {
@@ -96,7 +96,7 @@ class GameController extends GetxController {
     } else {
       isSearched.value = true;
       quizTemp = quizess
-          .where((e) => e.userId.toLowerCase().contains(query.toLowerCase()))
+          .where((e) => e.username.toLowerCase().contains(query.toLowerCase()))
           .toList();
       for (int i = 0; i < quizTemp.length; i++) {
         pageTemp = (i + 1) / dataPerPage.value;
@@ -121,6 +121,13 @@ class GameController extends GetxController {
 
     quizess.value =
         response.docs.map((doc) => QuizSessionM.fromJson(doc.data())).toList();
+    quizess.sort((a, b) =>
+        DateTime.parse(a.createdAt).compareTo(DateTime.parse(b.createdAt)));
+    double pageTemp = 0;
+    for (int i = 0; i < quizess.length; i++) {
+      pageTemp = (i + 1) / dataPerPage.value;
+      quizess[i] = quizess[i].copyWith(page: pageTemp.ceil());
+    }
   }
 
   Future updateGame(QuizSessionM data) async {

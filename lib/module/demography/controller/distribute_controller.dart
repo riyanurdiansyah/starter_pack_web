@@ -43,6 +43,21 @@ class DistributeController extends GetxController {
 
   RxList<Map<String, dynamic>> accessList = <Map<String, dynamic>>[].obs;
 
+  final RxList<bool> listHoveredProduct = <bool>[].obs;
+
+  final imageDemos = [
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fdemography%2F54.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fdemography%2F55.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fdemography%2F56.png?alt=media",
+    "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2Fdemography%2F555.png?alt=media"
+  ];
+
+  final Rx<bool> isDone = false.obs;
+
+  final listDistribute = <Map<String, dynamic>>[].obs;
+
+  final tcQty = TextEditingController();
+
   @override
   void onInit() async {
     onChangeLoading(true);
@@ -51,8 +66,20 @@ class DistributeController extends GetxController {
     await getDemographys();
     await getSellingPrice();
     await generateAccess();
+    await getLogDistribution();
     await onChangeLoading(false);
     super.onInit();
+  }
+
+  Future getLogDistribution() async {
+    final logAssign = await firestore
+        .collection("log")
+        .where("type", isEqualTo: "distribution")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+    if (logAssign.docs.isNotEmpty) {
+      isDone.value = true;
+    }
   }
 
   Future onChangeLoading(bool val) async {
@@ -75,6 +102,24 @@ class DistributeController extends GetxController {
     sellings.value = response.docs.map((e) {
       return SellingPriceM.fromJson(e.data());
     }).toList();
+
+    listHoveredProduct.value =
+        List.generate(sellings[0].areas.length, (i) => false);
+
+    listDistribute.value = List.generate(sellings[0].areas.length, (i) {
+      return {
+        "areaId": sellings[0].areas[i].id,
+        "total": 0,
+        "products": List.generate(
+            sellings[0].areas[i].products.length, (subindex) => 0),
+        "controller": List.generate(
+          sellings[0].areas[i].products.length,
+          (subindex) => TextEditingController(),
+        ),
+        "cost": List.generate(
+            sellings[0].areas[i].products.length, (subindex) => 0.0),
+      };
+    });
 
     // // Update productsOwn secara langsung
     // for (var itemDemo in demographys) {
@@ -301,6 +346,14 @@ class DistributeController extends GetxController {
               .doc(item.id)
               .update(item.toJson());
         }
+
+        await firestore.collection("log").doc(id).set({
+          "logId": id,
+          "groupId": userSession.value.groupId,
+          "type": "distribution",
+          "createdBy": userSession.value.username,
+          "createdAt": DateTime.now().toIso8601String(),
+        });
       }).then((_) async {
         await getProducts();
         await getDemographys();

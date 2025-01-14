@@ -19,6 +19,7 @@ import 'package:starter_pack_web/module/dashboard/controller/group_controller.da
 import 'package:starter_pack_web/module/dashboard/controller/newset_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/role_controller.dart';
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
+import 'package:starter_pack_web/module/demography/controller/distribute_controller.dart';
 import 'package:starter_pack_web/module/demography/model/produk_m.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/news/model/news_m.dart';
@@ -2111,7 +2112,8 @@ class AppDialog {
                 subtitle ?? "Are you sure you want to delete this item?",
                 14,
                 Colors.grey.shade600,
-                maxLines: 3,
+                maxLines: 5,
+                height: 1.4,
               ),
               26.ph,
               Row(
@@ -2402,10 +2404,20 @@ class AppDialog {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.network(
-                oldQuiz.image,
-                width: 125,
+              // SizedBox(
+              //   width: size.width / 2.5,
+              //   height: 100,
+              //   child:
+              // ),
+              AspectRatio(
+                aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
+                child: CachedNetworkImage(
+                  imageUrl: oldQuiz.image,
+                  width: 125,
+                  fit: BoxFit.fill,
+                ),
               ),
+
               16.ph,
               AppTextNormal.labelW700(
                 "Point",
@@ -2624,6 +2636,91 @@ class AppDialog {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogDetailDistribute() {
+    final c = Get.find<DistributeController>();
+    final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
+
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: size.width / 3,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                AppTextNormal.labelBold(
+                  "Detail Distribution",
+                  25,
+                  Colors.black,
+                ),
+                18.ph,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(c.sellings[0].areas.length, (i) {
+                    final area = c.sellings[0].areas[i];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppTextNormal.labelBold(
+                          area.name,
+                          16,
+                          Colors.black,
+                        ),
+                        10.ph,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:
+                              List.generate(area.products.length, (subindex) {
+                            final prod = area.products[subindex];
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppTextNormal.labelBold(
+                                      "${prod.nama} ${prod.tipe}",
+                                      12,
+                                      Colors.grey.shade600,
+                                    ),
+                                    10.ph,
+                                    AppTextNormal.labelW600(
+                                      "QTY : ${(c.listDistribute[i]["controller"][subindex] as TextEditingController).text.isEmpty ? 0 : (c.listDistribute[i]["controller"][subindex] as TextEditingController).text}",
+                                      10.5,
+                                      Colors.grey,
+                                    ),
+                                    10.ph,
+                                    AppTextNormal.labelW600(
+                                      "Distribution Cost : ${c.listDistribute[i]["cost"][subindex]}",
+                                      10.5,
+                                      Colors.grey,
+                                    ),
+                                    18.ph,
+                                  ],
+                                ),
+                                const Spacer(),
+                                AppTextNormal.labelBold(
+                                  "\$ ${c.listDistribute[i]["total"]}",
+                                  16,
+                                  colorPrimaryDark,
+                                ),
+                              ],
+                            );
+                          }),
+                        )
+                      ],
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
       ),

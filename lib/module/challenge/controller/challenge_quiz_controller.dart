@@ -585,57 +585,71 @@ class ChallengeQuizController extends GetxController {
   }
 
   void saveChallengeWellfit() async {
-    try {
-      showDialog(
-        context: navigatorKey.currentContext!,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          content: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(
-                  color: colorPrimaryDark,
+    // Menampilkan dialog loading
+    showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        content: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(
+                color: colorPrimaryDark,
+              ),
+              const SizedBox(height: 18),
+              Obx(
+                () => AppTextNormal.labelW700(
+                  "Uploading on progress ${uploadProgress.value.toInt()}%",
+                  14,
+                  Colors.grey.shade600,
                 ),
-                18.ph,
-                Obx(
-                  () => AppTextNormal.labelW700(
-                    "Uploading on progress ${uploadProgress.value.toInt()}",
-                    14,
-                    Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
-      String downloadUrl = "";
-      final fileBytes = filePickerResult?.files.single.bytes;
-      final fileName = filePickerResult?.files.single.name;
+      ),
+    );
+
+    try {
+      // Validasi file
+      if (filePickerResult == null ||
+          filePickerResult?.files.single.bytes == null) {
+        throw Exception("File tidak valid atau belum dipilih.");
+      }
+
+      // Inisialisasi variabel file
+      final fileBytes = filePickerResult!.files.single.bytes!;
+      final fileName = filePickerResult!.files.single.name;
       final storageRef =
           FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
 
       // Membuat task upload
-      final uploadTask = storageRef.putData(fileBytes!);
+      final uploadTask = storageRef.putData(fileBytes);
 
-      // Menggunakan snapshotEvents untuk memantau progress
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) async {
+      // Mendengarkan progress upload dan menangani snapshot
+      String downloadUrl = "";
+      await uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) async {
         final progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         uploadProgress.value = progress;
-        if (progress.toInt() == 100 && isFinished.value == false) {
-          navigatorKey.currentContext!.pop();
+
+        if (snapshot.state == TaskState.success && isFinished.value == false) {
+          // Menutup dialog saat upload selesai
+          navigatorKey.currentContext?.pop();
           _timer?.cancel();
           isFinished.value = true;
+
+          // Mendapatkan URL download
           downloadUrl = await snapshot.ref.getDownloadURL();
 
+          // Membuat data untuk Firestore
           var data = QuizSessionM(
             userId: user.value.id,
             multipleChoices: multipleChoices,
@@ -656,58 +670,23 @@ class ChallengeQuizController extends GetxController {
             updatedAt: dateNow.value.toIso8601String(),
             createdAt: dateNow.value.toIso8601String(),
           );
+
+          // Menyimpan data ke Firestore
           await firestore
               .collection("quiz_session")
               .doc(data.sessionId)
               .update(data.toJson());
-          // // Memeriksa apakah data session ada di Firestore
-          // final response = await firestore.collection("quiz_session").get();
-          // if (response.docs.isEmpty) {
-          //   await firestore
-          //       .collection("quiz_session")
-          //       .doc(data.sessionId)
-          //       .set(data.toJson());
-          //   await getSessionQuiz();
-          // } else {
-          //   final sessions = response.docs
-          //       .map((doc) => QuizSessionM.fromJson(doc.data()))
-          //       .toList();
-          //   final sessionData = sessions
-          //       .where((e) =>
-          //           e.userId == user.value.id && e.quizId == challenge.value.id)
-          //       .toList();
-          //   if (sessionData.isEmpty) {
-          //     await firestore
-          //         .collection("quiz_session")
-          //         .doc(data.sessionId)
-          //         .set(data.toJson());
-          //     await getSessionQuiz();
-          //   } else {
-          //     data = data.copyWith(
-          //       sessionId: sessionData.first.sessionId,
-          //       multipleChoices: multipleChoices,
-          //       answers: listAnswer,
-          //       time: 0,
-          //       image: downloadUrl,
-          //       isFinished: true,
-          //       isRated: false,
-          //     );
-          //     await firestore
-          //         .collection("quiz_session")
-          //         .doc(data.sessionId)
-          //         .update(data.toJson());
-          //     await getSessionQuiz();
-          //   }
-          // }
-
+          getSessionQuiz();
           AppDialog.dialogSnackbar("Success");
         }
-      });
+      }).asFuture();
 
-      // Mendapatkan URL download
+      // Validasi URL download
+      if (downloadUrl.isEmpty) {
+        throw Exception("Gagal mendapatkan URL gambar.");
+      }
     } catch (e) {
-      navigatorKey.currentContext!.pop();
-      AppDialog.dialogSnackbar("Error while saving : $e");
+      AppDialog.dialogSnackbar("Error while saving: $e");
     }
   }
 

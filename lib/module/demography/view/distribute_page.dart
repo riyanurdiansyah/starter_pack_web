@@ -8,7 +8,7 @@ import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../../../utils/app_color.dart';
-import '../../../utils/app_decoration.dart';
+import '../../../utils/app_dialog.dart';
 import '../../../utils/app_sound.dart';
 import '../../../utils/app_text.dart';
 
@@ -28,7 +28,7 @@ class DistributePage extends StatelessWidget {
             width: double.infinity,
             height: size.height,
             child: Image.asset(
-              bgDistribution,
+              bgSales,
               fit: BoxFit.fill,
             ),
           ),
@@ -71,16 +71,38 @@ class DistributePage extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      ElevatedButton(
-                        onPressed: () {
-                          _c.saveDistribute();
-                        },
-                        child: AppTextNormal.labelBold(
-                          "SAVE",
-                          16,
-                          Colors.black,
-                        ),
-                      ),
+                      Obx(() {
+                        if (_c.isDone.value) {
+                          return const SizedBox();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 45, top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              AppDialog.dialogDetailDistribute();
+                              // AppDialog.dialogDelete(
+                              //   title: "Update Selling Price",
+                              //   subtitle:
+                              //       "Are you sure you want to submit selling price? Once submitted the data can no longer be modified!",
+                              //   confirmText: "Yes, update the price",
+                              //   cancelText: "No, cancel",
+                              //   callback: () => _c.saveDistribute(),
+                              // );
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                padding: const EdgeInsets.all(20)),
+                            child: AppTextNormal.labelBold(
+                              "SUBMIT",
+                              16,
+                              Colors.black,
+                            ),
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -421,176 +443,563 @@ class DistributePage extends StatelessWidget {
                   return Expanded(
                     child: Form(
                       key: _c.formKey,
-                      child: ListView(
-                        children:
-                            List.generate(_c.sellings[0].areas.length, (index) {
-                          final data = _c.sellings[0].areas[index];
-                          return ExpansionTile(
-                            title: Row(
-                              children: [
-                                AppTextNormal.labelBold(
-                                  "${data.name} ",
-                                  16,
-                                  Colors.white,
-                                ),
-                                AppTextNormal.labelBold(
-                                  "  -  Cost: ${data.cost}/item",
-                                  12,
-                                  Colors.grey.shade300,
-                                ),
-                              ],
-                            ),
-                            children: List.generate(
-                                _c.sellings[0].areas[index].products.length,
-                                (subindex) {
-                              final prod = _c
-                                  .sellings[0].areas[index].products[subindex];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 16.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Row(
+                      child: Column(
+                        children: [
+                          AppTextNormal.labelBold(
+                            "DISTRIBUTION",
+                            35,
+                            Colors.white,
+                            letterSpacing: 2,
+                          ),
+                          50.ph,
+                          Expanded(
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: List.generate(
+                                  _c.sellings[0].areas.length, (index) {
+                                final data = _c.sellings[0].areas[index];
+
+                                return ExpansionTile(
+                                  tilePadding: EdgeInsets.zero,
+                                  title: Stack(
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24),
+                                        margin: const EdgeInsets.only(
+                                            right: 20, left: 50),
+                                        height: 140,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: _c.listHoveredProduct[index]
+                                                ? [
+                                                    colorPointRank,
+                                                    colorPointRank
+                                                  ]
+                                                : index.isOdd
+                                                    ? [
+                                                        colorPrimaryDark,
+                                                        colorElectricViolet
+                                                      ]
+                                                    : [
+                                                        colorElectricViolet,
+                                                        colorPrimaryDark
+                                                      ],
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                CachedNetworkImage(
-                                                  imageUrl: prod.image,
-                                                  width: 100,
-                                                  height: 100,
-                                                ),
-                                                18.pw,
                                                 AppTextNormal.labelBold(
-                                                  "${prod.nama} - ${prod.tipe}",
-                                                  16,
+                                                  data.name,
+                                                  35,
+                                                  Colors.white,
+                                                ),
+                                                10.ph,
+                                                AppTextNormal.labelBold(
+                                                  "\$ ${data.cost}/item",
+                                                  14,
                                                   Colors.white,
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: AppTextNormal.labelBold(
-                                              "Stock : ${_c.productsOwn.firstWhereOrNull((x) => x.id == prod.id)?.qty ?? 0}",
-                                              16,
-                                              Colors.white,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: AppTextNormal.labelBold(
-                                              "Price : ${prod.priceDistribute}",
-                                              16,
-                                              Colors.white,
-                                            ),
-                                          ),
-                                          20.pw,
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Row(
+                                      Positioned(
+                                        right: index.isEven ? null : 0,
+                                        left: index.isOdd ? null : 0,
+                                        top: 0,
+                                        bottom: 0,
+                                        child: SizedBox(
+                                          // color: Colors.white,
+                                          width: 240,
+                                          height: 350,
+                                          child: AspectRatio(
+                                            aspectRatio: 16 / 9,
+                                            child: CachedNetworkImage(
+                                              imageUrl: _c.imageDemos[index],
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: const SizedBox
+                                      .shrink(), // Menghilangkan ikon ekspansi
+                                  children: List.generate(
+                                    data.products.length,
+                                    (i) {
+                                      final prod = data.products[i];
+                                      return Stack(
                                         children: [
-                                          16.pw,
-                                          OutlinedButton(
-                                            onPressed: () {
-                                              _c.decrementQuantity(
-                                                  index, subindex);
-                                            },
-                                            style: OutlinedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 24),
+                                            margin: const EdgeInsets.only(
+                                                right: 60,
+                                                top: 10,
+                                                bottom: 10,
+                                                left: 125),
+                                            height: 140,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade400,
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                bottomLeft: Radius.circular(12),
                                               ),
                                             ),
-                                            child: AppTextNormal.labelBold(
-                                              "-",
-                                              16,
-                                              Colors.white,
-                                            ),
-                                          ),
-                                          16.pw,
-                                          Expanded(
-                                            child: TextFormField(
-                                              controller: _c.accessList[index]
-                                                  ["controller"][subindex],
-                                              textInputAction:
-                                                  TextInputAction.next,
-                                              decoration:
-                                                  textFieldAuthDecoration(
-                                                      fontSize: 14,
-                                                      hintText: "",
-                                                      radius: 4),
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                60.pw,
+                                                Expanded(
+                                                  child:
+                                                      AppTextNormal.labelBold(
+                                                    "${prod.nama} ${prod.tipe}",
+                                                    20,
+                                                    Colors.white,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      AppTextNormal.labelW600(
+                                                        "Min : 0",
+                                                        12.5,
+                                                        Colors.black,
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 100,
+                                                            height: 45,
+                                                            child: TextField(
+                                                              inputFormatters: [
+                                                                FilteringTextInputFormatter
+                                                                    .digitsOnly, // Hanya menerima angka
+                                                              ],
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              controller:
+                                                                  _c.listDistribute[
+                                                                          index]
+                                                                      [
+                                                                      "controller"][i],
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                disabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color:
+                                                                      colorElectricViolet,
+                                                                  width: 1.2,
+                                                                )),
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color:
+                                                                      colorElectricViolet,
+                                                                  width: 1.2,
+                                                                )),
+                                                                focusedErrorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color:
+                                                                      colorElectricViolet,
+                                                                  width: 1.2,
+                                                                )),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color:
+                                                                      colorElectricViolet,
+                                                                  width: 1.2,
+                                                                )),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color:
+                                                                      colorElectricViolet,
+                                                                  width: 1.2,
+                                                                )),
+                                                              ),
+                                                              onChanged: (String
+                                                                  value) {
+                                                                if (value
+                                                                    .isEmpty) {
+                                                                  _c.listDistribute[
+                                                                          index]
+                                                                      [
+                                                                      "products"][i] = 0;
+                                                                } else {
+                                                                  final int
+                                                                      typedValue =
+                                                                      int.parse(
+                                                                          value);
+                                                                  if (typedValue <=
+                                                                      prod.qty) {
+                                                                    // Jika valid, perbarui nilai
+                                                                    _c.listDistribute[index]["products"]
+                                                                            [
+                                                                            i] =
+                                                                        typedValue;
+                                                                  } else {
+                                                                    // Jika melebihi batas, tetap gunakan nilai sebelumnya
+                                                                    (_c.listDistribute[index]["controller"][i]
+                                                                            as TextEditingController)
+                                                                        .text = _c.listDistribute[
+                                                                            index]
+                                                                            [
+                                                                            "products"]
+                                                                            [i]
+                                                                        .toString();
+                                                                    (_c.listDistribute[index]["controller"][i]
+                                                                                as TextEditingController)
+                                                                            .selection =
+                                                                        TextSelection
+                                                                            .fromPosition(
+                                                                      TextPosition(
+                                                                          offset: (_c.listDistribute[index]["controller"][i] as TextEditingController)
+                                                                              .text
+                                                                              .length),
+                                                                    );
+                                                                  }
+                                                                }
+                                                                _c.listDistribute[
+                                                                            index]
+                                                                        ["cost"]
+                                                                    [
+                                                                    i] = double.parse((data
+                                                                            .cost *
+                                                                        int.parse(
+                                                                            value))
+                                                                    .toStringAsFixed(
+                                                                        2));
+                                                                _c.listDistribute[
+                                                                        index]
+                                                                    ["total"] = double.parse((int.parse((_c.listDistribute[index]["controller"][i]
+                                                                                as TextEditingController)
+                                                                            .text) *
+                                                                        data
+                                                                            .cost)
+                                                                    .toStringAsFixed(
+                                                                        2));
+                                                                _c.listDistribute
+                                                                    .refresh();
+                                                              },
+                                                            ),
+                                                          ),
+                                                          Slider(
+                                                            activeColor:
+                                                                colorElectricViolet,
+                                                            value: _c.listDistribute[
+                                                                    index]
+                                                                ["products"][i],
+                                                            max: prod.qty
+                                                                .roundToDouble(),
+                                                            min: 0,
+                                                            onChanged:
+                                                                (double value) {
+                                                              _c.listDistribute[
+                                                                          index]
+                                                                      [
+                                                                      "products"][i] =
+                                                                  value.round();
+                                                              (_c.listDistribute[index]["controller"]
+                                                                              [
+                                                                              i]
+                                                                          as TextEditingController)
+                                                                      .text =
+                                                                  value
+                                                                      .round()
+                                                                      .toString();
+
+                                                              _c.listDistribute[
+                                                                          index]
+                                                                      ["cost"][
+                                                                  i] = double.parse((data
+                                                                          .cost *
+                                                                      value
+                                                                          .round())
+                                                                  .toStringAsFixed(
+                                                                      2));
+
+                                                              _c.listDistribute[
+                                                                      index][
+                                                                  "total"] = double.parse((int.parse((_c.listDistribute[index]["controller"][i]
+                                                                              as TextEditingController)
+                                                                          .text) *
+                                                                      data.cost)
+                                                                  .toStringAsFixed(
+                                                                      2));
+                                                              _c.listDistribute
+                                                                  .refresh();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      AppTextNormal.labelW600(
+                                                        "Min : ${prod.qty}",
+                                                        12.5,
+                                                        Colors.black,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                28.pw,
+                                                Expanded(
+                                                  child:
+                                                      AppTextNormal.labelBold(
+                                                    "Distribution Cost : R\$ ${_c.listDistribute[index]["cost"][i]}",
+                                                    18,
+                                                    colorPrimaryDark,
+                                                    textAlign: TextAlign.end,
+                                                  ),
+                                                ),
+                                                80.pw,
                                               ],
-                                              // readOnly: true,
-                                              autovalidateMode: AutovalidateMode
-                                                  .onUserInteraction,
-                                              // onChanged: (value) {
-                                              //   int? newQty = int.tryParse(value);
-                                              //   if (newQty != null) {
-                                              //     if (_c.productsOwn[subindex].qty <
-                                              //         newQty) {
-                                              //       final updatedText =
-                                              //           value.substring(
-                                              //               0, value.length - 1);
-                                              //       (_c.accessList[index]
-                                              //                       ["controller"]
-                                              //                   [subindex]
-                                              //               as TextEditingController)
-                                              //           .text = updatedText;
-                                              //       AppDialog.dialogSnackbar(
-                                              //           "${_c.productsOwn[subindex].nama} is out of Stock");
-                                              //     } else {
-                                              //       _c.productsOwn[subindex] = _c
-                                              //           .productsOwn[subindex]
-                                              //           .copyWith(
-                                              //         qty: _c.productsOwn[subindex]
-                                              //                 .qty -
-                                              //             newQty,
-                                              //       );
-                                              //     }
-                                              //   } else {
-                                              //     _c.productsOwn[subindex] = _c
-                                              //         .productsOwn[subindex]
-                                              //         .copyWith(
-                                              //       qty: _c.productsOwn[subindex].qty,
-                                              //     );
-                                              //   }
-                                              // },
                                             ),
                                           ),
-                                          16.pw,
-                                          OutlinedButton(
-                                            onPressed: () {
-                                              _c.incrementQuantity(
-                                                  index, subindex);
-                                            },
-                                            style: OutlinedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
+                                          Positioned(
+                                            left: 50,
+                                            top: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              width: 125,
+                                              height: 125,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(
+                                                        0.25), // Warna bayangan dengan transparansi
+                                                    spreadRadius:
+                                                        12, // Penyebaran bayangan
+                                                    blurRadius:
+                                                        8, // Kekaburan bayangan
+                                                    offset: const Offset(2,
+                                                        4), // Posisi bayangan (x, y)
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: prod.image,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
-                                            child: AppTextNormal.labelBold(
-                                              "+",
-                                              16,
-                                              Colors.white,
-                                            ),
                                           ),
-                                          16.pw,
                                         ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                          );
-                        }),
+                                      );
+                                    },
+                                  ),
+                                );
+
+                                //BATAS
+                                // return ExpansionTile(
+                                //   title: Row(
+                                //     children: [
+                                //       AppTextNormal.labelBold(
+                                //         "${data.name} ",
+                                //         16,
+                                //         Colors.white,
+                                //       ),
+                                //       AppTextNormal.labelBold(
+                                //         "  -  Cost: ${data.cost}/item",
+                                //         12,
+                                //         Colors.grey.shade300,
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   children: List.generate(
+                                //       _c.sellings[0].areas[index].products.length,
+                                //       (subindex) {
+                                //     final prod = _c
+                                //         .sellings[0].areas[index].products[subindex];
+                                //     return Padding(
+                                //       padding: const EdgeInsets.only(bottom: 16.0),
+                                //       child: Row(
+                                //         mainAxisAlignment: MainAxisAlignment.center,
+                                //         children: [
+                                //           Expanded(
+                                //             child: Row(
+                                //               children: [
+                                //                 Expanded(
+                                //                   flex: 2,
+                                //                   child: Row(
+                                //                     children: [
+                                //                       CachedNetworkImage(
+                                //                         imageUrl: prod.image,
+                                //                         width: 100,
+                                //                         height: 100,
+                                //                       ),
+                                //                       18.pw,
+                                //                       AppTextNormal.labelBold(
+                                //                         "${prod.nama} - ${prod.tipe}",
+                                //                         16,
+                                //                         Colors.white,
+                                //                       ),
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //                 Expanded(
+                                //                   child: AppTextNormal.labelBold(
+                                //                     "Stock : ${_c.productsOwn.firstWhereOrNull((x) => x.id == prod.id)?.qty ?? 0}",
+                                //                     16,
+                                //                     Colors.white,
+                                //                   ),
+                                //                 ),
+                                //                 Expanded(
+                                //                   child: AppTextNormal.labelBold(
+                                //                     "Price : ${prod.priceDistribute}",
+                                //                     16,
+                                //                     Colors.white,
+                                //                   ),
+                                //                 ),
+                                //                 20.pw,
+                                //               ],
+                                //             ),
+                                //           ),
+                                //           Expanded(
+                                //             child: Row(
+                                //               children: [
+                                //                 16.pw,
+                                //                 OutlinedButton(
+                                //                   onPressed: () {
+                                //                     _c.decrementQuantity(
+                                //                         index, subindex);
+                                //                   },
+                                //                   style: OutlinedButton.styleFrom(
+                                //                     shape: RoundedRectangleBorder(
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(4),
+                                //                     ),
+                                //                   ),
+                                //                   child: AppTextNormal.labelBold(
+                                //                     "-",
+                                //                     16,
+                                //                     Colors.white,
+                                //                   ),
+                                //                 ),
+                                //                 16.pw,
+                                //                 Expanded(
+                                //                   child: TextFormField(
+                                //                     controller: _c.accessList[index]
+                                //                         ["controller"][subindex],
+                                //                     textInputAction:
+                                //                         TextInputAction.next,
+                                //                     decoration:
+                                //                         textFieldAuthDecoration(
+                                //                             fontSize: 14,
+                                //                             hintText: "",
+                                //                             radius: 4),
+                                //                     inputFormatters: [
+                                //                       FilteringTextInputFormatter
+                                //                           .digitsOnly,
+                                //                     ],
+                                //                     // readOnly: true,
+                                //                     autovalidateMode: AutovalidateMode
+                                //                         .onUserInteraction,
+                                //                     // onChanged: (value) {
+                                //                     //   int? newQty = int.tryParse(value);
+                                //                     //   if (newQty != null) {
+                                //                     //     if (_c.productsOwn[subindex].qty <
+                                //                     //         newQty) {
+                                //                     //       final updatedText =
+                                //                     //           value.substring(
+                                //                     //               0, value.length - 1);
+                                //                     //       (_c.accessList[index]
+                                //                     //                       ["controller"]
+                                //                     //                   [subindex]
+                                //                     //               as TextEditingController)
+                                //                     //           .text = updatedText;
+                                //                     //       AppDialog.dialogSnackbar(
+                                //                     //           "${_c.productsOwn[subindex].nama} is out of Stock");
+                                //                     //     } else {
+                                //                     //       _c.productsOwn[subindex] = _c
+                                //                     //           .productsOwn[subindex]
+                                //                     //           .copyWith(
+                                //                     //         qty: _c.productsOwn[subindex]
+                                //                     //                 .qty -
+                                //                     //             newQty,
+                                //                     //       );
+                                //                     //     }
+                                //                     //   } else {
+                                //                     //     _c.productsOwn[subindex] = _c
+                                //                     //         .productsOwn[subindex]
+                                //                     //         .copyWith(
+                                //                     //       qty: _c.productsOwn[subindex].qty,
+                                //                     //     );
+                                //                     //   }
+                                //                     // },
+                                //                   ),
+                                //                 ),
+                                //                 16.pw,
+                                //                 OutlinedButton(
+                                //                   onPressed: () {
+                                //                     _c.incrementQuantity(
+                                //                         index, subindex);
+                                //                   },
+                                //                   style: OutlinedButton.styleFrom(
+                                //                     shape: RoundedRectangleBorder(
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(4),
+                                //                     ),
+                                //                   ),
+                                //                   child: AppTextNormal.labelBold(
+                                //                     "+",
+                                //                     16,
+                                //                     Colors.white,
+                                //                   ),
+                                //                 ),
+                                //                 16.pw,
+                                //               ],
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     );
+                                //   }),
+                                // );
+                              }),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );

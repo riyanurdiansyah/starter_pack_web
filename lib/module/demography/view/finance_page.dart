@@ -7,6 +7,7 @@ import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
 
 import '../../../utils/app_color.dart';
+import '../../../utils/app_dialog.dart';
 import '../../../utils/app_sound.dart';
 import '../../../utils/app_text.dart';
 
@@ -73,17 +74,26 @@ class FinancePage extends StatelessWidget {
                           return const SizedBox();
                         }
                         return Padding(
-                          padding: const EdgeInsets.only(right: 45, top: 20),
+                          padding: const EdgeInsets.only(right: 45, top: 10),
                           child: ElevatedButton(
-                            onPressed: _c.savePrice,
+                            onPressed: () {
+                              AppDialog.dialogDelete(
+                                title: "Update Selling Price",
+                                subtitle:
+                                    "Are you sure you want to submit selling price? Once submitted the data can no longer be modified!",
+                                confirmText: "Yes, update the price",
+                                cancelText: "No, cancel",
+                                callback: () => _c.savePrice(),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                padding: const EdgeInsets.all(20)),
                             child: AppTextNormal.labelBold(
-                              "SAVE",
+                              "SUBMIT",
                               16,
                               Colors.black,
                             ),
@@ -158,12 +168,12 @@ class FinancePage extends StatelessWidget {
                                                   ]
                                                 : i.isOdd
                                                     ? [
-                                                        colorPointRank,
+                                                        colorElectricViolet,
                                                         colorPrimaryDark,
                                                       ]
                                                     : [
                                                         colorPrimaryDark,
-                                                        colorPointRank,
+                                                        colorElectricViolet,
                                                       ],
                                           ),
                                         ),
@@ -189,7 +199,7 @@ class FinancePage extends StatelessWidget {
                                                     children: [
                                                       if (!_c.isDone.value)
                                                         AppTextNormal.labelBold(
-                                                          "\$ ${prod.minPrice}",
+                                                          "R\$ ${prod.minPrice}",
                                                           14,
                                                           Colors.white,
                                                         ),
@@ -202,7 +212,7 @@ class FinancePage extends StatelessWidget {
                                                         children: [
                                                           AppTextNormal
                                                               .labelBold(
-                                                            "\$ ${_c.priceSliders[i].toStringAsFixed(1)}",
+                                                            "R\$ ${_c.priceSliders[i].toStringAsFixed(1)}",
                                                             18,
                                                             Colors.white,
                                                           ),
@@ -233,7 +243,7 @@ class FinancePage extends StatelessWidget {
                                                         14.pw,
                                                       if (!_c.isDone.value)
                                                         AppTextNormal.labelBold(
-                                                          "\$ ${prod.maxPrice}",
+                                                          "R\$ ${prod.maxPrice}",
                                                           14,
                                                           Colors.white,
                                                         ),
@@ -245,7 +255,7 @@ class FinancePage extends StatelessWidget {
                                                     children: [
                                                       if (!_c.isDone.value)
                                                         AppTextNormal.labelBold(
-                                                          "\$ ${prod.minPrice}",
+                                                          "R\$ ${prod.minPrice}",
                                                           14,
                                                           Colors.white,
                                                         ),
@@ -258,7 +268,7 @@ class FinancePage extends StatelessWidget {
                                                         children: [
                                                           AppTextNormal
                                                               .labelBold(
-                                                            "\$ ${_c.priceSliders[i].toStringAsFixed(1)}",
+                                                            "R\$ ${_c.priceSliders[i].toStringAsFixed(1)}",
                                                             18,
                                                             Colors.white,
                                                           ),
@@ -289,7 +299,7 @@ class FinancePage extends StatelessWidget {
                                                         14.pw,
                                                       if (!_c.isDone.value)
                                                         AppTextNormal.labelBold(
-                                                          "\$ ${prod.maxPrice}",
+                                                          "R\$ ${prod.maxPrice}",
                                                           14,
                                                           Colors.white,
                                                         ),
@@ -316,13 +326,33 @@ class FinancePage extends StatelessWidget {
                                         top: 0,
                                         bottom: 0,
                                         child: Container(
-                                          padding: const EdgeInsets.all(1.6),
-                                          color: Colors.white,
+                                          padding: const EdgeInsets.all(8),
                                           width: 200,
                                           height: 200,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                    0.25), // Warna bayangan dengan transparansi
+                                                spreadRadius:
+                                                    12, // Penyebaran bayangan
+                                                blurRadius:
+                                                    8, // Kekaburan bayangan
+                                                offset: const Offset(2,
+                                                    4), // Posisi bayangan (x, y)
+                                              ),
+                                            ],
+                                          ),
                                           child: Container(
                                             padding: const EdgeInsets.all(6),
-                                            color: colorPrimaryDark,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: colorPrimaryDark,
+                                            ),
                                             child: CachedNetworkImage(
                                               imageUrl: prod.image,
                                               fit: BoxFit.fill,

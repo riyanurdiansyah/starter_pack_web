@@ -214,7 +214,7 @@ class Product {
   final int harga;
   final String image;
   final int qty;
-  final int priceDistribute;
+  final double priceDistribute;
   final List<String> groups;
 
   Product({
@@ -235,7 +235,7 @@ class Product {
     int? harga,
     String? image,
     int? qty,
-    int? priceDistribute,
+    double? priceDistribute,
     List<String>? groups,
   }) =>
       Product(
