@@ -16,6 +16,10 @@ class ChallengesetController extends GetxController {
 
   final Rx<bool> isSearched = false.obs;
 
+  final Rx<bool> toRevenue = false.obs;
+
+  final Rx<bool> isSpecialChallenge = false.obs;
+
   FilePickerResult? filePickerResult;
 
   DateTime? selectedDate;
@@ -23,7 +27,7 @@ class ChallengesetController extends GetxController {
   DateTime? selectedEndDate;
 
   Rx<int> currentPage = 1.obs;
-  Rx<int> dataPerPage = 8.obs;
+  Rx<int> dataPerPage = 5.obs;
 
   final formKey = GlobalKey<FormState>();
 
@@ -51,7 +55,8 @@ class ChallengesetController extends GetxController {
 
     double pageTemp = 0;
     for (int i = 0; i < challenges.length; i++) {
-      pageTemp = (i + 1) ~/ 8 < 1 ? 1 : (i + 1) / 8;
+      pageTemp =
+          (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
       challenges[i] = challenges[i].copyWith(page: pageTemp.ceil());
     }
     return challenges;
@@ -130,10 +135,11 @@ class ChallengesetController extends GetxController {
         start: selectedDate?.toIso8601String() ?? "",
         end: selectedEndDate?.toIso8601String() ?? "",
         page: 0,
-        isRevenue: false,
+        isRevenue: toRevenue.value,
         time: int.parse(tcTime.text),
         maxPoint: int.parse(tcMaxPoint.text),
         maxQuestion: int.parse(tcMaxQuestion.text),
+        isSpecialChallenge: isSpecialChallenge.value,
       );
       if (oldChallenge != null) {
         challengeCollection.doc(oldChallenge.id).update(challenge.toJson());

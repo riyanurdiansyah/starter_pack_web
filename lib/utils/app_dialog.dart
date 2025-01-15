@@ -401,6 +401,67 @@ class AppDialog {
                   ),
                   16.ph,
                   AppTextNormal.labelW700(
+                    "Start Date",
+                    14,
+                    Colors.black,
+                  ),
+                  12.ph,
+                  TextFormField(
+                    controller: c.tcDate,
+                    validator: (val) => AppValidator.requiredField(val!),
+                    style: TextStyle(
+                      fontFamily: 'Bigail',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    onTap: () async {},
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final date = await globalDate();
+                            c.selectedDate = date;
+                            if (date != null) {
+                              c.tcDate.text =
+                                  "${DateFormat("dd/MM/yyyy HH:mm").format(date)} WIB";
+                            } else {
+                              c.tcDate.clear();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                          child: AppTextNormal.labelBold(
+                            "Choose Date",
+                            14,
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 12),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  16.ph,
+                  AppTextNormal.labelW700(
                     "Content",
                     14,
                     Colors.black,
@@ -943,6 +1004,49 @@ class AppDialog {
                         ),
                       ),
                     ],
+                  ),
+                  16.ph,
+                  SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: Row(
+                      children: [
+                        Obx(
+                          () => Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: CheckboxListTile(
+                                    value: c.toRevenue.value,
+                                    onChanged: (val) {
+                                      c.toRevenue.value = val ?? false;
+                                    },
+                                    title: AppTextNormal.labelNormal(
+                                      "To Revenue",
+                                      14,
+                                      Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: CheckboxListTile(
+                                    value: c.isSpecialChallenge.value,
+                                    onChanged: (val) {
+                                      c.isSpecialChallenge.value = val ?? false;
+                                    },
+                                    title: AppTextNormal.labelNormal(
+                                      "Special Challenge",
+                                      14,
+                                      Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   18.ph,
                   SizedBox(
@@ -2645,7 +2749,10 @@ class AppDialog {
   static dialogDetailDistribute() {
     final c = Get.find<DistributeController>();
     final size = MediaQuery.sizeOf(navigatorKey.currentContext!);
-
+    int totalQty = 0;
+    double totalDistributionCost =
+        0.0; // Variabel untuk total distribution cost
+    List<String> isValids = [];
     return showDialog(
       context: navigatorKey.currentContext!,
       barrierDismissible: true,
@@ -2655,70 +2762,246 @@ class AppDialog {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                AppTextNormal.labelBold(
-                  "Detail Distribution",
-                  25,
-                  Colors.black,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppTextNormal.labelBold(
+                      "Detail Distribution",
+                      25,
+                      Colors.black,
+                    ),
+                    StreamBuilder<GroupM>(
+                      stream: c.groupStream(),
+                      builder: (context, AsyncSnapshot<GroupM> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
+                        }
+
+                        if (!snapshot.hasData) {
+                          return const Center(child: Text("Data not found"));
+                        }
+
+                        return Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: colorElectricViolet,
+                          ),
+                          child: Text(
+                            "\$ ${convertNumber(c.groupData.value.point)}",
+                            style: const TextStyle(
+                              fontFamily: "Race",
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                14.ph,
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppTextNormal.labelW600(
+                        "Your Stock",
+                        16,
+                        colorPrimaryDark,
+                      ),
+                      14.ph,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(c.productsOwn.length, (i) {
+                          final own = c.productsOwn[i];
+
+                          // Hitung total qty produk di semua area distribusi
+                          int totalDistributedQty = 0;
+                          for (var area in c.listDistribute) {
+                            final controllers = area["controller"]
+                                as List<TextEditingController>;
+                            if (controllers.length > i) {
+                              final qty = controllers[i].text.isEmpty
+                                  ? 0
+                                  : int.parse(controllers[i].text);
+                              totalDistributedQty += qty;
+                            }
+                          }
+                          if (own.qty - totalDistributedQty < 0) {
+                            isValids.add(
+                                "${own.nama} ${own.tipe} exceeds by ${own.qty - totalDistributedQty} pcs");
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppTextNormal.labelW600(
+                                  "${own.nama} ${own.tipe} ",
+                                  12,
+                                  Colors.grey.shade600,
+                                ),
+                                AppTextNormal.labelW600(
+                                  "${convertNumber(own.qty)} Pcs",
+                                  12,
+                                  Colors.grey.shade600,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
                 18.ph,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(c.sellings[0].areas.length, (i) {
                     final area = c.sellings[0].areas[i];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppTextNormal.labelBold(
-                          area.name,
-                          16,
-                          Colors.black,
-                        ),
-                        10.ph,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:
-                              List.generate(area.products.length, (subindex) {
-                            final prod = area.products[subindex];
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AppTextNormal.labelBold(
-                                      "${prod.nama} ${prod.tipe}",
-                                      12,
-                                      Colors.grey.shade600,
-                                    ),
-                                    10.ph,
-                                    AppTextNormal.labelW600(
-                                      "QTY : ${(c.listDistribute[i]["controller"][subindex] as TextEditingController).text.isEmpty ? 0 : (c.listDistribute[i]["controller"][subindex] as TextEditingController).text}",
-                                      10.5,
-                                      Colors.grey,
-                                    ),
-                                    10.ph,
-                                    AppTextNormal.labelW600(
-                                      "Distribution Cost : ${c.listDistribute[i]["cost"][subindex]}",
-                                      10.5,
-                                      Colors.grey,
-                                    ),
-                                    18.ph,
-                                  ],
-                                ),
-                                const Spacer(),
-                                AppTextNormal.labelBold(
-                                  "\$ ${c.listDistribute[i]["total"]}",
-                                  16,
-                                  colorPrimaryDark,
-                                ),
-                              ],
-                            );
-                          }),
-                        )
-                      ],
+                    return Container(
+                      color: i.isEven ? Colors.white : Colors.grey.shade100,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          10.ph,
+                          AppTextNormal.labelBold(
+                            area.name,
+                            16,
+                            Colors.black,
+                          ),
+                          10.ph,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children:
+                                List.generate(area.products.length, (subindex) {
+                              final prod = area.products[subindex];
+                              final qty = (c.listDistribute[i]["controller"]
+                                          [subindex] as TextEditingController)
+                                      .text
+                                      .isEmpty
+                                  ? 0
+                                  : int.parse((c.listDistribute[i]["controller"]
+                                          [subindex] as TextEditingController)
+                                      .text);
+                              totalQty += qty;
+
+                              // Tambahkan biaya distribusi ke total keseluruhan
+                              totalDistributionCost +=
+                                  c.listDistribute[i]["cost"][subindex];
+
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      AppTextNormal.labelBold(
+                                        "${prod.nama} ${prod.tipe}",
+                                        12,
+                                        Colors.grey.shade600,
+                                      ),
+                                      10.ph,
+                                      AppTextNormal.labelW600(
+                                        "QTY : ${convertNumber(qty)}",
+                                        10.5,
+                                        Colors.grey,
+                                      ),
+                                      10.ph,
+                                      AppTextNormal.labelW600(
+                                        "Distribution Cost : ${convertNumber(c.listDistribute[i]["cost"][subindex])}",
+                                        10.5,
+                                        Colors.grey,
+                                      ),
+                                      18.ph,
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  AppTextNormal.labelBold(
+                                    "\$ ${convertNumber(c.listDistribute[i]["cost"][subindex])}",
+                                    16,
+                                    colorPrimaryDark,
+                                  ),
+                                ],
+                              );
+                            }),
+                          ),
+                          14.ph,
+                          Container(
+                            height: 2,
+                            width: double.infinity,
+                            color: Colors.grey.shade400,
+                          )
+                        ],
+                      ),
                     );
                   }),
                 ),
+                15.ph,
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(isValids.length, (i) {
+                      return AppTextNormal.labelBold(
+                        isValids[i],
+                        12,
+                        Colors.red,
+                      );
+                    }),
+                  ),
+                ),
+                15.ph,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppTextNormal.labelBold(
+                      "TOTAL",
+                      16,
+                      colorPrimaryDark,
+                    ),
+                    AppTextNormal.labelBold(
+                      "\$ ${convertNumber(totalDistributionCost)}", // Tampilkan total biaya distribusi
+                      18,
+                      isValids.isEmpty ? colorPrimaryDark : Colors.red,
+                    ),
+                  ],
+                ),
+                15.ph,
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: isValids.isNotEmpty || totalDistributionCost == 0
+                        ? null
+                        : () {
+                            context.pop();
+                            c.saveDistribute(totalDistributionCost);
+                          },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      backgroundColor: colorPrimaryDark,
+                    ),
+                    child: AppTextNormal.labelBold(
+                      "DISTRIBUTE",
+                      14,
+                      Colors.white,
+                    ),
+                  ),
+                )
               ],
             ),
           ),
@@ -2739,34 +3022,34 @@ class _AppDialogContent extends StatefulWidget {
 
 class __AppDialogContentState extends State<_AppDialogContent>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
+  late AnimationController controller;
+  late Animation<double> animation;
 
-  final _c = Get.find<LoginController>();
+  final c = Get.find<LoginController>();
 
   @override
   void initState() {
     super.initState();
 
     // Inisialisasi AnimationController dengan TickerProvider
-    _controller = AnimationController(
+    controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
 
     // Menambahkan animasi dengan efek zoom
-    _animation = CurvedAnimation(
-      parent: _controller,
+    animation = CurvedAnimation(
+      parent: controller,
       curve: Curves.easeInOut,
     );
 
     // Memulai animasi saat dialog muncul
-    _controller.forward();
+    controller.forward();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -2780,7 +3063,7 @@ class __AppDialogContentState extends State<_AppDialogContent>
       insetPadding:
           EdgeInsets.symmetric(horizontal: isMobile ? 20 : size.width / 6),
       child: ScaleTransition(
-        scale: _animation,
+        scale: animation,
         child: Container(
           // height: size.height / 2.8,
           width: isMobile ? size.width * 0.9 : size.width / 3,
@@ -2790,14 +3073,14 @@ class __AppDialogContentState extends State<_AppDialogContent>
           ),
           child: Center(
             child: Form(
-              key: _c.formKey,
+              key: c.formKey,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextFormField(
-                      controller: _c.tcUsername,
+                      controller: c.tcUsername,
                       textInputAction: TextInputAction.next,
                       decoration: textFieldAuthDecoration(
                           fontSize: isMobile ? 12 : 14,
@@ -2812,9 +3095,9 @@ class __AppDialogContentState extends State<_AppDialogContent>
                     ),
                     TextFormField(
                       obscureText: true,
-                      controller: _c.tcPassword,
+                      controller: c.tcPassword,
                       textInputAction: TextInputAction.go,
-                      onEditingComplete: () => _c.onLogin(),
+                      onEditingComplete: () => c.onLogin(),
                       decoration: textFieldAuthDecoration(
                           fontSize: isMobile ? 12 : 14,
                           hintText: "Password",
@@ -2824,12 +3107,12 @@ class __AppDialogContentState extends State<_AppDialogContent>
                           errorMsg: "Password tidak boleh kosong"),
                     ),
                     Obx(() {
-                      if (_c.errorMessage.isEmpty) {
+                      if (c.errorMessage.isEmpty) {
                         return const SizedBox();
                       }
                       return Padding(
                         padding: const EdgeInsets.only(top: 18.0),
-                        child: AppTextNormal.labelNormal(_c.errorMessage.value,
+                        child: AppTextNormal.labelNormal(c.errorMessage.value,
                             isMobile ? 12 : 14, Colors.red),
                       );
                     }),
@@ -2848,7 +3131,7 @@ class __AppDialogContentState extends State<_AppDialogContent>
                           backgroundColor:
                               WidgetStateProperty.all(colorPointRank),
                         ),
-                        onPressed: () => _c.onLogin(),
+                        onPressed: () => c.onLogin(),
                         child: AppTextNormal.labelBold(
                           "SIGN IN",
                           isMobile ? 16 : 18,

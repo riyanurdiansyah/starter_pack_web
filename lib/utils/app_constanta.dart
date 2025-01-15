@@ -57,6 +57,7 @@ final challengeEmpty = ChallengeM(
   maxQuestion: 0,
   maxPoint: 0,
   isRevenue: false,
+  isSpecialChallenge: false,
 );
 
 final imageBOD = [

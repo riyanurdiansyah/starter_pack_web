@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/dashboard/model/result_simbis_m.dart';
 import 'package:starter_pack_web/module/demography/model/simulation_m.dart';
+import 'package:starter_pack_web/module/rnd/model/config_simbis_m.dart';
 import 'package:starter_pack_web/utils/app_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
 import '../../demography/model/distribute_m.dart';
@@ -87,6 +89,14 @@ class SimbisController extends GetxController {
 
   Future generateResult() async {
     isLoading.value = true;
+    ConfigSimbs? configSimbs;
+    final response = await firestore
+        .collection("simbis")
+        .where("isActive", isEqualTo: true)
+        .get();
+    if (response.docs.isNotEmpty) {
+      configSimbs = ConfigSimbs.fromJson(response.docs[0].data());
+    }
     String demoData = "Simpan Dataset Demography ini :";
     // List<Map<String, dynamic>> datas = [];
     List<SimulationM> simulations = [];
@@ -97,6 +107,7 @@ class SimbisController extends GetxController {
     for (var item in distributes) {
       simulations.add(
         SimulationM(
+          cycleId: configSimbs?.id ?? const Uuid().v4(),
           distributeId: item.distributeId,
           groupId: item.groupId,
           groupName: item.groupName,
@@ -122,14 +133,12 @@ class SimbisController extends GetxController {
         return area.products.any((product) => product.qty > 0);
       });
     }).toList();
-
-    log("DATASET : $demoData");
-    log("BODY : ${jsonEncode(simulations)}");
+    log("CEK DATA : ${jsonEncode(simulations)}");
     try {
       final data = {
         "model": "gpt-4o-mini",
         "response_format": {"type": "json_object"},
-        "temperature": 1,
+        "temperature": 0.5,
         "max_tokens": 16000,
         "messages": [
           {
@@ -143,11 +152,12 @@ class SimbisController extends GetxController {
           {
             "role": "user",
             "content": '''
-                      dengan data di atas buatkan simulasi penjualan dengan berdasarkan dataset demography yg sudah ada. berikan angka random sesuai dengan dataset demography dan tidak perlu semua qty product terjual habis. dengan format json berikut
+                      dengan data di atas buatkan simulasi penjualan dengan berdasarkan dataset demography yg sudah ada. berikan angka random sesuai dengan dataset demography. dengan format json berikut
                       result:
                       [
                           {
                               "distributeId" : "...",
+                              "cycleId" : "...",
                               "groupId" : "...",
                               "groupName" : "...",
                               "summary" : [
@@ -183,10 +193,10 @@ class SimbisController extends GetxController {
       );
       // final dataJSON = json
       //     .decode();
-      log("CEK DATA : ${response.data}");
       final dataJSON = jsonDecode(
               response.data["choices"][0]["message"]["content"])["result"]
           as List<dynamic>;
+
       resultSimbis.value = dataJSON.map((e) {
         return ResultSimbisM.fromJson(e);
       }).toList();
@@ -195,11 +205,31 @@ class SimbisController extends GetxController {
           resultSimbis.map((e) => e.toJson()).toList());
 
       for (var item in distributes) {
+        item = item.copyWith(
+          distributeId: const Uuid().v4(),
+        );
+        await firestore
+            .collection("distribution_log")
+            .doc(item.distributeId)
+            .set(item.toJson());
+      }
+
+      for (var i = 0; i < distributes.length; i++) {
+        for (var j = 0; j < distributes[i].areas.length; j++) {
+          for (var k = 0; k < distributes[i].areas[j].products.length; k++) {
+            distributes[i].areas[j].products[k] =
+                distributes[i].areas[j].products[k].copyWith(
+                      qty: distributes[i].areas[j].products[k].qty -
+                          distributes[i].areas[j].products[k].sold,
+                    );
+          }
+        }
         await firestore
             .collection("distribution")
-            .doc(item.distributeId)
-            .update(item.toJson());
+            .doc(distributes[i].distributeId)
+            .update(distributes[i].toJson());
       }
+
       await getDistribute();
 
       isLoading.value = false;
@@ -260,6 +290,8 @@ class SimbisController extends GetxController {
         (gen) => gen['distributeId'] == distributeId,
       );
 
+      base["cycleId"] = matchingGenerated["cycleId"];
+
       for (var baseArea in base['areas']) {
         String areaId = baseArea['areaId'];
         var matchingArea = matchingGenerated['summary'].firstWhere(
@@ -282,6 +314,8 @@ class SimbisController extends GetxController {
         }
       }
     }
+    log("CEK DATA BASE : ${json.encode(baseData)}");
+    log("CEK DATA GENERATED : ${json.encode(generatedData)}");
     distributes.value = baseData.map((e) => DistributeM.fromJson(e)).toList();
   }
 }

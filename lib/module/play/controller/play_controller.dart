@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -10,9 +11,9 @@ import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/user/model/user_m.dart';
-import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:universal_html/html.dart' as html;
 
+import '../../../utils/app_dialog.dart';
 import '../../dashboard/controller/audio_controller.dart';
 import '../../dashboard/model/sidebar_m.dart';
 
@@ -47,11 +48,14 @@ class PlayController extends GetxController {
 
   Rx<bool> isPlaying = false.obs;
 
+  Timer? _timer;
+
   @override
   void onInit() async {
     pref = await SharedPreferences.getInstance();
     await getUser();
     await getMenus();
+    getNews();
     Future.delayed(const Duration(seconds: 1), () async {
       await changeLoading(false);
       // Future.delayed(const Duration(seconds: 1), () {
@@ -59,6 +63,28 @@ class PlayController extends GetxController {
       // });
     });
     super.onInit();
+  }
+
+  void getNews() async {
+    _timer = Timer.periodic(
+      const Duration(seconds: 3),
+      (timer) async {
+        final response = await firestore.collection("news").get();
+        List<NewsM> news =
+            response.docs.map((e) => NewsM.fromJson(e.data())).toList();
+        news = news
+            .where((e) =>
+                !e.users.contains(user.value.id) &&
+                DateTime.now().isAfter(DateTime.parse(e.date)))
+            .toList();
+        if (news.isNotEmpty) {
+          if (user.value.roleId == 100 || user.value.roleId == 109) {
+            updateNews(news[0]);
+            AppDialog.dialogNews(news[0]);
+          }
+        }
+      },
+    );
   }
 
   Future changeLoading(bool isValue) async {
@@ -111,31 +137,33 @@ class PlayController extends GetxController {
     }
   }
 
-  Stream<bool> groupStream() {
-    return FirebaseFirestore.instance
-        .collection('news')
-        .snapshots()
-        .map((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        List<NewsM> news =
-            snapshot.docs.map((e) => NewsM.fromJson(e.data())).toList();
-        news = news.where((e) => !e.users.contains(user.value.id)).toList();
-        if (news.isNotEmpty) {
-          if (user.value.roleId == 100 || user.value.roleId == 109) {
-            updateNews(news[0]);
-            AppDialog.dialogNews(news[0]);
-          } else {
-            // final newsAll = news.where((e) => e.isForAll == true).toList();
-            // updateNews(newsAll[0]);
-            // AppDialog.dialogNews(newsAll[0]);
-          }
-        }
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
+  // Stream<bool> groupStream() {
+  //   return FirebaseFirestore.instance
+  //       .collection('news')
+  //       .snapshots()
+  //       .map((snapshot) {
+  //     debugPrint("LISTEN");
+  //     if (snapshot.docs.isNotEmpty) {
+  //       List<NewsM> news =
+  //           snapshot.docs.map((e) => NewsM.fromJson(e.data())).toList();
+  //       news = news
+  //           .where((e) =>
+  //               !e.users.contains(user.value.id) &&
+  //               DateTime.now().isAfter(DateTime.parse(e.date)))
+  //           .toList();
+  //       debugPrint("CEK NEWS : ${json.encode(news)}");
+  //       if (news.isNotEmpty) {
+  //         if (user.value.roleId == 100 || user.value.roleId == 109) {
+  //           updateNews(news[0]);
+  //           AppDialog.dialogNews(news[0]);
+  //         }
+  //       }
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   });
+  // }
 
   void updateNews(NewsM news) async {
     DocumentReference docRef =

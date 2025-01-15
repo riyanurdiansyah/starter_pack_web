@@ -275,7 +275,7 @@ class CartPage extends StatelessWidget {
                                                   BorderRadius.circular(8),
                                             ),
                                             child: AppTextNormal.labelBold(
-                                              data.qty.toString(),
+                                              convertNumber(data.qty),
                                               16,
                                               Colors.black,
                                               letterSpacing: 2.5,
@@ -472,42 +472,34 @@ class CartPage extends StatelessWidget {
                                     //     .where((x) => x.qty > 0)
                                     //     .toList()
                                     //     .length;
-                                    int? newQty = int.tryParse(value);
+                                    int newQty = int.tryParse(value) ?? 0;
                                     double discount = 0;
-                                    // double charge = 0;
-
-                                    if (newQty != null) {
+                                    double charge = 0;
+                                    if (value.isNotEmpty) {
                                       if (newQty >= 10000) {
-                                        discount = newQty *
-                                            ((_c.products[_c.indexImg.value]
-                                                                .harga *
-                                                            0.8) +
-                                                        _c.products
-                                                            .where((x) =>
-                                                                x.qty > 0)
-                                                            .toList()
-                                                            .length >
-                                                    1
-                                                ? 0.4 *
-                                                    _c.products
-                                                        .where((x) => x.qty > 0)
-                                                        .toList()
-                                                        .length
-                                                : 0);
+                                        discount = (_c
+                                                .products[_c.indexImg.value]
+                                                .harga *
+                                            newQty *
+                                            0.2);
                                       } else {
                                         discount = 0;
+                                        charge = 0;
                                       }
 
                                       _c.products[_c.indexImg.value] = _c
                                           .products[_c.indexImg.value]
                                           .copyWith(
-                                              qty: newQty, discount: discount);
+                                              charge: 0,
+                                              qty: newQty,
+                                              discount: discount);
                                     } else {
                                       _c.products[_c.indexImg.value] = _c
                                           .products[_c.indexImg.value]
                                           .copyWith(
                                         qty: 0,
                                         discount: 0,
+                                        charge: 0,
                                       );
                                     }
                                     if (_c.products
@@ -519,14 +511,18 @@ class CartPage extends StatelessWidget {
                                           i < _c.products.length;
                                           i++) {
                                         if (_c.products[i].qty > 0) {
-                                          final charge = _c.products[i].qty *
-                                              ((0.4 *
-                                                  (_c.products
-                                                          .where(
-                                                              (x) => x.qty > 0)
-                                                          .toList()
-                                                          .length -
-                                                      1)));
+                                          if (value.isEmpty || value == "0") {
+                                            charge = 0;
+                                          } else {
+                                            charge = _c.products[i].qty *
+                                                ((0.4 *
+                                                    (_c.products
+                                                            .where((x) =>
+                                                                x.qty > 0)
+                                                            .toList()
+                                                            .length -
+                                                        1)));
+                                          }
                                           _c.products[i] =
                                               _c.products[i].copyWith(
                                             charge: charge,
@@ -729,7 +725,7 @@ class CartPage extends StatelessWidget {
                                           Expanded(
                                             flex: 2,
                                             child: AppTextNormal.labelBold(
-                                              "\$${convertNumber(_c.products.fold(0, (total, product) => (total + (product.qty * product.harga)) - product.discount + product.charge))}",
+                                              "\$${convertNumber(_c.products.map((e) => (e.harga * e.qty) - e.discount + e.charge).fold(0.0, (prev, next) => prev + next))}",
                                               22,
                                               colorPointRank,
                                               textAlign: TextAlign.end,
@@ -794,7 +790,7 @@ class CartPage extends StatelessWidget {
                                                       AppDialog.dialogDelete(
                                                         title: "Create Product",
                                                         subtitle:
-                                                            "Are you sure you want to create a new product?",
+                                                            "Are you sure you want to create a new product?Once submitted the data can no longer be modified!",
                                                         confirmText:
                                                             "Yes, create",
                                                         cancelText:

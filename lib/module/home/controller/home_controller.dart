@@ -162,14 +162,19 @@ class HomeController extends GetxController {
   }
 
   Future getGroups() async {
-    final response = await firestore
-        .collection("group")
-        .where("alias", isNotEqualTo: "PANITIA")
-        .get();
+    QuerySnapshot<Map<String, dynamic>> response;
+    if (userSession.value.roleId == 109) {
+      response = await firestore.collection("group").get();
+    } else {
+      response = await firestore
+          .collection("group")
+          .where("alias", isNotEqualTo: "PANITIA")
+          .get();
+    }
 
     groups.value = response.docs.map((e) {
       var data = GroupM.fromJson(e.data()).copyWith(
-        profit: calculateTotalProfit(e.id).toInt(),
+        profit: calculateTotalProfit(e.id),
       );
       return data;
     }).toList();
@@ -177,8 +182,8 @@ class HomeController extends GetxController {
     oldGroups.value = List.from(groups);
     thenGroups.value = List.from(groups);
 
-    groups.sort((a, b) => b.profit.compareTo(a.profit));
     groups.sort((a, b) => b.point.compareTo(a.point));
+    groups.sort((a, b) => b.revenue.compareTo(a.revenue));
     oldGroups.sort((a, b) => b.pointBefore.compareTo(a.pointBefore));
     thenGroups.sort((a, b) => b.point.compareTo(a.point));
 

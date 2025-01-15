@@ -12,6 +12,7 @@ String distributeMToJson(List<DistributeM> data) =>
 
 class DistributeM {
   final String distributeId;
+  final String cycleId;
   final String groupId;
   final String groupName;
   final List<AreaM> areas;
@@ -19,6 +20,7 @@ class DistributeM {
 
   DistributeM({
     required this.distributeId,
+    required this.cycleId,
     required this.groupId,
     required this.groupName,
     required this.areas,
@@ -27,6 +29,7 @@ class DistributeM {
 
   DistributeM copyWith({
     String? distributeId,
+    String? cycleId,
     String? groupId,
     String? groupName,
     List<AreaM>? areas,
@@ -34,6 +37,7 @@ class DistributeM {
   }) =>
       DistributeM(
         distributeId: distributeId ?? this.distributeId,
+        cycleId: cycleId ?? this.cycleId,
         groupId: groupId ?? this.groupId,
         groupName: groupName ?? this.groupName,
         areas: areas ?? this.areas,
@@ -42,6 +46,7 @@ class DistributeM {
 
   factory DistributeM.fromJson(Map<String, dynamic> json) => DistributeM(
         distributeId: json["distributeId"],
+        cycleId: json["cycleId"] ?? "",
         groupId: json["groupId"],
         groupName: json["groupName"] ?? "",
         areas: List<AreaM>.from(json["areas"].map((x) => AreaM.fromJson(x))),
@@ -50,6 +55,7 @@ class DistributeM {
 
   Map<String, dynamic> toJson() => {
         "distributeId": distributeId,
+        "cycleId": cycleId,
         "groupId": groupId,
         "groupName": groupName,
         "page": page,

@@ -11,6 +11,7 @@ import '../../../utils/app_constanta.dart';
 import '../../../utils/app_dialog.dart';
 import '../../../utils/app_sound.dart';
 import '../../dashboard/model/demography_m.dart';
+import '../../user/model/group_m.dart';
 import '../../user/model/user_m.dart';
 import '../model/distribute_m.dart';
 import '../model/produk_m.dart';
@@ -58,6 +59,10 @@ class DistributeController extends GetxController {
 
   final tcQty = TextEditingController();
 
+  Rx<GroupM> groupData = groupEmpty.obs;
+
+  RxList<DistributeM> oldDistributions = <DistributeM>[].obs;
+
   @override
   void onInit() async {
     onChangeLoading(true);
@@ -67,8 +72,21 @@ class DistributeController extends GetxController {
     await getSellingPrice();
     await generateAccess();
     await getLogDistribution();
+    await getDistribution();
     await onChangeLoading(false);
     super.onInit();
+  }
+
+  Future getDistribution() async {
+    final snapshot = await firestore
+        .collection("distribution")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      oldDistributions.value =
+          snapshot.docs.map((e) => DistributeM.fromJson(e.data())).toList();
+    }
   }
 
   Future getLogDistribution() async {
@@ -102,65 +120,25 @@ class DistributeController extends GetxController {
     sellings.value = response.docs.map((e) {
       return SellingPriceM.fromJson(e.data());
     }).toList();
-
-    listHoveredProduct.value =
-        List.generate(sellings[0].areas.length, (i) => false);
-
-    listDistribute.value = List.generate(sellings[0].areas.length, (i) {
-      return {
-        "areaId": sellings[0].areas[i].id,
-        "total": 0,
-        "products": List.generate(
-            sellings[0].areas[i].products.length, (subindex) => 0),
-        "controller": List.generate(
-          sellings[0].areas[i].products.length,
-          (subindex) => TextEditingController(),
-        ),
-        "cost": List.generate(
-            sellings[0].areas[i].products.length, (subindex) => 0.0),
-      };
-    });
-
-    // // Update productsOwn secara langsung
-    // for (var itemDemo in demographys) {
-    //   Product? itemProduct;
-    //   var itemSell = sellings
-    //       .firstWhereOrNull((x) => x.groupId == userSession.value.groupId);
-    //   if (itemSell != null) {
-    //     var prodSell =
-    //         itemSell.areas.firstWhereOrNull((y) => y.id == itemDemo.id);
-    //     if (prodSell != null) {
-    //       for (var i = 0; i < productsOwn.length; i++) {
-    //         final item = productsOwn[i];
-
-    //         try {
-    //           var data = sellings.firstWhereOrNull((e) =>
-    //               e.areas.firstWhereOrNull((y) =>
-    //                   y.id == itemDemo.id &&
-    //                   y.products.firstWhereOrNull((z) => z.id == item.id) !=
-    //                       null) !=
-    //               null);
-
-    //           itemProduct = data?.areas
-    //               .expand((x) => x.products)
-    //               .firstWhere((x) => x.id == item.id);
-
-    //           if (itemProduct != null) {
-    //             // log("MASUK");
-    //             productsOwn[i] = item.copyWith(
-    //               priceDistribute: itemProduct.priceDistribute.toDouble(),
-    //             );
-    //           }
-    //         } catch (e) {
-    //           itemProduct = null; // Tetapkan null jika tidak ditemukan
-    //         }
-    //       }
-    //     } else {
-    //       log("MASUK GA ADA ${itemDemo.id}");
-    //     }
-    //   }
-    // }
-
+    if (sellings.isNotEmpty) {
+      listHoveredProduct.value =
+          List.generate(sellings[0].areas.length, (i) => false);
+      listDistribute.clear();
+      listDistribute.value = List.generate(sellings[0].areas.length, (i) {
+        return {
+          "areaId": sellings[0].areas[i].id,
+          "total": 0,
+          "products": List.generate(
+              sellings[0].areas[i].products.length, (subindex) => 0),
+          "controller": List.generate(
+            sellings[0].areas[i].products.length,
+            (subindex) => TextEditingController(),
+          ),
+          "cost": List.generate(
+              sellings[0].areas[i].products.length, (subindex) => 0.0),
+        };
+      });
+    }
     return sellings;
   }
 
@@ -195,19 +173,21 @@ class DistributeController extends GetxController {
   }
 
   Future generateAccess() async {
-    accessList.value = List.generate(sellings[0].areas.length, (index) {
-      final data = sellings[0].areas[index];
-      return {
-        "id": data.id,
-        "name": data.name,
-        "controller": List.generate(data.products.length, (subindex) {
-          return TextEditingController(text: "0");
-        }),
-        "controller_price": List.generate(data.products.length, (subindex) {
-          return TextEditingController(text: "0");
-        }),
-      };
-    });
+    if (sellings.isNotEmpty) {
+      accessList.value = List.generate(sellings[0].areas.length, (index) {
+        final data = sellings[0].areas[index];
+        return {
+          "id": data.id,
+          "name": data.name,
+          "controller": List.generate(data.products.length, (subindex) {
+            return TextEditingController(text: "0");
+          }),
+          "controller_price": List.generate(data.products.length, (subindex) {
+            return TextEditingController(text: "0");
+          }),
+        };
+      });
+    }
   }
 
   void incrementQuantity(int index, int subindex) {
@@ -243,125 +223,157 @@ class DistributeController extends GetxController {
     }
   }
 
-  Future saveDistribute() async {
-    if (formKey.currentState!.validate()) {
-      final id = const Uuid().v4();
-      Map<String, AreaM> groupedAreas = {};
+  Future saveDistribute(double totalDistributionCost) async {
+    // if (formKey.currentState!.validate()) {
+    final id = const Uuid().v4();
+    Map<String, AreaM> groupedAreas = {};
 
-      for (int i = 0; i < demographys.length; i++) {
-        for (int j = 0; j < productsOwn.length; j++) {
-          final priceTc = sellings[0].areas[i].products[j].priceDistribute;
-          var qTc = accessList[i]["controller"][j] as TextEditingController;
-          int currentQty = int.parse(qTc.text);
+    for (int i = 0; i < demographys.length; i++) {
+      for (int j = 0; j < productsOwn.length; j++) {
+        final priceTc = sellings[0].areas[i].products[j].priceDistribute;
+        // var qTc = accessList[i]["controller"][j] as TextEditingController;
+        var qTc = listDistribute[i]["controller"][j] as TextEditingController;
 
-          // if (qtyTc.trim().isNotEmpty) {
-          final areaId = demographys[i].id;
-          final product = ProductDistributeM(
-            productId: productsOwn[j].id,
-            productName: "${productsOwn[j].nama} - ${productsOwn[j].tipe}",
-            pricePerProduct: priceTc.toDouble(),
-            qty: currentQty,
-            sold: 0,
-            profit: 0,
-          );
+        int currentQty = int.tryParse(qTc.text) ?? 0;
 
-          if (groupedAreas.containsKey(areaId)) {
-            groupedAreas[areaId]!.products.add(product);
-          } else {
-            groupedAreas[areaId] = AreaM(
-              areaId: areaId,
-              areaName: demographys[i].name,
-              products: [product],
-            );
-          }
-          // }
-        }
-      }
-
-      final groupedAreasList = groupedAreas.values.toList();
-
-      DistributeM dataDistribute;
-
-      final snapshot = await firestore
-          .collection("distribution")
-          .where("groupId", isEqualTo: userSession.value.groupId)
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        dataDistribute = DistributeM.fromJson(snapshot.docs[0].data());
-
-        for (var newArea in groupedAreasList) {
-          final existingAreaIndex = dataDistribute.areas.indexWhere(
-              (existingArea) => existingArea.areaId == newArea.areaId);
-
-          if (existingAreaIndex != -1) {
-            final existingArea = dataDistribute.areas[existingAreaIndex];
-
-            for (var newProduct in newArea.products) {
-              final existingProductIndex = existingArea.products.indexWhere(
-                  (existingProduct) =>
-                      existingProduct.productId == newProduct.productId);
-
-              if (existingProductIndex != -1) {
-                final existingProduct =
-                    existingArea.products[existingProductIndex];
-
-                existingArea.products[existingProductIndex] =
-                    existingProduct.copyWith(
-                  qty: existingProduct.qty + newProduct.qty,
-                  pricePerProduct: newProduct.pricePerProduct,
-                );
-              } else {
-                existingArea.products.add(newProduct);
-              }
-            }
-            dataDistribute.areas[existingAreaIndex] = existingArea;
-          } else {
-            dataDistribute.areas.add(newArea);
-          }
-        }
-      } else {
-        // Jika data belum ada di Firestore
-        dataDistribute = DistributeM(
-          distributeId: id,
-          groupId: userSession.value.groupId,
-          groupName: userSession.value.kelompok,
-          areas: groupedAreasList,
-          page: 0,
+        productsOwn[j] = productsOwn[j].copyWith(
+          qty: productsOwn[j].qty - currentQty,
         );
+
+        // if (qtyTc.trim().isNotEmpty) {
+        final areaId = demographys[i].id;
+        final product = ProductDistributeM(
+          productId: productsOwn[j].id,
+          productName: "${productsOwn[j].nama} - ${productsOwn[j].tipe}",
+          pricePerProduct: priceTc.toDouble(),
+          qty: currentQty,
+          sold: 0,
+          profit: 0,
+        );
+
+        if (groupedAreas.containsKey(areaId)) {
+          groupedAreas[areaId]!.products.add(product);
+        } else {
+          groupedAreas[areaId] = AreaM(
+            areaId: areaId,
+            areaName: demographys[i].name,
+            products: [product],
+          );
+        }
+        // }
+      }
+    }
+
+    final groupedAreasList = groupedAreas.values.toList();
+
+    DistributeM dataDistribute;
+
+    final snapshot = await firestore
+        .collection("distribution")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      dataDistribute = DistributeM.fromJson(snapshot.docs[0].data());
+
+      for (var newArea in groupedAreasList) {
+        final existingAreaIndex = dataDistribute.areas.indexWhere(
+            (existingArea) => existingArea.areaId == newArea.areaId);
+
+        if (existingAreaIndex != -1) {
+          final existingArea = dataDistribute.areas[existingAreaIndex];
+
+          for (var newProduct in newArea.products) {
+            final existingProductIndex = existingArea.products.indexWhere(
+                (existingProduct) =>
+                    existingProduct.productId == newProduct.productId);
+
+            if (existingProductIndex != -1) {
+              final existingProduct =
+                  existingArea.products[existingProductIndex];
+
+              existingArea.products[existingProductIndex] =
+                  existingProduct.copyWith(
+                qty: existingProduct.qty + newProduct.qty,
+                pricePerProduct: newProduct.pricePerProduct,
+              );
+            } else {
+              existingArea.products.add(newProduct);
+            }
+          }
+          dataDistribute.areas[existingAreaIndex] = existingArea;
+        } else {
+          dataDistribute.areas.add(newArea);
+        }
+      }
+    } else {
+      // Jika data belum ada di Firestore
+      dataDistribute = DistributeM(
+        distributeId: id,
+        cycleId: "",
+        groupId: userSession.value.groupId,
+        groupName: userSession.value.kelompok,
+        areas: groupedAreasList,
+        page: 0,
+      );
+    }
+
+    // Simpan data ke Firestore
+    await firestore.runTransaction((trx) async {
+      await firestore
+          .collection("distribution")
+          .doc(dataDistribute.distributeId)
+          .set(dataDistribute.toJson());
+      for (var item in productsOwn) {
+        await FirebaseFirestore.instance
+            .collection("group")
+            .doc(userSession.value.groupId)
+            .collection("production")
+            .doc(item.id)
+            .update(item.toJson());
       }
 
-      // Simpan data ke Firestore
-      await firestore.runTransaction((trx) async {
-        await firestore
-            .collection("distribution")
-            .doc(dataDistribute.distributeId)
-            .set(dataDistribute.toJson());
-
-        for (var item in productsOwn) {
-          await FirebaseFirestore.instance
-              .collection("group")
-              .doc(userSession.value.groupId)
-              .collection("production")
-              .doc(item.id)
-              .update(item.toJson());
-        }
-
-        await firestore.collection("log").doc(id).set({
-          "logId": id,
-          "groupId": userSession.value.groupId,
-          "type": "distribution",
-          "createdBy": userSession.value.username,
-          "createdAt": DateTime.now().toIso8601String(),
-        });
-      }).then((_) async {
-        await getProducts();
-        await getDemographys();
-        await generateAccess();
-        AppDialog.dialogSnackbar("Data has been saved");
-      }).catchError((e) {
-        AppDialog.dialogSnackbar("Error while creating : $e");
+      await FirebaseFirestore.instance
+          .collection("group")
+          .doc(userSession.value.groupId)
+          .update({
+        "point": groupData.value.point - totalDistributionCost,
       });
-    }
+
+      await firestore.collection("log").doc(id).set({
+        "logId": id,
+        "groupId": userSession.value.groupId,
+        "type": "distribution",
+        "createdBy": userSession.value.username,
+        "createdAt": DateTime.now().toIso8601String(),
+      });
+    }).then((_) async {
+      onChangeLoading(true);
+      await getProducts();
+      await getDemographys();
+      await generateAccess();
+      await getLogDistribution();
+      await onChangeLoading(false);
+      AppDialog.dialogSnackbar("Data has been saved");
+    }).catchError((e) {
+      AppDialog.dialogSnackbar("Error while creating : $e");
+    });
+  }
+  // }
+
+  Stream<GroupM> groupStream() {
+    return FirebaseFirestore.instance
+        .collection('group')
+        .doc(userSession.value.groupId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        groupData.value =
+            GroupM.fromJson(snapshot.data() as Map<String, dynamic>);
+        return groupData.value;
+      } else {
+        throw Exception("Data not found");
+      }
+    });
   }
 }

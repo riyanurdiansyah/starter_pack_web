@@ -35,6 +35,7 @@ String resultSimbisMToJson(ResultSimbisM data) => json.encode(data.toJson());
 
 class ResultSimbisM {
   final String distributeId;
+  final String cycleId;
   final String groupId;
   final String groupName;
   final List<Summary> summary;
@@ -42,6 +43,7 @@ class ResultSimbisM {
 
   ResultSimbisM({
     required this.distributeId,
+    required this.cycleId,
     required this.groupId,
     required this.groupName,
     required this.summary,
@@ -50,6 +52,7 @@ class ResultSimbisM {
 
   ResultSimbisM copyWith({
     String? distributeId,
+    String? cycleId,
     String? groupId,
     String? groupName,
     List<Summary>? summary,
@@ -57,6 +60,7 @@ class ResultSimbisM {
   }) =>
       ResultSimbisM(
         distributeId: distributeId ?? this.distributeId,
+        cycleId: cycleId ?? this.cycleId,
         groupId: groupId ?? this.groupId,
         groupName: groupName ?? this.groupName,
         summary: summary ?? this.summary,
@@ -65,6 +69,7 @@ class ResultSimbisM {
 
   factory ResultSimbisM.fromJson(Map<String, dynamic> json) => ResultSimbisM(
         distributeId: json["distributeId"],
+        cycleId: json["cycleId"] ?? "",
         groupId: json["groupId"],
         groupName: json["groupName"],
         summary:
@@ -74,6 +79,7 @@ class ResultSimbisM {
 
   Map<String, dynamic> toJson() => {
         "distributeId": distributeId,
+        "cycleId": cycleId,
         "groupId": groupId,
         "groupName": groupName,
         "summary": List<dynamic>.from(summary.map((x) => x.toJson())),
@@ -120,7 +126,7 @@ class Product {
   final String productId;
   final String productName;
   final int sold;
-  final int profit;
+  final double profit;
 
   Product({
     required this.productId,
@@ -133,7 +139,7 @@ class Product {
     String? productId,
     String? productName,
     int? sold,
-    int? profit,
+    double? profit,
   }) =>
       Product(
         productId: productId ?? this.productId,

@@ -1,11 +1,13 @@
 class SimulationM {
   String distributeId;
+  String cycleId;
   String groupId;
   String groupName;
   List<SimulationAreaM> productSell;
 
   SimulationM({
     required this.distributeId,
+    required this.cycleId,
     required this.groupName,
     required this.groupId,
     required this.productSell,
@@ -14,6 +16,7 @@ class SimulationM {
   Map<String, dynamic> toJson() {
     return {
       'distributeId': distributeId,
+      'cycleId': cycleId,
       'groupName': groupName,
       'groupId': groupId,
       'productSell': productSell.map((area) => area.toJson()).toList(),

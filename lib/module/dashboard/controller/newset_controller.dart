@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,6 +18,10 @@ class NewsetController extends GetxController {
   final tcTitle = TextEditingController();
   final tcData = TextEditingController();
   final tcImage = TextEditingController();
+
+  final tcDate = TextEditingController();
+
+  DateTime? selectedDate;
 
   FilePickerResult? filePickerResult;
 
@@ -113,7 +118,8 @@ class NewsetController extends GetxController {
         id: oldNews == null ? id : oldNews.id,
         title: tcTitle.text,
         content: tcData.text,
-        date: DateTime.now().toIso8601String(),
+        date:
+            selectedDate?.toIso8601String() ?? DateTime.now().toIso8601String(),
         image: oldNews != null ? oldNews.image : downlodUrl,
         page: 0,
         users: oldNews != null ? oldNews.users : [],
@@ -162,6 +168,11 @@ class NewsetController extends GetxController {
     tcTitle.text = oldNews.title;
     tcImage.text = oldNews.image;
     tcData.text = oldNews.content;
+    if (oldNews.date.isNotEmpty) {
+      selectedDate = DateTime.parse(oldNews.date);
+      tcDate.text =
+          "${DateFormat("dd/MM/yyyy HH:mm").format(selectedDate!)} WIB";
+    }
 
     // controller.document = quill.Document.fromJson(json.decode(oldNews.content));
   }

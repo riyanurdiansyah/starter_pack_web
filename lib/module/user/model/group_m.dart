@@ -23,7 +23,7 @@ class GroupM {
   final int? rank;
   final int? rankOld;
   final int page;
-  final int profit;
+  final double profit;
   final double revenue;
 
   GroupM({
@@ -56,7 +56,7 @@ class GroupM {
     int? rank,
     int? rankOld,
     int? page,
-    int? profit,
+    double? profit,
     double? revenue,
   }) =>
       GroupM(
@@ -90,7 +90,7 @@ class GroupM {
         rankOld: 0,
         page: 0,
         profit: 0,
-        revenue: 0,
+        revenue: json["revenue"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,6 +101,7 @@ class GroupM {
         "image": image,
         "name": name,
         "point": point,
+        "revenue": revenue,
         "point_before": pointBefore,
         "updated_date": updatedDate,
       };

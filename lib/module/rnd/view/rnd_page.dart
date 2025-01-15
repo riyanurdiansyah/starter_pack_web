@@ -547,17 +547,17 @@ class RndPage extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         AppTextNormal.labelBold(
-                                          "R\$${data.harga}/pcs",
-                                          16,
-                                          colorPrimaryDark,
-                                          letterSpacing: 1.8,
-                                        ),
-                                        10.ph,
-                                        AppTextNormal.labelBold(
                                           "${data.nama}  -  ${data.tipe}",
                                           16,
                                           Colors.grey.shade600,
                                           letterSpacing: 1.8,
+                                        ),
+                                        10.ph,
+                                        AppTextNormal.labelW600(
+                                          "Production Cost: R\$${data.harga}/pcs",
+                                          16,
+                                          colorPrimaryDark,
+                                          letterSpacing: 2.2,
                                         ),
                                       ],
                                     ),
@@ -605,14 +605,14 @@ class RndPage extends StatelessWidget {
                                     ? null
                                     : () {
                                         AppDialog.dialogDelete(
-                                          title: "Save Product",
+                                          title: "Submit Product",
                                           subtitle:
                                               "Are you sure you want to save this product? The data cannot be changed later.",
                                           callback: () {
                                             context.pop();
                                             _c.saveProduct();
                                           },
-                                          confirmText: "Yes, save",
+                                          confirmText: "Yes, Submit",
                                         );
                                       },
                                 style: ElevatedButton.styleFrom(
@@ -622,7 +622,7 @@ class RndPage extends StatelessWidget {
                                   ),
                                 ),
                                 child: AppTextNormal.labelBold(
-                                  "SAVE",
+                                  "SUBMIT",
                                   22,
                                   Colors.white,
                                   letterSpacing: 1.8,
