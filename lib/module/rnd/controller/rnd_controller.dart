@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -144,8 +145,7 @@ class RndController extends GetxController {
           transaction.update(docRef, itemJson);
         }
         final filteredCase = configSimbis.firstWhereOrNull((item) {
-          return DateTime.now().isAfter(DateTime.parse(item.start)) &&
-              DateTime.now().isBefore(DateTime.parse(item.end));
+          return item.isActive;
         });
 
         await firestore.collection("log").doc(id).set({
@@ -163,6 +163,7 @@ class RndController extends GetxController {
       AppDialog.dialogSnackbar("Data has been saved");
     } catch (e) {
       // Jika ada kesalahan, transaksi akan dibatalkan
+      log("CEK ERROR : $e");
       AppDialog.dialogSnackbar("Error while saving: $e");
     }
   }
