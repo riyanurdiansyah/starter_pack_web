@@ -17,6 +17,7 @@ final userEmpty = UserM(
   page: 0,
   groupId: "",
   point: 0,
+  isUsePrivillege: false,
 );
 
 final roleEmpty = RoleM(
@@ -46,6 +47,7 @@ final groupEmpty = GroupM(
 final challengeEmpty = ChallengeM(
   route: "",
   start: "",
+  isUseSpecialChallenge: false,
   end: "",
   no: 0,
   id: "",

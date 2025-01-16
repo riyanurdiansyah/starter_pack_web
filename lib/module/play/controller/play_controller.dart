@@ -42,6 +42,7 @@ class PlayController extends GetxController {
     kelompokId: 0,
     page: 0,
     groupId: "",
+    isUsePrivillege: false,
   ).obs;
 
   late SharedPreferences pref;

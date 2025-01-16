@@ -188,6 +188,7 @@ class ChallengeQuizController extends GetxController {
   }
 
   void startTimer() {
+    log("MASUK");
     if (isStarting.value) return;
     isStarting.value = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -269,6 +270,7 @@ class ChallengeQuizController extends GetxController {
         page: 0,
         image: "",
         remark: tcRemark.text,
+        isUsePrivillege: false,
         isRevenue: challenge.value.isRevenue,
         createdAt: dateNow.value.toIso8601String(),
       );
@@ -295,11 +297,21 @@ class ChallengeQuizController extends GetxController {
             final groupData = GroupM.fromJson(responseGroup.data()!);
 
             // Increment group points by the quiz point
-            transaction.update(groupDoc, {
-              'point_before': groupData.point,
-              'point': FieldValue.increment(
-                  point.value.roundToDouble()), // Increment point by the value
-            });
+            if (!challenge.value.isSpecialChallenge) {
+              if (challenge.value.isRevenue) {
+                transaction.update(groupDoc, {
+                  'point_before': groupData.point,
+                  'revenue': FieldValue.increment(point.value
+                      .roundToDouble()), // Increment point by the value
+                });
+              } else {
+                transaction.update(groupDoc, {
+                  'point_before': groupData.point,
+                  'point': FieldValue.increment(point.value
+                      .roundToDouble()), // Increment point by the value
+                });
+              }
+            }
           }
         }
 
@@ -659,6 +671,7 @@ class ChallengeQuizController extends GetxController {
             answers: listAnswer,
             time: 0,
             point: point.value,
+            isUsePrivillege: false,
             page: 0,
             username: user.value.username,
             isFinished: true,

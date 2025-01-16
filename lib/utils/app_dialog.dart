@@ -21,6 +21,7 @@ import 'package:starter_pack_web/module/dashboard/controller/role_controller.dar
 import 'package:starter_pack_web/module/dashboard/model/demography_m.dart';
 import 'package:starter_pack_web/module/demography/controller/distribute_controller.dart';
 import 'package:starter_pack_web/module/demography/model/produk_m.dart';
+import 'package:starter_pack_web/module/home/controller/home_controller.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/news/model/news_m.dart';
 import 'package:starter_pack_web/module/play/controller/play_controller.dart';
@@ -3002,6 +3003,86 @@ class AppDialog {
                     ),
                   ),
                 )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static dialogSpecialChallenge() {
+    final c = Get.find<HomeController>();
+    final size = MediaQuery.of(navigatorKey.currentContext!).size;
+    return showDialog(
+      context: navigatorKey.currentContext!,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        title: AppTextNormal.labelBold(
+          "Privillege",
+          16,
+          Colors.black,
+        ),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: size.width / 2.5,
+            child: Column(
+              children: [
+                Obx(
+                  () => Column(
+                    children: List.generate(
+                      c.groups.length,
+                      (i) {
+                        return ListTile(
+                          subtitle: AppTextNormal.labelBold(
+                            c.groups[i].alias,
+                            16,
+                            Colors.black,
+                          ),
+                          title: AppTextNormal.labelW600(
+                            convertNumber(c.groups[i].revenue),
+                            14,
+                            Colors.black,
+                          ),
+                          trailing: Checkbox(
+                            value: c.indexSpecial.value == i,
+                            onChanged: (val) {
+                              c.indexSpecial.value = i;
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: ElevatedButton(
+                      onPressed: c.indexSpecial.value == 99
+                          ? null
+                          : () {
+                              context.pop();
+                              c.updateChallenge(c.challenges[c.challenges
+                                  .indexWhere((e) =>
+                                      e.id == c.boards[c.indexTab.value])]);
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorPrimaryDark,
+                      ),
+                      child: AppTextNormal.labelBold(
+                        "Steal Point",
+                        16,
+                        Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

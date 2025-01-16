@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starter_pack_web/module/home/controller/home_controller.dart';
 import 'package:starter_pack_web/module/home/view/widget/challenge_board_page.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:starter_pack_web/utils/app_extension.dart';
 import 'package:starter_pack_web/utils/app_text.dart';
 
@@ -115,10 +116,48 @@ class HomePage extends StatelessWidget {
                           20.ph,
                         if (_c.boards[_c.indexTab.value] != "GROUP" &&
                             _c.boards[_c.indexTab.value] != "USER")
-                          AppTextNormal.labelBold(
-                            "${_c.challenges[_c.challenges.indexWhere((e) => e.id == _c.boards[_c.indexTab.value])].name} Board",
-                            26,
-                            Colors.white,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AppTextNormal.labelBold(
+                                "${_c.challenges[_c.challenges.indexWhere((e) => e.id == _c.boards[_c.indexTab.value])].name} Board",
+                                26,
+                                Colors.white,
+                              ),
+                              if (_c
+                                      .challenges[_c.challenges.indexWhere(
+                                          (e) =>
+                                              e.id ==
+                                              _c.boards[_c.indexTab.value])]
+                                      .isSpecialChallenge &&
+                                  _c.users.indexWhere((e) =>
+                                          e.username ==
+                                          _c.userSession.value.username) ==
+                                      0 &&
+                                  _c
+                                          .challenges[_c.challenges.indexWhere(
+                                              (e) =>
+                                                  e.id ==
+                                                  _c.boards[_c.indexTab.value])]
+                                          .isUseSpecialChallenge ==
+                                      false)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 50.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      AppDialog.dialogSpecialChallenge();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: colorPrimaryDark,
+                                    ),
+                                    child: AppTextNormal.labelBold(
+                                      "Get Your privilege",
+                                      16,
+                                      Colors.white,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         20.ph,
                         Obx(

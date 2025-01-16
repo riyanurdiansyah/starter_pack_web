@@ -20,6 +20,7 @@ class QuizSessionM {
   final String remark;
   final int page;
   final bool isRevenue;
+  final bool isUsePrivillege;
 
   QuizSessionM({
     required this.userId,
@@ -40,6 +41,7 @@ class QuizSessionM {
     required this.remark,
     required this.page,
     required this.isRevenue,
+    required this.isUsePrivillege,
   });
 
   // copyWith method
@@ -62,6 +64,7 @@ class QuizSessionM {
     String? remark,
     int? page,
     bool? isRevenue,
+    bool? isUsePrivillege,
   }) {
     return QuizSessionM(
       userId: userId ?? this.userId,
@@ -82,6 +85,7 @@ class QuizSessionM {
       remark: remark ?? this.remark,
       page: page ?? this.page,
       isRevenue: isRevenue ?? this.isRevenue,
+      isUsePrivillege: isUsePrivillege ?? this.isUsePrivillege,
     );
   }
 
@@ -104,6 +108,7 @@ class QuizSessionM {
       isFinished: json['isFinished'],
       isRated: json['isRated'] ?? false,
       isRevenue: json['isRevenue'] ?? false,
+      isUsePrivillege: json['isUsePrivillege'] ?? true,
       createdAt: json['createdAt'] ?? "",
       updatedAt: json['updatedAt'] ?? "",
       remark: json['remark'] ?? "",

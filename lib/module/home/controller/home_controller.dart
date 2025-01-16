@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/user/model/group_m.dart';
+import 'package:starter_pack_web/utils/app_dialog.dart';
 
 import '../../../utils/app_constanta.dart';
 import '../../challenge/model/challenge_m.dart';
@@ -16,6 +18,8 @@ class HomeController extends GetxController {
 
   Rx<int> indexFilter = 0.obs;
   Rx<int> indexTab = 0.obs;
+
+  Rx<int> indexSpecial = 99.obs;
 
   RxList<GroupM> groups = <GroupM>[].obs;
   RxList<GroupM> oldGroups = <GroupM>[].obs;
@@ -116,10 +120,12 @@ class HomeController extends GetxController {
         if (resultQuiz != null) {
           data = data.copyWith(
             point: resultQuiz.point,
+            isUsePrivillege: resultQuiz.isUsePrivillege,
           );
         } else {
           data = data.copyWith(
             point: 0,
+            isUsePrivillege: true,
           );
         }
         userData.add(data);
@@ -239,8 +245,10 @@ class HomeController extends GetxController {
     users.value = response.docs.map((e) {
       return UserM.fromJson(e.data());
     }).toList();
-    users.value =
-        users.where((e) => e.kelompokId < 20 && e.roleId != 109).toList();
+    if (userSession.value.roleId != 109) {
+      users.value =
+          users.where((e) => e.kelompokId < 20 && e.roleId != 109).toList();
+    }
 
     double pageTemp = 0;
     for (int i = 0; i < users.length; i++) {
@@ -354,5 +362,69 @@ class HomeController extends GetxController {
         .expand((area) => area.products) // Dapatkan semua ProductDistributeM
         .map((product) => product.profit) // Ambil nilai profit
         .fold(0.0, (total, profit) => total + profit); // Jumlahkan semua profit
+  }
+
+  void updateChallenge(ChallengeM challeng) async {
+    try {
+      // Mendapatkan referensi Firestore
+      final firestore = FirebaseFirestore.instance;
+
+      // Mulai transaksi
+      await firestore.runTransaction((transaction) async {
+        // Ambil data yang diperlukan terlebih dahulu
+        final px = challenges[
+                challenges.indexWhere((e) => e.id == boards[indexTab.value])]
+            .maxPoint;
+
+        var selfGroup =
+            groups[groups.indexWhere((e) => e.id == userSession.value.groupId)];
+
+        // Mengupdate grup target (selfGroup) dan grup spesial (indexSpecial)
+        var specialGroup = groups[indexSpecial.value];
+
+        // Ambil dokumen grup yang akan diupdate
+        DocumentReference groupRef =
+            firestore.collection("group").doc(specialGroup.id);
+        DocumentReference selfGroupRef =
+            firestore.collection("group").doc(selfGroup.id);
+        DocumentReference challengeRef =
+            firestore.collection("challenge").doc(challeng.id);
+
+        // Ambil snapshot dokumen grup saat ini
+        final groupSnapshot = await transaction.get(groupRef);
+        final selfGroupSnapshot = await transaction.get(selfGroupRef);
+
+        // Perbarui informasi grup jika dokumen ada
+        if (groupSnapshot.exists && selfGroupSnapshot.exists) {
+          var updatedSpecialGroup = specialGroup.copyWith(
+            revenue: specialGroup.revenue - px,
+          );
+
+          selfGroup = selfGroup.copyWith(
+            revenue: selfGroup.revenue + px,
+          );
+
+          // Update dokumen grup dengan data baru
+          transaction.update(groupRef, updatedSpecialGroup.toJson());
+          transaction.update(selfGroupRef, selfGroup.toJson());
+
+          // Update challenge jika berhasil
+          challeng = challeng.copyWith(
+            isUseSpecialChallenge: true,
+          );
+
+          transaction.update(challengeRef, challeng.toJson());
+        } else {
+          throw Exception("Group or Challenge document not found.");
+        }
+      });
+
+      // Menampilkan hasil setelah transaksi berhasil
+      await getChallenges();
+    } catch (e) {
+      // Menangani kesalahan jika transaksi gagal
+      log("Error updating challenge: $e");
+      AppDialog.dialogSnackbar("Failed to use privillege");
+    }
   }
 }

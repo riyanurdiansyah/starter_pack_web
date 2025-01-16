@@ -20,6 +20,7 @@ class UserM {
   final int page;
   final String groupId;
   final double point;
+  final bool isUsePrivillege;
 
   UserM({
     required this.id,
@@ -33,6 +34,7 @@ class UserM {
     required this.page,
     required this.groupId,
     required this.point,
+    required this.isUsePrivillege,
   });
 
   UserM copyWith({
@@ -47,6 +49,7 @@ class UserM {
     int? page,
     String? groupId,
     double? point,
+    bool? isUsePrivillege,
   }) =>
       UserM(
         id: id ?? this.id,
@@ -60,6 +63,7 @@ class UserM {
         page: page ?? this.page,
         groupId: groupId ?? this.groupId,
         point: point ?? this.point,
+        isUsePrivillege: isUsePrivillege ?? this.isUsePrivillege,
       );
 
   factory UserM.fromJson(Map<String, dynamic> json) => UserM(
@@ -74,6 +78,7 @@ class UserM {
         page: json["page"] ?? 0,
         groupId: json["group_id"] ?? "",
         point: json["point"] ?? 0,
+        isUsePrivillege: json["isUsePrivillege"] ?? true,
       );
 
   Map<String, dynamic> toJson() => {
