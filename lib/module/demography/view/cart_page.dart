@@ -477,11 +477,12 @@ class CartPage extends StatelessWidget {
                                     double charge = 0;
                                     if (value.isNotEmpty) {
                                       if (newQty >= 10000) {
-                                        discount = (_c
-                                                .products[_c.indexImg.value]
-                                                .harga *
-                                            newQty *
-                                            0.2);
+                                        discount =
+                                            ((_c.products[_c.indexImg.value]
+                                                            .harga *
+                                                        0.2)
+                                                    .ceilToDouble() *
+                                                newQty);
                                       } else {
                                         discount = 0;
                                         charge = 0;
