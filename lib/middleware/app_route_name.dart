@@ -11,6 +11,7 @@ class AppRouteName {
   static const String demographset = 'demographyset';
   static const String production = 'production';
   static const String rnd = 'rnd';
+  static const String ranks = 'ranks';
   static const String news = 'news';
   static const String newset = 'newset';
   static const String wellness = 'wellness';

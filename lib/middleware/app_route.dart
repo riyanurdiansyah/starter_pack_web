@@ -34,6 +34,8 @@ import 'package:starter_pack_web/module/demography/controller/finance_controller
 import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
 import 'package:starter_pack_web/module/demography/view/finance_page.dart';
+import 'package:starter_pack_web/module/home/controller/ranks_controller.dart';
+import 'package:starter_pack_web/module/home/view/ranks_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
 import 'package:starter_pack_web/module/login/controller/reset_controller.dart';
 import 'package:starter_pack_web/module/login/view/login_page.dart';
@@ -400,6 +402,18 @@ GoRouter router = GoRouter(
           pageBuilder: (context, state) {
             Get.put(RndController());
             return NoTransitionPage(child: RndPage());
+          },
+        ),
+        GoRoute(
+          path: AppRouteName.ranks,
+          name: AppRouteName.ranks,
+          onExit: (_, __) {
+            Get.delete<RanksController>();
+            return true;
+          },
+          pageBuilder: (context, state) {
+            Get.put(RanksController());
+            return NoTransitionPage(child: RanksPage());
           },
         ),
         GoRoute(

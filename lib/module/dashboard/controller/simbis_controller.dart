@@ -29,11 +29,6 @@ class SimbisController extends GetxController {
   late SharedPreferences pref;
 
   Rx<UserM> userSession = userEmpty.obs;
-
-  // final RxList<ResultSimbisM> resultSimbisSearch = <ResultSimbisM>[].obs;
-
-  // final RxList<DistributeM> resultDistribute = <DistributeM>[].obs;
-  // final RxList<DistributeM> distributesSearch = <DistributeM>[].obs;
   final Rx<bool> isSearched = false.obs;
 
   Rx<int> currentPage = 1.obs;
