@@ -27,6 +27,8 @@ const newsImage = "assets/images/news.png";
 const driverImage = "assets/images/driver.png";
 const helmetImg = "assets/images/helmet.png";
 
+const bgTxt = "assets/images/text_bu.png";
+
 const bgRole = "assets/images/bg_role.png";
 const bgSales = "assets/images/bg_finance.png";
 const bgProd = "assets/images/bg_prod.png";

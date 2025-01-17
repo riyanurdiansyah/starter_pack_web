@@ -60,7 +60,7 @@ class Siderbar extends StatelessWidget {
                 SizedBox(
                   width: 60,
                   height: 60,
-                  child: Image.asset(bgSales),
+                  child: Image.asset(bgTxt),
                 )
               ],
             ),
