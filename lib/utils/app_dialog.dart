@@ -784,6 +784,7 @@ class AppDialog {
                       "MULTIPLE CHOICE",
                       "TRUE/FALSE",
                       "WELLNESS",
+                      "MULTIPLE WELLNESS",
                       "WELLNESS GROUP"
                     ],
                     compareFn: (_, __) {
@@ -2503,112 +2504,118 @@ class AppDialog {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
-        content: SizedBox(
-          width: size.width / 2.5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // SizedBox(
-              //   width: size.width / 2.5,
-              //   height: 100,
-              //   child:
-              // ),
-              AspectRatio(
-                aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
-                child: CachedNetworkImage(
-                  imageUrl: oldQuiz.image,
-                  width: 125,
-                  fit: BoxFit.fill,
-                ),
-              ),
-
-              16.ph,
-              AppTextNormal.labelW700(
-                "Point",
-                14,
-                Colors.black,
-              ),
-              8.ph,
-              TextFormField(
-                controller: c.tcPoint,
-                validator: (val) => AppValidator.requiredField(val!),
-                style: GoogleFonts.poppins(
-                  height: 1.4,
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  hintStyle: GoogleFonts.poppins(
-                    fontSize: 14,
-                    wordSpacing: 4,
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade500),
-                    borderRadius: BorderRadius.circular(8),
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: size.width / 2.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
+                  child: CachedNetworkImage(
+                    imageUrl: oldQuiz.image,
+                    width: 125,
+                    fit: BoxFit.fill,
                   ),
                 ),
-              ),
-              35.ph,
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey.shade400,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              )),
-                          onPressed: () {
-                            context.pop();
-                          },
-                          child: AppTextNormal.labelBold(
-                            "CANCEL",
-                            14,
-                            Colors.white,
-                          ),
-                        ),
-                      ),
+                18.ph,
+                if (oldQuiz.type == "MULTIPLE WELLNESS")
+                  AspectRatio(
+                    aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
+                    child: CachedNetworkImage(
+                      imageUrl: oldQuiz.image.split("||")[1],
+                      width: 125,
+                      fit: BoxFit.fill,
                     ),
-                    const SizedBox(
-                      width: 18,
+                  ),
+                16.ph,
+                AppTextNormal.labelW700(
+                  "Point",
+                  14,
+                  Colors.black,
+                ),
+                8.ph,
+                TextFormField(
+                  controller: c.tcPoint,
+                  validator: (val) => AppValidator.requiredField(val!),
+                  style: GoogleFonts.poppins(
+                    height: 1.4,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  decoration: InputDecoration(
+                    hintStyle: GoogleFonts.poppins(
+                      fontSize: 14,
+                      wordSpacing: 4,
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colorPrimaryDark,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey.shade500),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                35.ph,
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade400,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                )),
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: AppTextNormal.labelBold(
+                              "CANCEL",
+                              14,
+                              Colors.white,
                             ),
                           ),
-                          onPressed: () {
-                            context.pop();
-                            c.updateGame(oldQuiz);
-                          },
-                          child: AppTextNormal.labelBold(
-                            "SAVE",
-                            14,
-                            Colors.white,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 18,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorPrimaryDark,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            onPressed: () {
+                              context.pop();
+                              c.updateGame(oldQuiz);
+                            },
+                            child: AppTextNormal.labelBold(
+                              "SAVE",
+                              14,
+                              Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -246,7 +246,9 @@ class _DemographyPageState extends State<DemographyPage>
                               letterSpacing: 1.2,
                             ),
                           25.ph,
-                          if (_c.selectedIndex.value != 99)
+                          if (_c.selectedIndex.value != 99 &&
+                              _c.demographys[_c.selectedIndex.value].specialCase
+                                  .isNotEmpty)
                             AppTextNormal.labelBold(
                               "CASE",
                               26,

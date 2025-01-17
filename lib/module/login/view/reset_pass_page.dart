@@ -55,6 +55,7 @@ class ResetPassPage extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     height: 1.4,
                   ),
+                  onEditingComplete: _c.updatePassword,
                   obscureText: true,
                   decoration: InputDecoration(
                     fillColor: Colors.white,

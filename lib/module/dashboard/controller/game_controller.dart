@@ -111,7 +111,6 @@ class GameController extends GetxController {
         .collection("quiz_session")
         .where("isRated", isEqualTo: false)
         .where("isFinished", isEqualTo: true)
-        .where("type", isEqualTo: "WELLNESS")
         .get();
 
     if (response.docs.isEmpty) {
@@ -121,6 +120,9 @@ class GameController extends GetxController {
 
     quizess.value =
         response.docs.map((doc) => QuizSessionM.fromJson(doc.data())).toList();
+    quizess.value = quizess
+        .where((e) => e.type == "WELLNESS" || e.type == "MULTIPLE WELLNESS")
+        .toList();
     quizess.sort((a, b) =>
         DateTime.parse(a.createdAt).compareTo(DateTime.parse(b.createdAt)));
     double pageTemp = 0;

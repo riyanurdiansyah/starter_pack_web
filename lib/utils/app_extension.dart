@@ -49,6 +49,7 @@ Future<DateTime?> globalDate() async {
 
 Future<FilePickerResult?> pickFile() async {
   final result = await FilePicker.platform.pickFiles(
+    allowMultiple: true,
     type: FileType.image,
   );
   return result;

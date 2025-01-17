@@ -51,18 +51,49 @@ class GamePage extends StatelessWidget {
                             horizontal: 14, vertical: 16),
                         child: Row(
                           children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  AppDialog.dialogMarkChallenge(data);
-                                },
-                                child: CachedNetworkImage(
-                                  imageUrl: data.image,
-                                  width: 80,
-                                  height: 80,
+                            if (data.type == "MULTIPLE WELLNESS")
+                              Expanded(
+                                  child: Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        AppDialog.dialogMarkChallenge(data);
+                                      },
+                                      child: CachedNetworkImage(
+                                        imageUrl: data.image.split("||")[0],
+                                        width: 80,
+                                        height: 80,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        AppDialog.dialogMarkChallenge(data);
+                                      },
+                                      child: CachedNetworkImage(
+                                        imageUrl: data.image.split("||")[1],
+                                        width: 80,
+                                        height: 80,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            if (data.type == "WELLNESS")
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    AppDialog.dialogMarkChallenge(data);
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: data.image,
+                                    width: 80,
+                                    height: 80,
+                                  ),
                                 ),
                               ),
-                            ),
                             Expanded(
                               child: AppTextNormal.labelW500(
                                 data.username,

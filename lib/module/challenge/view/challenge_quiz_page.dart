@@ -45,185 +45,185 @@ class ChallengeQuizPage extends StatelessWidget {
               ),
             );
           }
-          if (_c.isComingSoon.value) {
-            int days = _c.remainingTime.value.inDays; // Hitung jumlah hari
-            int hours =
-                _c.remainingTime.value.inHours % 24; // Sisa jam setelah hari
-            int minutes = _c.remainingTime.value.inMinutes % 60; // Sisa menit
-            int seconds = _c.remainingTime.value.inSeconds % 60; // Sisa detik
-            return Center(
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                color: Colors.amber,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppTextNormal.labelBold(
-                      "COMING SOON",
-                      50,
-                      Colors.black,
-                      letterSpacing: 18,
-                    ),
-                    14.ph,
-                    AppTextNormal.labelW600(
-                      "The challenge will start in...",
-                      36,
-                      Colors.black,
-                      letterSpacing: 8,
-                    ),
-                    50.ph,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (!isMobile)
-                          const Expanded(
-                            flex: 4,
-                            child: SizedBox(),
-                          ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: 80,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    width: 0.6,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                child: AppTextNormal.labelBold(
-                                  days.toString().padLeft(2, '0'),
-                                  25,
-                                  Colors.grey.shade600,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                              25.ph,
-                              AppTextNormal.labelBold(
-                                "Days",
-                                14,
-                                Colors.grey.shade800,
-                                letterSpacing: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                        16.pw,
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: 80,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    width: 0.6,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                child: AppTextNormal.labelBold(
-                                  hours.toString().padLeft(2, '0'),
-                                  25,
-                                  Colors.grey.shade600,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                              25.ph,
-                              AppTextNormal.labelBold(
-                                "Hours",
-                                14,
-                                Colors.grey.shade800,
-                                letterSpacing: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                        16.pw,
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: 80,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    width: 0.6,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                child: AppTextNormal.labelBold(
-                                  minutes.toString().padLeft(2, '0'),
-                                  25,
-                                  Colors.grey.shade600,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                              25.ph,
-                              AppTextNormal.labelBold(
-                                "Minutes",
-                                14,
-                                Colors.grey.shade800,
-                                letterSpacing: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                        16.pw,
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: 80,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    width: 0.6,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                child: AppTextNormal.labelBold(
-                                  seconds.toString().padLeft(2, '0'),
-                                  25,
-                                  Colors.grey.shade600,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                              25.ph,
-                              AppTextNormal.labelBold(
-                                "Seconds",
-                                14,
-                                Colors.grey.shade800,
-                                letterSpacing: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (!isMobile)
-                          const Expanded(
-                            flex: 4,
-                            child: SizedBox(),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
+          // if (_c.isComingSoon.value) {
+          //   int days = _c.remainingTime.value.inDays; // Hitung jumlah hari
+          //   int hours =
+          //       _c.remainingTime.value.inHours % 24; // Sisa jam setelah hari
+          //   int minutes = _c.remainingTime.value.inMinutes % 60; // Sisa menit
+          //   int seconds = _c.remainingTime.value.inSeconds % 60; // Sisa detik
+          //   return Center(
+          //     child: Container(
+          //       alignment: Alignment.center,
+          //       padding: const EdgeInsets.symmetric(horizontal: 18),
+          //       color: Colors.amber,
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           AppTextNormal.labelBold(
+          //             "COMING SOON",
+          //             50,
+          //             Colors.black,
+          //             letterSpacing: 18,
+          //           ),
+          //           14.ph,
+          //           AppTextNormal.labelW600(
+          //             "The challenge will start in...",
+          //             36,
+          //             Colors.black,
+          //             letterSpacing: 8,
+          //           ),
+          //           50.ph,
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               if (!isMobile)
+          //                 const Expanded(
+          //                   flex: 4,
+          //                   child: SizedBox(),
+          //                 ),
+          //               Expanded(
+          //                 child: Column(
+          //                   children: [
+          //                     Container(
+          //                       alignment: Alignment.center,
+          //                       width: 80,
+          //                       height: 90,
+          //                       decoration: BoxDecoration(
+          //                         borderRadius: BorderRadius.circular(6),
+          //                         color: Colors.white,
+          //                         border: Border.all(
+          //                           width: 0.6,
+          //                           color: Colors.black54,
+          //                         ),
+          //                       ),
+          //                       child: AppTextNormal.labelBold(
+          //                         days.toString().padLeft(2, '0'),
+          //                         25,
+          //                         Colors.grey.shade600,
+          //                         letterSpacing: 4,
+          //                       ),
+          //                     ),
+          //                     25.ph,
+          //                     AppTextNormal.labelBold(
+          //                       "Days",
+          //                       14,
+          //                       Colors.grey.shade800,
+          //                       letterSpacing: 2,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               16.pw,
+          //               Expanded(
+          //                 child: Column(
+          //                   children: [
+          //                     Container(
+          //                       alignment: Alignment.center,
+          //                       width: 80,
+          //                       height: 90,
+          //                       decoration: BoxDecoration(
+          //                         borderRadius: BorderRadius.circular(6),
+          //                         color: Colors.white,
+          //                         border: Border.all(
+          //                           width: 0.6,
+          //                           color: Colors.black54,
+          //                         ),
+          //                       ),
+          //                       child: AppTextNormal.labelBold(
+          //                         hours.toString().padLeft(2, '0'),
+          //                         25,
+          //                         Colors.grey.shade600,
+          //                         letterSpacing: 4,
+          //                       ),
+          //                     ),
+          //                     25.ph,
+          //                     AppTextNormal.labelBold(
+          //                       "Hours",
+          //                       14,
+          //                       Colors.grey.shade800,
+          //                       letterSpacing: 2,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               16.pw,
+          //               Expanded(
+          //                 child: Column(
+          //                   children: [
+          //                     Container(
+          //                       alignment: Alignment.center,
+          //                       width: 80,
+          //                       height: 90,
+          //                       decoration: BoxDecoration(
+          //                         borderRadius: BorderRadius.circular(6),
+          //                         color: Colors.white,
+          //                         border: Border.all(
+          //                           width: 0.6,
+          //                           color: Colors.black54,
+          //                         ),
+          //                       ),
+          //                       child: AppTextNormal.labelBold(
+          //                         minutes.toString().padLeft(2, '0'),
+          //                         25,
+          //                         Colors.grey.shade600,
+          //                         letterSpacing: 4,
+          //                       ),
+          //                     ),
+          //                     25.ph,
+          //                     AppTextNormal.labelBold(
+          //                       "Minutes",
+          //                       14,
+          //                       Colors.grey.shade800,
+          //                       letterSpacing: 2,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               16.pw,
+          //               Expanded(
+          //                 child: Column(
+          //                   children: [
+          //                     Container(
+          //                       alignment: Alignment.center,
+          //                       width: 80,
+          //                       height: 90,
+          //                       decoration: BoxDecoration(
+          //                         borderRadius: BorderRadius.circular(6),
+          //                         color: Colors.white,
+          //                         border: Border.all(
+          //                           width: 0.6,
+          //                           color: Colors.black54,
+          //                         ),
+          //                       ),
+          //                       child: AppTextNormal.labelBold(
+          //                         seconds.toString().padLeft(2, '0'),
+          //                         25,
+          //                         Colors.grey.shade600,
+          //                         letterSpacing: 4,
+          //                       ),
+          //                     ),
+          //                     25.ph,
+          //                     AppTextNormal.labelBold(
+          //                       "Seconds",
+          //                       14,
+          //                       Colors.grey.shade800,
+          //                       letterSpacing: 2,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //               if (!isMobile)
+          //                 const Expanded(
+          //                   flex: 4,
+          //                   child: SizedBox(),
+          //                 ),
+          //             ],
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   );
+          // }
 
           if (_c.isFinished.value &&
               (_c.challenge.value.type == "MULTIPLE CHOICE" ||
@@ -480,6 +480,7 @@ class ChallengeQuizPage extends StatelessWidget {
           }
           if (_c.isFinished.value &&
               (_c.challenge.value.type == "WELLNESS" ||
+                  _c.challenge.value.type == "MULTIPLE WELLNESS" ||
                   _c.challenge.value.type == "WELLNESS GROUP")) {
             if (_c.point.value.toInt() == 0) {
               return Center(
@@ -1216,226 +1217,362 @@ class ChallengeQuizPage extends StatelessWidget {
                   ),
                 ),
               if (!_c.isQuestFinished.value)
-                SizedBox(
-                  width: size.width,
-                  child: Column(
-                    children: [
-                      125.ph,
-                      SizedBox(
-                        width: size.width / 2.2,
-                        child: AppTextNormal.labelBold(
-                          "",
-                          25,
-                          Colors.white,
-                          letterSpacing: 2.5,
-                          textAlign: TextAlign.center,
-                          height: 1.6,
-                          maxLines: 10,
-                        ),
-                      ),
-                      SizedBox(
-                        width: isMobile ? double.infinity : size.width / 2.4,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AppTextNormal.labelBold(
-                              "Max Point : ${convertNumber(_c.challenge.value.maxPoint)}",
-                              12.5,
-                              Colors.white,
-                            ),
-                            AppTextNormal.labelBold(
-                              "Time : ${_c.formatTime()}",
-                              12.5,
-                              Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                      10.ph,
-                      Container(
-                        height: 4,
-                        width: double.infinity,
-                        color: Colors.white.withOpacity(0.4),
-                      ),
-                      14.ph,
-                      Center(
-                        child: Container(
-                          height: 150,
-                          width: size.width / 2.4,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.2),
-                            border: Border.all(
-                              width: 1.5,
-                              color: Colors.white.withOpacity(0.6),
-                            ),
+                SingleChildScrollView(
+                  child: SizedBox(
+                    width: size.width,
+                    child: Column(
+                      children: [
+                        125.ph,
+                        SizedBox(
+                          width: size.width / 2.2,
+                          child: AppTextNormal.labelBold(
+                            "",
+                            25,
+                            Colors.white,
+                            letterSpacing: 2.5,
+                            textAlign: TextAlign.center,
+                            height: 1.6,
+                            maxLines: 10,
                           ),
-                          child: Stack(
+                        ),
+                        SizedBox(
+                          width: isMobile ? double.infinity : size.width / 2.4,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              if (_c.fileName.value.isNotEmpty)
-                                Container(
-                                  height: 180,
-                                  width: size.width / 2.4,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Image.memory(
-                                    _c.filePickerResult!.files.first.bytes!,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              Builder(
-                                builder: (context) {
-                                  return DropzoneView(
-                                    onCreated: (controller) =>
-                                        _c.dropzoneController = controller,
-                                    onDropFile: (file) async {
-                                      if (file.type.contains("image")) {
-                                        _c.fileName.value = file.name;
-                                        final byteData = await _c
-                                            .dropzoneController
-                                            .getFileData(file);
-                                        final files = [
-                                          PlatformFile(
-                                            name: file.name,
-                                            size: byteData.lengthInBytes,
-                                            bytes: byteData,
-                                          ),
-                                        ];
-
-                                        _c.filePickerResult =
-                                            FilePickerResult(files);
-                                      } else {
-                                        AppDialog.dialogSnackbar(
-                                            "Only image files are allowed!");
-                                      }
-                                    },
-                                    onError: (e) => debugPrint('Error: $e'),
-                                  );
-                                },
+                              AppTextNormal.labelBold(
+                                "Max Point : ${convertNumber(_c.challenge.value.maxPoint)}",
+                                12.5,
+                                Colors.white,
                               ),
-                              Center(
-                                child: InkWell(
-                                  onTap: _c.pickImage,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          // Ikon dengan warna outline (lebih besar)
-                                          Icon(
-                                            Icons.cloud_upload,
-                                            size:
-                                                54, // Lebih besar untuk efek outline
-                                            color:
-                                                Colors.black, // Warna outline
-                                          ),
-                                          // Ikon utama
-                                          Icon(
-                                            Icons.cloud_upload,
-                                            size: 50, // Ukuran asli
-                                            color:
-                                                Colors.grey, // Warna ikon utama
-                                          ),
-                                        ],
-                                      ),
-                                      14.ph,
-                                      AppTextNormal.labelBold(
-                                        "Drag & Drop or Click to Upload",
-                                        14,
-                                        Colors.white,
-                                        letterSpacing: 2.5,
-                                        shadows: const [
-                                          Shadow(
-                                            offset: Offset(-1.5,
-                                                -1.5), // Bayangan ke kiri atas
-                                            color: Colors.black,
-                                            blurRadius: 1.0,
-                                          ),
-                                          Shadow(
-                                            offset: Offset(1.5,
-                                                -1.5), // Bayangan ke kanan atas
-                                            color: Colors.black,
-                                            blurRadius: 1.0,
-                                          ),
-                                          Shadow(
-                                            offset: Offset(1.5,
-                                                1.5), // Bayangan ke kanan bawah
-                                            color: Colors.black,
-                                            blurRadius: 1.0,
-                                          ),
-                                          Shadow(
-                                            offset: Offset(-1.5,
-                                                1.5), // Bayangan ke kiri bawah
-                                            color: Colors.black,
-                                            blurRadius: 1.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              AppTextNormal.labelBold(
+                                "Time : ${_c.formatTime()}",
+                                12.5,
+                                Colors.white,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      18.ph,
-                      SizedBox(
-                        width: size.width / 2.4,
-                        child: TextFormField(
-                          controller: _c.tcRemark,
-                          validator: (val) => AppValidator.requiredField(val!),
-                          style: GoogleFonts.poppins(
-                            height: 1.4,
-                            color: Colors.white,
-                          ),
-                          decoration: InputDecoration(
-                            hintStyle: GoogleFonts.poppins(
-                              fontSize: 14,
-                              wordSpacing: 4,
-                              color: Colors.white30,
+                        10.ph,
+                        Container(
+                          height: 4,
+                          width: double.infinity,
+                          color: Colors.white.withOpacity(0.4),
+                        ),
+                        14.ph,
+                        Center(
+                          child: Container(
+                            height: 225,
+                            width: size.width / 2.4,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.2),
+                              border: Border.all(
+                                width: 1.5,
+                                color: Colors.white.withOpacity(0.6),
+                              ),
                             ),
-                            hintText: "Insert your remark",
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 8),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade500),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade500),
-                              borderRadius: BorderRadius.circular(8),
+                            child: Stack(
+                              children: [
+                                if (_c.fileName.value.isNotEmpty)
+                                  Container(
+                                    height: 225,
+                                    width: size.width / 2.4,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: Image.memory(
+                                        _c.filePickerResult!.files.first.bytes!,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                Builder(
+                                  builder: (context) {
+                                    return DropzoneView(
+                                      onCreated: (controller) =>
+                                          _c.dropzoneController = controller,
+                                      onDropFile: (file) async {
+                                        if (file.type.contains("image")) {
+                                          _c.fileName.value = file.name;
+                                          final byteData = await _c
+                                              .dropzoneController
+                                              .getFileData(file);
+                                          final files = [
+                                            PlatformFile(
+                                              name: file.name,
+                                              size: byteData.lengthInBytes,
+                                              bytes: byteData,
+                                            ),
+                                          ];
+
+                                          _c.filePickerResult =
+                                              FilePickerResult(files);
+                                        } else {
+                                          AppDialog.dialogSnackbar(
+                                              "Only image files are allowed!");
+                                        }
+                                      },
+                                      onError: (e) => debugPrint('Error: $e'),
+                                    );
+                                  },
+                                ),
+                                Center(
+                                  child: InkWell(
+                                    onTap: _c.pickImage,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            // Ikon dengan warna outline (lebih besar)
+                                            Icon(
+                                              Icons.cloud_upload,
+                                              size:
+                                                  54, // Lebih besar untuk efek outline
+                                              color:
+                                                  Colors.black, // Warna outline
+                                            ),
+                                            // Ikon utama
+                                            Icon(
+                                              Icons.cloud_upload,
+                                              size: 50, // Ukuran asli
+                                              color: Colors
+                                                  .grey, // Warna ikon utama
+                                            ),
+                                          ],
+                                        ),
+                                        14.ph,
+                                        AppTextNormal.labelBold(
+                                          "Drag & Drop or Click to Upload",
+                                          14,
+                                          Colors.white,
+                                          letterSpacing: 2.5,
+                                          shadows: const [
+                                            Shadow(
+                                              offset: Offset(-1.5,
+                                                  -1.5), // Bayangan ke kiri atas
+                                              color: Colors.black,
+                                              blurRadius: 1.0,
+                                            ),
+                                            Shadow(
+                                              offset: Offset(1.5,
+                                                  -1.5), // Bayangan ke kanan atas
+                                              color: Colors.black,
+                                              blurRadius: 1.0,
+                                            ),
+                                            Shadow(
+                                              offset: Offset(1.5,
+                                                  1.5), // Bayangan ke kanan bawah
+                                              color: Colors.black,
+                                              blurRadius: 1.0,
+                                            ),
+                                            Shadow(
+                                              offset: Offset(-1.5,
+                                                  1.5), // Bayangan ke kiri bawah
+                                              color: Colors.black,
+                                              blurRadius: 1.0,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                      16.ph,
-                      SizedBox(
-                        width: size.width / 2.4,
-                        height: 45,
-                        child: ElevatedButton(
-                          onPressed: _c.fileName.value.isEmpty
-                              ? () {}
-                              : _c.saveChallengeWellfit,
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
+                        18.ph,
+                        if (_c.challenge.value.type == "MULTIPLE WELLNESS")
+                          Center(
+                            child: Container(
+                              height: 225,
+                              width: size.width / 2.4,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                border: Border.all(
+                                  width: 1.5,
+                                  color: Colors.white.withOpacity(0.6),
+                                ),
+                              ),
+                              child: Stack(
+                                children: [
+                                  if (_c.fileName2.value.isNotEmpty)
+                                    Container(
+                                      height: 225,
+                                      width: size.width / 2.4,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: Image.memory(
+                                          _c.filePickerResult2!.files.first
+                                              .bytes!,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  Builder(
+                                    builder: (context) {
+                                      return DropzoneView(
+                                        onCreated: (controller) =>
+                                            _c.dropzoneController2 = controller,
+                                        onDropFile: (file) async {
+                                          if (file.type.contains("image")) {
+                                            _c.fileName2.value = file.name;
+                                            final byteData = await _c
+                                                .dropzoneController2
+                                                .getFileData(file);
+                                            final files = [
+                                              PlatformFile(
+                                                name: file.name,
+                                                size: byteData.lengthInBytes,
+                                                bytes: byteData,
+                                              ),
+                                            ];
+
+                                            _c.filePickerResult2 =
+                                                FilePickerResult(files);
+                                          } else {
+                                            AppDialog.dialogSnackbar(
+                                                "Only image files are allowed!");
+                                          }
+                                        },
+                                        onError: (e) => debugPrint('Error: $e'),
+                                      );
+                                    },
+                                  ),
+                                  Center(
+                                    child: InkWell(
+                                      onTap: _c.pickImage2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              // Ikon dengan warna outline (lebih besar)
+                                              Icon(
+                                                Icons.cloud_upload,
+                                                size:
+                                                    54, // Lebih besar untuk efek outline
+                                                color: Colors
+                                                    .black, // Warna outline
+                                              ),
+                                              // Ikon utama
+                                              Icon(
+                                                Icons.cloud_upload,
+                                                size: 50, // Ukuran asli
+                                                color: Colors
+                                                    .grey, // Warna ikon utama
+                                              ),
+                                            ],
+                                          ),
+                                          14.ph,
+                                          AppTextNormal.labelBold(
+                                            "Drag & Drop or Click to Upload",
+                                            14,
+                                            Colors.white,
+                                            letterSpacing: 2.5,
+                                            shadows: const [
+                                              Shadow(
+                                                offset: Offset(-1.5,
+                                                    -1.5), // Bayangan ke kiri atas
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                              Shadow(
+                                                offset: Offset(1.5,
+                                                    -1.5), // Bayangan ke kanan atas
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                              Shadow(
+                                                offset: Offset(1.5,
+                                                    1.5), // Bayangan ke kanan bawah
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                              Shadow(
+                                                offset: Offset(-1.5,
+                                                    1.5), // Bayangan ke kiri bawah
+                                                color: Colors.black,
+                                                blurRadius: 1.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            backgroundColor: _c.fileName.value.isEmpty
-                                ? Colors.grey
-                                : colorPointRank,
                           ),
-                          child: AppTextNormal.labelBold(
-                            "SUBMIT",
-                            14,
-                            Colors.white,
+                        18.ph,
+                        SizedBox(
+                          width: size.width / 2.4,
+                          child: TextFormField(
+                            controller: _c.tcRemark,
+                            validator: (val) =>
+                                AppValidator.requiredField(val!),
+                            style: GoogleFonts.poppins(
+                              height: 1.4,
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                              hintStyle: GoogleFonts.poppins(
+                                fontSize: 14,
+                                wordSpacing: 4,
+                                color: Colors.white30,
+                              ),
+                              hintText: "Insert your remark",
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade500),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade500),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                           ),
                         ),
-                      )
-                    ],
+                        16.ph,
+                        SizedBox(
+                          width: size.width / 2.4,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: _c.fileName.value.isEmpty
+                                ? () {}
+                                : _c.saveChallengeWellfit,
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              backgroundColor: _c.fileName.value.isEmpty
+                                  ? Colors.grey
+                                  : colorPointRank,
+                            ),
+                            child: AppTextNormal.labelBold(
+                              "SUBMIT",
+                              14,
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
             ],

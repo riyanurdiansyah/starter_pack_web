@@ -12,7 +12,6 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:starter_pack_web/middleware/app_route.dart';
 import 'package:starter_pack_web/module/challenge/model/answer_m.dart';
 import 'package:starter_pack_web/module/challenge/model/quiz_session_m.dart';
 import 'package:starter_pack_web/utils/app_images.dart';
@@ -32,6 +31,7 @@ class ChallengeQuizController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   late DropzoneViewController dropzoneController;
+  late DropzoneViewController dropzoneController2;
 
   final Rx<ChallengeM> challenge = challengeEmpty.obs;
 
@@ -82,12 +82,16 @@ class ChallengeQuizController extends GetxController {
   final Rx<bool> isFinished = false.obs;
 
   FilePickerResult? filePickerResult;
+  FilePickerResult? filePickerResult2;
 
   final tcImage = TextEditingController();
+  final tcImage2 = TextEditingController();
   final tcRemark = TextEditingController();
 
   Rx<Uint8List?> imageBytes = null.obs;
+  Rx<Uint8List?> imageBytes2 = null.obs;
   Rx<String> fileName = "".obs;
+  Rx<String> fileName2 = "".obs;
 
   Rx<Duration> remainingTime = Duration.zero.obs;
 
@@ -589,6 +593,17 @@ class ChallengeQuizController extends GetxController {
     }
   }
 
+  void pickImage2() async {
+    final result = await pickFile();
+    filePickerResult2 = result;
+
+    if (result != null) {
+      fileName2.value = result.files.single.name;
+    } else {
+      tcImage2.clear();
+    }
+  }
+
   void onDrop(dynamic event) async {
     final bytes = await dropzoneController.getFileData(event);
     final name = await dropzoneController.getFilename(event);
@@ -596,109 +611,174 @@ class ChallengeQuizController extends GetxController {
     fileName.value = name;
   }
 
-  void saveChallengeWellfit() async {
-    // Menampilkan dialog loading
-    showDialog(
-      context: navigatorKey.currentContext!,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        content: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(
-                color: colorPrimaryDark,
-              ),
-              const SizedBox(height: 18),
-              Obx(
-                () => AppTextNormal.labelW700(
-                  "Uploading on progress ${uploadProgress.value.toInt()}%",
-                  14,
-                  Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+  void onDrop2(dynamic event) async {
+    final bytes = await dropzoneController2.getFileData(event);
+    final name = await dropzoneController2.getFilename(event);
+    imageBytes2.value = bytes;
+    fileName2.value = name;
+  }
+
+  Future<Map<String, dynamic>> uploadsFile() async {
+    var data = <String, dynamic>{};
+    // Inisialisasi variabel file pertama
+    final fileBytes1 = filePickerResult!.files.single.bytes!;
+    final fileName1 = filePickerResult!.files.single.name;
+    final storageRef1 = FirebaseStorage.instance
+        .ref()
+        .child('assets/challenges/${challenge.value.name}/$fileName1');
+
+    // Inisialisasi variabel file kedua
+
+    // Metadata untuk kedua file
+    final metadata1 = SettableMetadata(
+      contentType: 'image/${fileName1.split('.').last}',
     );
 
+    // Membuat task upload untuk kedua file
+    final uploadTask1 = await storageRef1.putData(fileBytes1, metadata1);
+
+    data["url"] = await storageRef1.getDownloadURL();
+
+    if (challenge.value.type == "MULTIPLE WELLNESS") {
+      final fileBytes2 = filePickerResult2!.files.single.bytes!;
+      final fileName2 = filePickerResult2!.files.single.name;
+      final metadata2 = SettableMetadata(
+        contentType: 'image/${fileName2.split('.').last}',
+      );
+      final storageRef2 = FirebaseStorage.instance
+          .ref()
+          .child('assets/challenges/${challenge.value.name}/$fileName2');
+
+      final uploadTask2 = await storageRef2.putData(fileBytes2, metadata2);
+      data["url2"] = await storageRef2.getDownloadURL();
+    }
+
+    // Mendengarkan progress upload kedua file
+    // String downloadUrl1 = "";
+    // String downloadUrl2 = "";
+
+    // await Future.wait([
+    //   await uploadTask1.snapshotEvents.listen((TaskSnapshot snapshot) async {
+    //     final progress =
+    //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //     uploadProgress.value = progress / 2; // Karena ada 2 file
+    //     if (snapshot.state == TaskState.success) {
+    //       data["url"] = await snapshot.ref.getDownloadURL();
+    //     }
+    //   }).asFuture(),
+    //   await uploadTask2.snapshotEvents.listen((TaskSnapshot snapshot) async {
+    //     final progress =
+    //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //     uploadProgress.value = 50 + (progress / 2); // Progres file kedua
+    //     if (snapshot.state == TaskState.success) {
+    //       data["url2"] = await snapshot.ref.getDownloadURL();
+    //     }
+    //   }).asFuture(),
+    // ]);
+    return data;
+  }
+
+  void saveChallengeWellfit() async {
+    changeLoading(true);
+    // Menampilkan dialog loading
+    // showDialog(
+    //   context: navigatorKey.currentContext!,
+    //   barrierDismissible: false,
+    //   builder: (context) => AlertDialog(
+    //     backgroundColor: Colors.white,
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(4),
+    //     ),
+    //     content: Padding(
+    //       padding: const EdgeInsets.all(16),
+    //       child: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [
+    //           const CircularProgressIndicator(
+    //             color: colorPrimaryDark,
+    //           ),
+    //           const SizedBox(height: 18),
+    //           Obx(
+    //             () => AppTextNormal.labelW700(
+    //               "Uploading on progress ${uploadProgress.value.toInt()}%",
+    //               14,
+    //               Colors.grey.shade600,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
+
     try {
-      // Validasi file
+      // Validasi file pertama
       if (filePickerResult == null ||
           filePickerResult?.files.single.bytes == null) {
-        throw Exception("File tidak valid atau belum dipilih.");
+        AppDialog.dialogSnackbar("First file is not valid");
+        return;
       }
 
-      // Inisialisasi variabel file
-      final fileBytes = filePickerResult!.files.single.bytes!;
-      final fileName = filePickerResult!.files.single.name;
-      final storageRef =
-          FirebaseStorage.instance.ref().child('assets/challenge/$fileName');
-
-      // Membuat task upload
-      final uploadTask = storageRef.putData(fileBytes);
-
-      // Mendengarkan progress upload dan menangani snapshot
-      String downloadUrl = "";
-      await uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) async {
-        final progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        uploadProgress.value = progress;
-
-        if (snapshot.state == TaskState.success && isFinished.value == false) {
-          // Menutup dialog saat upload selesai
-          navigatorKey.currentContext?.pop();
-          _timer?.cancel();
-          isFinished.value = true;
-
-          // Mendapatkan URL download
-          downloadUrl = await snapshot.ref.getDownloadURL();
-
-          // Membuat data untuk Firestore
-          var data = QuizSessionM(
-            userId: user.value.id,
-            multipleChoices: multipleChoices,
-            groupId: user.value.groupId,
-            quizId: challenge.value.id,
-            sessionId: id.value,
-            answers: listAnswer,
-            time: 0,
-            point: point.value,
-            isUsePrivillege: false,
-            page: 0,
-            username: user.value.username,
-            isFinished: true,
-            isRated: false,
-            type: challenge.value.type,
-            image: downloadUrl,
-            isRevenue: false,
-            remark: tcRemark.text,
-            updatedAt: dateNow.value.toIso8601String(),
-            createdAt: dateNow.value.toIso8601String(),
-          );
-
-          // Menyimpan data ke Firestore
-          await firestore
-              .collection("quiz_session")
-              .doc(data.sessionId)
-              .update(data.toJson());
-          getSessionQuiz();
-          AppDialog.dialogSnackbar("Success");
+      // Validasi file kedua
+      if (challenge.value.type == "MULTIPLE WELLNESS") {
+        if (filePickerResult2 == null ||
+            filePickerResult2?.files.single.bytes == null) {
+          AppDialog.dialogSnackbar("Second file is not valid");
+          return;
         }
-      }).asFuture();
-
-      // Validasi URL download
-      if (downloadUrl.isEmpty) {
-        throw Exception("Gagal mendapatkan URL gambar.");
       }
+      final res = await uploadsFile();
+      // Validasi URL download
+      if (res["url"].isEmpty) {
+        await changeLoading(false);
+        AppDialog.dialogSnackbar("Failed to upload one or more files");
+        return;
+      }
+
+      if (challenge.value.type == "MULTIPLE WELLNESS" && res["url2"].isEmpty) {
+        await changeLoading(false);
+        AppDialog.dialogSnackbar("Failed to upload one or more files");
+        return;
+      }
+
+      // Membuat data untuk Firestore
+      var data = QuizSessionM(
+        userId: user.value.id,
+        multipleChoices: multipleChoices,
+        groupId: user.value.groupId,
+        quizId: challenge.value.id,
+        sessionId: id.value,
+        answers: listAnswer,
+        time: 0,
+        point: point.value,
+        isUsePrivillege: false,
+        page: 0,
+        username: user.value.username,
+        isFinished: true,
+        isRated: false,
+        type: challenge.value.type,
+        image: challenge.value.type == "WELLNESS"
+            ? res["url"]
+            : "${res["url"]}||${res["url2"]}", // Simpan URL file pertama
+        isRevenue: false,
+        remark: tcRemark.text,
+        updatedAt: dateNow.value.toIso8601String(),
+        createdAt: dateNow.value.toIso8601String(),
+      );
+
+      // Menambahkan URL file kedua (opsional)
+
+      // Menyimpan data ke Firestore
+      await firestore
+          .collection("quiz_session")
+          .doc(data.sessionId)
+          .update(data.toJson());
+      await getSessionQuiz();
+      await changeLoading(false);
+      AppDialog.dialogSnackbar("Success");
     } catch (e) {
+      await changeLoading(false);
       AppDialog.dialogSnackbar("Error while saving: $e");
     }
   }
