@@ -479,53 +479,55 @@ class CartPage extends StatelessWidget {
                                                         0.2)
                                                     .ceilToDouble() *
                                                 newQty);
-                                      } else {
-                                        discount = 0;
-                                        charge = 0;
                                       }
-
-                                      _c.products[_c.indexImg.value] = _c
-                                          .products[_c.indexImg.value]
-                                          .copyWith(
-                                        charge: 0,
-                                        qty: newQty,
-                                        discount: discount,
-                                      );
-                                    } else {
-                                      _c.products[_c.indexImg.value] = _c
-                                          .products[_c.indexImg.value]
-                                          .copyWith(
-                                        qty: 0,
-                                        discount: 0,
-                                        charge: 0,
-                                      );
                                     }
-                                    if (_c.products
-                                            .where((x) => x.qty > 0)
-                                            .toList()
-                                            .length >
-                                        1) {
-                                      for (int i = 0;
-                                          i < _c.products.length;
-                                          i++) {
-                                        if (_c.products[i].qty > 0) {
-                                          if (value.isEmpty || value == "0") {
-                                            charge = 0;
-                                          } else {
-                                            charge = _c.products[i].qty *
-                                                ((0.4 *
-                                                    (_c.products
-                                                            .where((x) =>
-                                                                x.qty > 0)
-                                                            .toList()
-                                                            .length -
-                                                        1)));
-                                          }
-                                          _c.products[i] =
-                                              _c.products[i].copyWith(
-                                            charge: charge,
-                                          );
-                                        }
+
+                                    _c.products[_c.indexImg.value] =
+                                        _c.products[_c.indexImg.value].copyWith(
+                                      charge: charge,
+                                      qty: newQty,
+                                      discount: discount,
+                                    );
+
+                                    final listNoNullProducts = _c.products
+                                        .where((e) => e.qty > 0)
+                                        .toList();
+
+                                    final productCount =
+                                        listNoNullProducts.length;
+
+// Tentukan faktor pengali berdasarkan jumlah produk yang qty > 0
+                                    double chargeMultiplier = 0.0;
+                                    if (productCount == 1) {
+                                      chargeMultiplier =
+                                          0.0; // Tidak ada charge jika hanya 1 produk
+                                    } else if (productCount == 2) {
+                                      chargeMultiplier =
+                                          0.4; // Jika ada 2 produk
+                                    } else if (productCount == 3) {
+                                      chargeMultiplier =
+                                          0.8; // Jika ada 3 produk
+                                    } else if (productCount > 3) {
+                                      chargeMultiplier = 0.8 +
+                                          (0.4 *
+                                              (productCount -
+                                                  3)); // Jika lebih dari 3 produk
+                                    }
+
+// Iterasi untuk menghitung charge setiap produk
+                                    for (var i = 0;
+                                        i < _c.products.length;
+                                        i++) {
+                                      final product = _c.products[i];
+                                      if (product.qty > 0) {
+                                        // Hitung charge berdasarkan jumlah produk dan multiplier
+                                        _c.products[i] = product.copyWith(
+                                            charge:
+                                                chargeMultiplier * product.qty);
+                                      } else {
+                                        // Jika qty produk 0 atau kurang, set charge jadi 0
+                                        _c.products[i] =
+                                            product.copyWith(charge: 0);
                                       }
                                     }
                                   },

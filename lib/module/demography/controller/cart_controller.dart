@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -170,6 +171,8 @@ class CartController extends GetxController {
     products.value = response.docs.map((e) {
       return ProdukM.fromJson(e.data());
     }).toList();
+
+    log("CEK DATA : ${products.value}");
     products.sort((a, b) => a.nama.compareTo(b.nama));
     quantityControllers.value = List.generate(products.length, (index) {
       return TextEditingController(text: products[index].qty.toString());
