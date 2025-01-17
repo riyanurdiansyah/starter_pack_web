@@ -45,185 +45,185 @@ class ChallengeQuizPage extends StatelessWidget {
               ),
             );
           }
-          // if (_c.isComingSoon.value) {
-          //   int days = _c.remainingTime.value.inDays; // Hitung jumlah hari
-          //   int hours =
-          //       _c.remainingTime.value.inHours % 24; // Sisa jam setelah hari
-          //   int minutes = _c.remainingTime.value.inMinutes % 60; // Sisa menit
-          //   int seconds = _c.remainingTime.value.inSeconds % 60; // Sisa detik
-          //   return Center(
-          //     child: Container(
-          //       alignment: Alignment.center,
-          //       padding: const EdgeInsets.symmetric(horizontal: 18),
-          //       color: Colors.amber,
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           AppTextNormal.labelBold(
-          //             "COMING SOON",
-          //             50,
-          //             Colors.black,
-          //             letterSpacing: 18,
-          //           ),
-          //           14.ph,
-          //           AppTextNormal.labelW600(
-          //             "The challenge will start in...",
-          //             36,
-          //             Colors.black,
-          //             letterSpacing: 8,
-          //           ),
-          //           50.ph,
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             children: [
-          //               if (!isMobile)
-          //                 const Expanded(
-          //                   flex: 4,
-          //                   child: SizedBox(),
-          //                 ),
-          //               Expanded(
-          //                 child: Column(
-          //                   children: [
-          //                     Container(
-          //                       alignment: Alignment.center,
-          //                       width: 80,
-          //                       height: 90,
-          //                       decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(6),
-          //                         color: Colors.white,
-          //                         border: Border.all(
-          //                           width: 0.6,
-          //                           color: Colors.black54,
-          //                         ),
-          //                       ),
-          //                       child: AppTextNormal.labelBold(
-          //                         days.toString().padLeft(2, '0'),
-          //                         25,
-          //                         Colors.grey.shade600,
-          //                         letterSpacing: 4,
-          //                       ),
-          //                     ),
-          //                     25.ph,
-          //                     AppTextNormal.labelBold(
-          //                       "Days",
-          //                       14,
-          //                       Colors.grey.shade800,
-          //                       letterSpacing: 2,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //               16.pw,
-          //               Expanded(
-          //                 child: Column(
-          //                   children: [
-          //                     Container(
-          //                       alignment: Alignment.center,
-          //                       width: 80,
-          //                       height: 90,
-          //                       decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(6),
-          //                         color: Colors.white,
-          //                         border: Border.all(
-          //                           width: 0.6,
-          //                           color: Colors.black54,
-          //                         ),
-          //                       ),
-          //                       child: AppTextNormal.labelBold(
-          //                         hours.toString().padLeft(2, '0'),
-          //                         25,
-          //                         Colors.grey.shade600,
-          //                         letterSpacing: 4,
-          //                       ),
-          //                     ),
-          //                     25.ph,
-          //                     AppTextNormal.labelBold(
-          //                       "Hours",
-          //                       14,
-          //                       Colors.grey.shade800,
-          //                       letterSpacing: 2,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //               16.pw,
-          //               Expanded(
-          //                 child: Column(
-          //                   children: [
-          //                     Container(
-          //                       alignment: Alignment.center,
-          //                       width: 80,
-          //                       height: 90,
-          //                       decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(6),
-          //                         color: Colors.white,
-          //                         border: Border.all(
-          //                           width: 0.6,
-          //                           color: Colors.black54,
-          //                         ),
-          //                       ),
-          //                       child: AppTextNormal.labelBold(
-          //                         minutes.toString().padLeft(2, '0'),
-          //                         25,
-          //                         Colors.grey.shade600,
-          //                         letterSpacing: 4,
-          //                       ),
-          //                     ),
-          //                     25.ph,
-          //                     AppTextNormal.labelBold(
-          //                       "Minutes",
-          //                       14,
-          //                       Colors.grey.shade800,
-          //                       letterSpacing: 2,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //               16.pw,
-          //               Expanded(
-          //                 child: Column(
-          //                   children: [
-          //                     Container(
-          //                       alignment: Alignment.center,
-          //                       width: 80,
-          //                       height: 90,
-          //                       decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(6),
-          //                         color: Colors.white,
-          //                         border: Border.all(
-          //                           width: 0.6,
-          //                           color: Colors.black54,
-          //                         ),
-          //                       ),
-          //                       child: AppTextNormal.labelBold(
-          //                         seconds.toString().padLeft(2, '0'),
-          //                         25,
-          //                         Colors.grey.shade600,
-          //                         letterSpacing: 4,
-          //                       ),
-          //                     ),
-          //                     25.ph,
-          //                     AppTextNormal.labelBold(
-          //                       "Seconds",
-          //                       14,
-          //                       Colors.grey.shade800,
-          //                       letterSpacing: 2,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //               if (!isMobile)
-          //                 const Expanded(
-          //                   flex: 4,
-          //                   child: SizedBox(),
-          //                 ),
-          //             ],
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   );
-          // }
+          if (_c.isComingSoon.value) {
+            int days = _c.remainingTime.value.inDays; // Hitung jumlah hari
+            int hours =
+                _c.remainingTime.value.inHours % 24; // Sisa jam setelah hari
+            int minutes = _c.remainingTime.value.inMinutes % 60; // Sisa menit
+            int seconds = _c.remainingTime.value.inSeconds % 60; // Sisa detik
+            return Center(
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                color: Colors.amber,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppTextNormal.labelBold(
+                      "COMING SOON",
+                      50,
+                      Colors.black,
+                      letterSpacing: 18,
+                    ),
+                    14.ph,
+                    AppTextNormal.labelW600(
+                      "The challenge will start in...",
+                      36,
+                      Colors.black,
+                      letterSpacing: 8,
+                    ),
+                    50.ph,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (!isMobile)
+                          const Expanded(
+                            flex: 4,
+                            child: SizedBox(),
+                          ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  days.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Days",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        16.pw,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  hours.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Hours",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        16.pw,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  minutes.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Minutes",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        16.pw,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 80,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    width: 0.6,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                child: AppTextNormal.labelBold(
+                                  seconds.toString().padLeft(2, '0'),
+                                  25,
+                                  Colors.grey.shade600,
+                                  letterSpacing: 4,
+                                ),
+                              ),
+                              25.ph,
+                              AppTextNormal.labelBold(
+                                "Seconds",
+                                14,
+                                Colors.grey.shade800,
+                                letterSpacing: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (!isMobile)
+                          const Expanded(
+                            flex: 4,
+                            child: SizedBox(),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
 
           if (_c.isFinished.value &&
               (_c.challenge.value.type == "MULTIPLE CHOICE" ||
@@ -1263,7 +1263,8 @@ class ChallengeQuizPage extends StatelessWidget {
                         Center(
                           child: Container(
                             height: 225,
-                            width: size.width / 2.4,
+                            width:
+                                isMobile ? size.width / 1.1 : size.width / 2.4,
                             decoration: BoxDecoration(
                               color: Colors.grey.withOpacity(0.2),
                               border: Border.all(
@@ -1276,7 +1277,9 @@ class ChallengeQuizPage extends StatelessWidget {
                                 if (_c.fileName.value.isNotEmpty)
                                   Container(
                                     height: 225,
-                                    width: size.width / 2.4,
+                                    width: isMobile
+                                        ? size.width / 1.1
+                                        : size.width / 2.4,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -1391,7 +1394,9 @@ class ChallengeQuizPage extends StatelessWidget {
                           Center(
                             child: Container(
                               height: 225,
-                              width: size.width / 2.4,
+                              width: isMobile
+                                  ? size.width / 1.1
+                                  : size.width / 2.4,
                               decoration: BoxDecoration(
                                 color: Colors.grey.withOpacity(0.2),
                                 border: Border.all(
@@ -1517,7 +1522,7 @@ class ChallengeQuizPage extends StatelessWidget {
                           ),
                         18.ph,
                         SizedBox(
-                          width: size.width / 2.4,
+                          width: isMobile ? size.width / 1.1 : size.width / 2.4,
                           child: TextFormField(
                             controller: _c.tcRemark,
                             validator: (val) =>
@@ -1550,7 +1555,7 @@ class ChallengeQuizPage extends StatelessWidget {
                         ),
                         16.ph,
                         SizedBox(
-                          width: size.width / 2.4,
+                          width: isMobile ? size.width / 1.1 : size.width / 2.4,
                           height: 45,
                           child: ElevatedButton(
                             onPressed: _c.fileName.value.isEmpty

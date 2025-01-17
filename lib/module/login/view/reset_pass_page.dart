@@ -17,6 +17,8 @@ class ResetPassPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final isMiniMobile = MediaQuery.sizeOf(context).width < 400;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Obx(() {
@@ -37,7 +39,7 @@ class ResetPassPage extends StatelessWidget {
         }
         return Center(
           child: SizedBox(
-            width: size.width / 3,
+            width: isMobile ? size.width / 1.2 : size.width / 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
