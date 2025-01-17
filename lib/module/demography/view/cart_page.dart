@@ -275,7 +275,7 @@ class CartPage extends StatelessWidget {
                                                   BorderRadius.circular(8),
                                             ),
                                             child: AppTextNormal.labelBold(
-                                              convertNumber(data.qty),
+                                              "${convertNumber(data.qty)} Pcs",
                                               16,
                                               Colors.black,
                                               letterSpacing: 2.5,

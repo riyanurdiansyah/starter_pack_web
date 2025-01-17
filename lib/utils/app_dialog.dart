@@ -2984,7 +2984,9 @@ class AppDialog {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: isValids.isNotEmpty || totalDistributionCost == 0
+                    onPressed: isValids.isNotEmpty ||
+                            totalDistributionCost == 0 ||
+                            totalDistributionCost > c.groupData.value.point
                         ? null
                         : () {
                             context.pop();

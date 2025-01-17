@@ -571,7 +571,7 @@ class DistributePage extends StatelessWidget {
                                                   ),
                                                   10.ph,
                                                   AppTextNormal.labelBold(
-                                                    "\$ ${data.cost}/item",
+                                                    "Distribution cost ${data.cost} % /item",
                                                     14,
                                                     Colors.white,
                                                   ),
@@ -634,11 +634,26 @@ class DistributePage extends StatelessWidget {
                                                 children: [
                                                   60.pw,
                                                   Expanded(
-                                                    child:
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
                                                         AppTextNormal.labelBold(
-                                                      "${prod.nama} ${prod.tipe}",
-                                                      20,
-                                                      Colors.white,
+                                                          "${prod.nama} ${prod.tipe}",
+                                                          20,
+                                                          Colors.white,
+                                                        ),
+                                                        12.ph,
+                                                        AppTextNormal.labelW600(
+                                                          "Production Cost : R\$ ${prod.harga}",
+                                                          16,
+                                                          colorPrimaryDark,
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   Obx(() {
@@ -682,6 +697,9 @@ class DistributePage extends StatelessWidget {
                                                                     FilteringTextInputFormatter
                                                                         .digitsOnly, // Hanya menerima angka
                                                                   ],
+                                                                  readOnly:
+                                                                      prod.qty ==
+                                                                          0,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -781,7 +799,10 @@ class DistributePage extends StatelessWidget {
                                                                         [
                                                                         i] = double.parse((data.cost *
                                                                             int.parse(
-                                                                                value))
+                                                                                value) *
+                                                                            prod
+                                                                                .harga /
+                                                                            100)
                                                                         .toStringAsFixed(
                                                                             2));
                                                                     _c.listDistribute[
@@ -829,8 +850,10 @@ class DistributePage extends StatelessWidget {
                                                                       [
                                                                       i] = double.parse((data
                                                                               .cost *
-                                                                          value
-                                                                              .round())
+                                                                          value *
+                                                                          prod
+                                                                              .harga /
+                                                                          100)
                                                                       .toStringAsFixed(
                                                                           2));
 

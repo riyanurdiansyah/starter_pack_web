@@ -10,6 +10,7 @@ import '../../../utils/app_constanta.dart';
 import '../../dashboard/model/demography_m.dart';
 import '../../user/model/user_m.dart';
 import '../model/produk_m.dart';
+import '../model/selling_price_m.dart';
 
 class FinanceController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -31,6 +32,8 @@ class FinanceController extends GetxController {
   Rx<UserM> userSession = userEmpty.obs;
 
   final Rx<bool> isDone = false.obs;
+
+  RxList<SellingPriceM> sellings = <SellingPriceM>[].obs;
 
   // RxList<Map<String, dynamic>> accessList = <Map<String, dynamic>>[].obs;
 
@@ -77,6 +80,16 @@ class FinanceController extends GetxController {
     //     }),
     //   };
     // });
+  }
+
+  Future getSellingPrice() async {
+    final response = await firestore
+        .collection("selling_price")
+        .where("groupId", isEqualTo: userSession.value.groupId)
+        .get();
+    sellings.value = response.docs.map((e) {
+      return SellingPriceM.fromJson(e.data());
+    }).toList();
   }
 
   Future<List<DemographyM>> getDemographys() async {
@@ -143,6 +156,17 @@ class FinanceController extends GetxController {
         return demographyJson;
       }).toList(),
     };
+
+    for (var i = 0; i < productsOwn.length; i++) {
+      productsOwn[i] = productsOwn[i].copyWith(
+          priceDistribute: double.tryParse(priceSliders[i].toStringAsFixed(1)));
+      await firestore
+          .collection("group")
+          .doc(userSession.value.groupId)
+          .collection("production")
+          .doc(productsOwn[i].id)
+          .update(productsOwn[i].toJson());
+    }
 
     // Periksa dokumen dengan groupId
     final querySnapshot = await firestore

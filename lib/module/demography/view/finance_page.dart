@@ -256,7 +256,7 @@ class FinancePage extends StatelessWidget {
                                                               .center,
                                                       children: [
                                                         AppTextNormal.labelBold(
-                                                          "R\$ ${_c.priceSliders[i].toStringAsFixed(1)}",
+                                                          "R\$ ${_c.isDone.value ? prod.priceDistribute : _c.priceSliders[i].toStringAsFixed(1)}",
                                                           18,
                                                           Colors.white,
                                                         ),
@@ -306,7 +306,7 @@ class FinancePage extends StatelessWidget {
                                                               .center,
                                                       children: [
                                                         AppTextNormal.labelBold(
-                                                          "R\$ ${_c.priceSliders[i].toStringAsFixed(1)}",
+                                                          "R\$ ${_c.isDone.value ? prod.priceDistribute : _c.priceSliders[i].toStringAsFixed(1)}",
                                                           18,
                                                           Colors.white,
                                                         ),
