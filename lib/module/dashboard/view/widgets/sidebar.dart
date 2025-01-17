@@ -7,6 +7,7 @@ import 'package:starter_pack_web/utils/app_extension.dart';
 
 import '../../../../middleware/app_route.dart';
 import '../../../../utils/app_color.dart';
+import '../../../../utils/app_images.dart';
 import '../../../../utils/app_text.dart';
 import '../../model/sidebar_m.dart';
 
@@ -56,6 +57,11 @@ class Siderbar extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Image.asset(bgSales),
+                )
               ],
             ),
           ),

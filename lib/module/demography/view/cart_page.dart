@@ -467,14 +467,10 @@ class CartPage extends StatelessWidget {
                                   ),
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
-                                    // log("VAL : $value");
-                                    // int lengthProduct = _c.products
-                                    //     .where((x) => x.qty > 0)
-                                    //     .toList()
-                                    //     .length;
                                     int newQty = int.tryParse(value) ?? 0;
                                     double discount = 0;
                                     double charge = 0;
+
                                     if (value.isNotEmpty) {
                                       if (newQty >= 10000) {
                                         discount =
@@ -491,9 +487,10 @@ class CartPage extends StatelessWidget {
                                       _c.products[_c.indexImg.value] = _c
                                           .products[_c.indexImg.value]
                                           .copyWith(
-                                              charge: 0,
-                                              qty: newQty,
-                                              discount: discount);
+                                        charge: 0,
+                                        qty: newQty,
+                                        discount: discount,
+                                      );
                                     } else {
                                       _c.products[_c.indexImg.value] = _c
                                           .products[_c.indexImg.value]

@@ -29,6 +29,11 @@ class SimbisController extends GetxController {
   late SharedPreferences pref;
 
   Rx<UserM> userSession = userEmpty.obs;
+
+  // final RxList<ResultSimbisM> resultSimbisSearch = <ResultSimbisM>[].obs;
+
+  // final RxList<DistributeM> resultDistribute = <DistributeM>[].obs;
+  // final RxList<DistributeM> distributesSearch = <DistributeM>[].obs;
   final Rx<bool> isSearched = false.obs;
 
   Rx<int> currentPage = 1.obs;
@@ -98,7 +103,6 @@ class SimbisController extends GetxController {
     for (var item in demographys) {
       demoData = "$demoData \n${item.name}: ${item.data}";
     }
-
     for (var item in distributes) {
       simulations.add(
         SimulationM(
@@ -139,6 +143,11 @@ class SimbisController extends GetxController {
           {
             "role": "system",
             "content": demoData,
+          },
+          {
+            "role": "system",
+            "content":
+                "sementara penjual untuk susu bayi affordable dan premium tidak bisa dilakukan di area Daytona.",
           },
           {
             "role": "user",
