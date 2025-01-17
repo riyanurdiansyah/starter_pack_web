@@ -351,8 +351,9 @@ class DistributeController extends GetxController {
       onChangeLoading(true);
       await getProducts();
       await getDemographys();
-      await generateAccess();
+      await getSellingPrice();
       await getLogDistribution();
+      await getDistribution();
       await onChangeLoading(false);
       AppDialog.dialogSnackbar("Data has been saved");
     }).catchError((e) {

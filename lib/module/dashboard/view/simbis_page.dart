@@ -30,13 +30,7 @@ class SimbisPage extends StatelessWidget {
                     () => Container(
                       color: Colors.white,
                       child: AppDataTableSimbis<DistributeM>(
-                        headers: const [
-                          "Group",
-                          "Jawa",
-                          "Kalimantan",
-                          "Sulawesi",
-                          "Sumatera",
-                        ],
+                        headers: _c.groupNames,
                         datas: _c.isUsingSimbis(),
                         currentPage: _c.currentPage.value,
                         totalPage: _c.isTotalPage(),

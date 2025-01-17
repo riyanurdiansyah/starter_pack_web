@@ -8,10 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/dashboard/model/result_simbis_m.dart';
 import 'package:starter_pack_web/module/demography/model/simulation_m.dart';
 import 'package:starter_pack_web/module/rnd/model/config_simbis_m.dart';
-import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
+import '../../../utils/app_dialog.dart';
 import '../../demography/model/distribute_m.dart';
 import '../../user/model/user_m.dart';
 import '../model/demography_m.dart';
@@ -39,6 +39,7 @@ class SimbisController extends GetxController {
   Rx<int> currentPage = 1.obs;
   Rx<int> dataPerPage = 2.obs;
 
+  List<String> groupNames = ["Group"];
   @override
   void onInit() async {
     await setup();
@@ -61,7 +62,6 @@ class SimbisController extends GetxController {
     demographys.value = response.docs.map((e) {
       return DemographyM.fromJson(e.data());
     }).toList();
-    demographys.sort((a, b) => a.name.compareTo(b.name));
     return demographys;
   }
 
@@ -78,11 +78,13 @@ class SimbisController extends GetxController {
     distributes.value = response.docs.map((e) {
       return DistributeM.fromJson(e.data());
     }).toList();
-    double pageTemp = 0;
-    for (int i = 0; i < distributes.length; i++) {
-      pageTemp =
-          (i + 1) ~/ dataPerPage.value < 1 ? 1 : (i + 1) / dataPerPage.value;
-      distributes[i] = distributes[i].copyWith(page: pageTemp.ceil());
+    var list = distributes
+        .expand((distribute) => distribute.areas)
+        .map((area) => area.areaName)
+        .toSet()
+        .toList();
+    for (var item in list) {
+      groupNames.add(item);
     }
     return distributes;
   }
@@ -97,12 +99,20 @@ class SimbisController extends GetxController {
     if (response.docs.isNotEmpty) {
       configSimbs = ConfigSimbs.fromJson(response.docs[0].data());
     }
-    String demoData = "Simpan Dataset Demography ini :";
-    // List<Map<String, dynamic>> datas = [];
+    String demoData = "Simpan Dataset Demography ini : ";
     List<SimulationM> simulations = [];
+
+// Pastikan demographys berisi data
     for (var item in demographys) {
-      demoData = "$demoData \n${item.name}: ${item.data}";
+      if (item.specialCase.isNotEmpty) {
+        demoData =
+            "$demoData ${json.encode(item.name)}: ${json.encode(item.data)}. Special Case : Special Case: freeze demand=0, dimarket Susu Bayi Affordable & Susu Bayi Premium.";
+      } else {
+        demoData =
+            "$demoData ${json.encode(item.name)}: ${json.encode(item.data)}";
+      }
     }
+
     for (var item in distributes) {
       simulations.add(
         SimulationM(
@@ -132,22 +142,17 @@ class SimbisController extends GetxController {
         return area.products.any((product) => product.qty > 0);
       });
     }).toList();
-    log("CEK DATA : ${jsonEncode(simulations)}");
+    log("CEK BODY : $demoData");
     try {
       final data = {
-        "model": "gpt-4o-mini",
+        "model": "gpt-4o",
         "response_format": {"type": "json_object"},
-        "temperature": 0.5,
+        "temperature": 1,
         "max_tokens": 16000,
         "messages": [
           {
             "role": "system",
             "content": demoData,
-          },
-          {
-            "role": "system",
-            "content":
-                "sementara penjual untuk susu bayi affordable dan premium tidak bisa dilakukan di area Daytona.",
           },
           {
             "role": "user",
@@ -181,7 +186,8 @@ class SimbisController extends GetxController {
                           }
                       ]
 
-                      BALAS HANYA JSON SAJA!. JIKA ADA 2 DATA KELOMPOK YANG SAMA TETAP DIBEDAKAN KARENA ADA PERBEDAAN HARGA JUAL.
+                       BALAS HANYA JSON SAJA!. JIKA ADA 2 DATA KELOMPOK YANG SAMA TETAP DIBEDAKAN KARENA ADA PERBEDAAN HARGA JUAL.
+                       JIKA TERJADI PERSAMAAN HARGA JUAL DI 1 WILAYAH MAKA PRODUK YANG TERJUAL UNTUK SETIAP KELOMPOK HARUS SAMA RATA.
                   ''',
           }
         ]
@@ -200,7 +206,6 @@ class SimbisController extends GetxController {
       final dataJSON = jsonDecode(
               response.data["choices"][0]["message"]["content"])["result"]
           as List<dynamic>;
-
       resultSimbis.value = dataJSON.map((e) {
         return ResultSimbisM.fromJson(e);
       }).toList();
@@ -245,9 +250,6 @@ class SimbisController extends GetxController {
   }
 
   List<DistributeM> isUsingSimbis() {
-    if (isSearched.value) {
-      return distributesSearch;
-    }
     return distributes;
   }
 

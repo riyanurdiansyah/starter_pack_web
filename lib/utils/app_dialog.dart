@@ -2840,7 +2840,7 @@ class AppDialog {
                           }
                           if (own.qty - totalDistributedQty < 0) {
                             isValids.add(
-                                "${own.nama} ${own.tipe} exceeds by ${own.qty - totalDistributedQty} pcs");
+                                "${own.nama} ${own.tipe} exceeds by ${totalDistributedQty - own.qty} pcs");
                           }
                           return Padding(
                             padding: const EdgeInsets.all(2.0),
