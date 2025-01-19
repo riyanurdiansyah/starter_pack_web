@@ -2511,22 +2511,34 @@ class AppDialog {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
-                  child: CachedNetworkImage(
-                    imageUrl: oldQuiz.image,
-                    width: 125,
-                    fit: BoxFit.fill,
+                InkWell(
+                  onTap: () {
+                    AppDialog.dialogImagePreview(oldQuiz.image);
+                  },
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
+                    child: CachedNetworkImage(
+                      imageUrl: oldQuiz.image,
+                      width: 125,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
                 18.ph,
-                if (oldQuiz.type == "MULTIPLE WELLNESS")
-                  AspectRatio(
-                    aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
-                    child: CachedNetworkImage(
-                      imageUrl: oldQuiz.image.split("||")[1],
-                      width: 125,
-                      fit: BoxFit.fill,
+                if (oldQuiz.type == "MULTIPLE WELLNESS" &&
+                    oldQuiz.image.split("||").length > 1)
+                  InkWell(
+                    onTap: () {
+                      AppDialog.dialogImagePreview(
+                          oldQuiz.image.split("||")[1]);
+                    },
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9, // Contoh aspect ratio 16:9
+                      child: CachedNetworkImage(
+                        imageUrl: oldQuiz.image.split("||")[1],
+                        width: 125,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 16.ph,
@@ -2637,7 +2649,7 @@ class AppDialog {
             maxScale: 4.0, // Zoom maksimum
             child: CachedNetworkImage(
               imageUrl: url,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
         ),

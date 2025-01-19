@@ -67,18 +67,21 @@ class GamePage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        AppDialog.dialogMarkChallenge(data);
-                                      },
-                                      child: CachedNetworkImage(
-                                        imageUrl: data.image.split("||")[1],
-                                        width: 80,
-                                        height: 80,
+                                  if (data.image.split("||").length > 1)
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          AppDialog.dialogMarkChallenge(data);
+                                        },
+                                        child: CachedNetworkImage(
+                                          imageUrl: data.image.split("||")[1],
+                                          errorWidget: (_, __, ___) =>
+                                              const SizedBox(),
+                                          width: 80,
+                                          height: 80,
+                                        ),
                                       ),
                                     ),
-                                  ),
                                 ],
                               )),
                             if (data.type == "WELLNESS")
