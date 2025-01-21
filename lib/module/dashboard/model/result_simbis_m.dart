@@ -152,7 +152,7 @@ class Product {
         productId: json["productId"],
         productName: json["productName"],
         sold: json["sold"],
-        profit: json["profit"],
+        profit: json["revenue"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

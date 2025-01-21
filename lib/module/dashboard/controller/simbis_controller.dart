@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/module/dashboard/model/result_simbis_m.dart';
@@ -143,12 +142,13 @@ class SimbisController extends GetxController {
       });
     }).toList();
     log("CEK BODY : $demoData");
+    log("CEK BODY 2 : ${jsonEncode(simulations)}");
     try {
       final data = {
         "model": "gpt-4o",
         "response_format": {"type": "json_object"},
-        "temperature": 1,
-        "max_tokens": 16000,
+        "temperature": 0.5,
+        "max_tokens": 16383,
         "messages": [
           {
             "role": "system",
@@ -161,7 +161,21 @@ class SimbisController extends GetxController {
           {
             "role": "user",
             "content": '''
-                      dengan data di atas buatkan simulasi penjualan dengan berdasarkan dataset demography yg sudah ada. berikan angka random sesuai dengan dataset demography. dengan format json berikut
+                      Perhitungan Penjualan per Area
+                      1. Jika pasar affordable, maka simulasi menunjukkan produk dengan harga lebih rendah akan habis terlebih dahulu.
+                      2. Jika pasar premium, sensitivitas harga rendah, sehingga penjualan didominasi oleh produk berkualitas tinggi tanpa pengaruh besar pada harga.               
+                      Asumsinya, setiap pembeli hanya membeli satu item dalam setiap transaksi, tanpa membeli beberapa item sekaligus. Misalnya, seorang ibu hamil tidak akan membeli susu ibu hamil lagi jika persediaan susu yang dimilikinya belum habis.                     
+                      Simulasikan penjualan masing-masing kelompok selama 4 hari, berdasarkan kondisi demografi masing-masing area yang tersedia mempertimbangkan 
+                      Pembelian dapat dilakukan selama 30hari, dengan nilai daya beli setara 4 hari. Buat grafik penjualan yang kompetitif berdasarkan dengan tipe produk dan harga produk.     
+                      dengan format json berikut.
+                      conclusions: [
+                        {
+                          "areaId" : "...",
+                          "areaName" : "...",
+                          "cycleId" : "...",
+                          "conclusion" : "...",
+                        }
+                      ]
                       result:
                       [
                           {
@@ -178,68 +192,71 @@ class SimbisController extends GetxController {
                                               "productId" : "...",
                                               "productName" : "...",
                                               "sold" : 0,
-                                              "profit" : 0
+                                              "revenue" : 0
                                           }
                                       ]
                                   }
                               ]
                           }
                       ]
-
-                       BALAS HANYA JSON SAJA!. JIKA ADA 2 DATA KELOMPOK YANG SAMA TETAP DIBEDAKAN KARENA ADA PERBEDAAN HARGA JUAL.
-                       JIKA TERJADI PERSAMAAN HARGA JUAL DI 1 WILAYAH MAKA PRODUK YANG TERJUAL UNTUK SETIAP KELOMPOK HARUS SAMA RATA.
                   ''',
           }
         ]
       };
 
-      Dio dio = Dio();
-      final response = await dio.post(
-        "https://api.openai.com/v1/chat/completions",
-        data: data,
-        options: Options(headers: {
-          "Authorization": "Bearer ${apiKey.value}",
-        }),
-      );
-      // final dataJSON = json
-      //     .decode();
-      final dataJSON = jsonDecode(
-              response.data["choices"][0]["message"]["content"])["result"]
-          as List<dynamic>;
-      resultSimbis.value = dataJSON.map((e) {
-        return ResultSimbisM.fromJson(e);
-      }).toList();
+      // Dio dio = Dio();
+      // final response = await dio.post(
+      //   "https://api.openai.com/v1/chat/completions",
+      //   data: data,
+      //   options: Options(headers: {
+      //     "Authorization": "Bearer ${apiKey.value}",
+      //   }),
+      // );
 
-      await updateData(distributes.map((e) => e.toJson()).toList(),
-          resultSimbis.map((e) => e.toJson()).toList());
+      // // final dataJSON = json
+      // //     .decode();
+      // final dataJSON = jsonDecode(
+      //         response.data["choices"][0]["message"]["content"])["result"]
+      //     as List<dynamic>;
+      // final dataJSONConclu = jsonDecode(
+      //         response.data["choices"][0]["message"]["content"])["conclusions"]
+      //     as List<dynamic>;
+      // resultSimbis.value = dataJSON.map((e) {
+      //   return ResultSimbisM.fromJson(e);
+      // }).toList();
 
-      for (var item in distributes) {
-        item = item.copyWith(
-          distributeId: const Uuid().v4(),
-        );
-        await firestore
-            .collection("distribution_log")
-            .doc(item.distributeId)
-            .set(item.toJson());
-      }
+      // await updateData(distributes.map((e) => e.toJson()).toList(),
+      //     resultSimbis.map((e) => e.toJson()).toList());
 
-      for (var i = 0; i < distributes.length; i++) {
-        for (var j = 0; j < distributes[i].areas.length; j++) {
-          for (var k = 0; k < distributes[i].areas[j].products.length; k++) {
-            distributes[i].areas[j].products[k] =
-                distributes[i].areas[j].products[k].copyWith(
-                      qty: distributes[i].areas[j].products[k].qty -
-                          distributes[i].areas[j].products[k].sold,
-                    );
-          }
-        }
-        await firestore
-            .collection("distribution")
-            .doc(distributes[i].distributeId)
-            .update(distributes[i].toJson());
-      }
+      // for (var item in dataJSONConclu) {
+      //   item["id"] = const Uuid().v4();
+      //   await firestore.collection("conclusions").doc(item["id"]).set(item);
+      // }
 
-      await getDistribute();
+      // for (var item in convertDistributeMToMap(distributes)) {
+      //   await firestore
+      //       .collection("distribution_log_new")
+      //       .doc(item["id"])
+      //       .set(item);
+      // }
+
+      // for (var i = 0; i < distributes.length; i++) {
+      //   for (var j = 0; j < distributes[i].areas.length; j++) {
+      //     for (var k = 0; k < distributes[i].areas[j].products.length; k++) {
+      //       distributes[i].areas[j].products[k] =
+      //           distributes[i].areas[j].products[k].copyWith(
+      //                 qty: distributes[i].areas[j].products[k].qty -
+      //                     distributes[i].areas[j].products[k].sold,
+      //               );
+      //     }
+      //   }
+      //   await firestore
+      //       .collection("distribution")
+      //       .doc(distributes[i].distributeId)
+      //       .update(distributes[i].toJson());
+      // }
+
+      // await getDistribute();
 
       isLoading.value = false;
     } catch (e) {
@@ -247,6 +264,31 @@ class SimbisController extends GetxController {
       log(e.toString());
       AppDialog.dialogSnackbar("Failed generate simbis : $e");
     }
+  }
+
+  List<Map<String, dynamic>> convertDistributeMToMap(
+      List<DistributeM> distributeList) {
+    return distributeList.expand((distribute) {
+      return distribute.areas.map((area) {
+        return {
+          "id": const Uuid().v4(),
+          "cycleId": distribute.cycleId,
+          "areaId": area.areaId,
+          "areaName": area.areaName,
+          "groupId": distribute.groupId,
+          "groupName": distribute.groupName,
+          "products": area.products.map((product) {
+            return {
+              "productId": product.productId,
+              "productName": product.productName,
+              "revenue": product.profit,
+              "qty": product.qty,
+              "sold": product.sold,
+            };
+          }).toList(),
+        };
+      }).toList();
+    }).toList();
   }
 
   List<DistributeM> isUsingSimbis() {
@@ -320,8 +362,6 @@ class SimbisController extends GetxController {
         }
       }
     }
-    log("CEK DATA BASE : ${json.encode(baseData)}");
-    log("CEK DATA GENERATED : ${json.encode(generatedData)}");
     distributes.value = baseData.map((e) => DistributeM.fromJson(e)).toList();
   }
 }

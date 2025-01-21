@@ -186,9 +186,9 @@ class RanksPage extends StatelessWidget {
                           _c.demographys.length,
                           (i) {
                             final area = _c.demographys[i];
-                            final d = _c.distributes
-                                .where((e) => e.cycleId == config.id)
-                                .toList();
+
+                            final allNewAreas =
+                                _c.getSortNewAreas(config.id, area.id);
                             return ExpansionTile(
                                 trailing: const SizedBox.shrink(),
                                 title: Container(
@@ -237,7 +237,7 @@ class RanksPage extends StatelessWidget {
                                           ),
                                         ),
                                         Expanded(
-                                          flex: 4,
+                                          flex: 1,
                                           child: Center(
                                             child: AppTextNormal.labelBold(
                                               "PRODUCT SOLD",
@@ -248,134 +248,359 @@ class RanksPage extends StatelessWidget {
                                         ),
                                         Expanded(
                                           flex: 1,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              AppTextNormal.labelBold(
-                                                "REVENUE",
-                                                14,
-                                                colorPrimaryDark,
-                                              ),
-                                            ],
+                                          child: Center(
+                                            child: AppTextNormal.labelBold(
+                                              "REVENUE",
+                                              14,
+                                              colorPrimaryDark,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Column(
-                                    children: List.generate(
-                                        _c.sortDistributeListByProfit(d).length,
-                                        (k) {
-                                      final areas = _c
-                                          .sortDistributeListByProfit(d)[k]
-                                          .areas
-                                          .where((x) => x.areaId == area.id)
-                                          .toList();
-                                      final products = areas[areas.indexWhere(
-                                              (u) => u.areaId == area.id)]
-                                          .products;
-                                      return SizedBox(
-                                        width: double.infinity,
-                                        height: 60,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          decoration: const BoxDecoration(
-                                            color: colorCardRank,
-                                          ),
-                                          margin: EdgeInsets.only(
-                                              bottom: 10,
-                                              left: isMobile ? 0 : 40,
-                                              right: 80),
-                                          alignment: Alignment.center,
-                                          height: 45,
-                                          child: InkWell(
-                                            onTap: () {},
+                                    children:
+                                        List.generate(allNewAreas.length, (o) {
+                                      final dataArea = allNewAreas[o];
+                                      // final products = areas[areas.indexWhere(
+                                      //         (u) => u.areaId == area.id)]
+                                      //     .products;
+                                      return ExpansionTile(
+                                          trailing: const SizedBox.shrink(),
+                                          title: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 25),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 25),
+                                            color: Colors.grey.shade200,
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
                                               children: [
                                                 Expanded(
-                                                    flex: 1,
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        AppTextNormal.labelBold(
-                                                          "${k + 1}. ",
-                                                          16.5,
-                                                          Colors.black,
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 6),
-                                                          child: AppTextNormal
-                                                              .labelBold(
-                                                            _c.groups
-                                                                    .firstWhereOrNull((e) =>
-                                                                        e.id ==
-                                                                        _c
-                                                                            .sortDistributeListByProfit(d)[k]
-                                                                            .groupId)
-                                                                    ?.alias ??
-                                                                "-",
-                                                            16,
-                                                            Colors.black,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )),
+                                                  flex: 1,
+                                                  child:
+                                                      AppTextNormal.labelBold(
+                                                    dataArea.groupName,
+                                                    16,
+                                                    Colors.black,
+                                                  ),
+                                                ),
                                                 Expanded(
-                                                  flex: 4,
+                                                  flex: 1,
                                                   child: Center(
                                                     child:
                                                         AppTextNormal.labelBold(
-                                                      "${products.fold(0, (sum, item) => sum + item.qty)} pcs",
-                                                      12.5,
+                                                      convertNumber(dataArea
+                                                          .products
+                                                          .fold(
+                                                              0.0,
+                                                              (sum, prod) =>
+                                                                  sum +
+                                                                  prod.sold)),
+                                                      16,
                                                       Colors.black,
-                                                      letterSpacing: 3.5,
-                                                      maxLines: 5,
                                                     ),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   flex: 1,
-                                                  child: Container(
-                                                    width: 70,
-                                                    padding:
-                                                        const EdgeInsets.all(6),
-                                                    margin:
-                                                        const EdgeInsets.all(6),
-                                                    alignment: Alignment.center,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  8)),
-                                                      color: colorPointRank,
-                                                    ),
-                                                    child: FittedBox(
-                                                      child: AppTextNormal
-                                                          .labelBold(
-                                                        "R\$ ${products.fold(0.0, (sum, item) => sum + item.profit)}",
-                                                        14,
-                                                        Colors.white,
-                                                      ),
+                                                  child: Center(
+                                                    child:
+                                                        AppTextNormal.labelBold(
+                                                      "R\$ ${convertNumber(dataArea.products.fold(0.0, (sum, prod) => sum + prod.profit))}",
+                                                      16,
+                                                      Colors.black,
                                                     ),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ),
-                                      );
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  bottom: 10,
+                                                  left: isMobile ? 0 : 40,
+                                                  right: 80),
+                                              height: 60,
+                                              width: double.infinity,
+                                              color: Colors.grey.shade400,
+                                              child: Row(
+                                                children: [
+                                                  14.pw,
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child:
+                                                        AppTextNormal.labelBold(
+                                                      "PRODUCT",
+                                                      14,
+                                                      colorPrimaryDark,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Center(
+                                                      child: AppTextNormal
+                                                          .labelBold(
+                                                        "PRICE",
+                                                        14,
+                                                        colorPrimaryDark,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Center(
+                                                      child: AppTextNormal
+                                                          .labelBold(
+                                                        "SOLD",
+                                                        14,
+                                                        colorPrimaryDark,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Center(
+                                                      child: AppTextNormal
+                                                          .labelBold(
+                                                        "REMAINS",
+                                                        14,
+                                                        colorPrimaryDark,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Center(
+                                                      child: AppTextNormal
+                                                          .labelBold(
+                                                        "REVENUE",
+                                                        14,
+                                                        colorPrimaryDark,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Column(
+                                              children: List.generate(
+                                                  dataArea.products.length,
+                                                  (z) {
+                                                final prodX =
+                                                    dataArea.products[z];
+                                                return Column(
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 10,
+                                                          left:
+                                                              isMobile ? 0 : 40,
+                                                          right: 80),
+                                                      height: 60,
+                                                      width: double.infinity,
+                                                      color:
+                                                          Colors.grey.shade400,
+                                                      child: Row(
+                                                        children: [
+                                                          14.pw,
+                                                          Expanded(
+                                                            flex: 4,
+                                                            child: AppTextNormal
+                                                                .labelBold(
+                                                              prodX.productName,
+                                                              14,
+                                                              colorPrimaryDark,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            flex: 4,
+                                                            child: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Expanded(
+                                                                  flex: 1,
+                                                                  child: Center(
+                                                                    child: AppTextNormal
+                                                                        .labelBold(
+                                                                      convertNumber(
+                                                                          prodX
+                                                                              .price),
+                                                                      14,
+                                                                      colorPrimaryDark,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 1,
+                                                                  child: Center(
+                                                                    child: AppTextNormal
+                                                                        .labelBold(
+                                                                      convertNumber(
+                                                                          prodX
+                                                                              .sold),
+                                                                      14,
+                                                                      colorPrimaryDark,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 1,
+                                                                  child: Center(
+                                                                    child: AppTextNormal
+                                                                        .labelBold(
+                                                                      convertNumber(prodX
+                                                                              .qty -
+                                                                          prodX
+                                                                              .sold),
+                                                                      14,
+                                                                      colorPrimaryDark,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 1,
+                                                                  child: Center(
+                                                                    child: AppTextNormal
+                                                                        .labelBold(
+                                                                      convertNumber(
+                                                                          prodX
+                                                                              .profit),
+                                                                      14,
+                                                                      colorPrimaryDark,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          14.pw,
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              }),
+                                            )
+                                          ]);
                                     }),
-                                  )
+                                  ),
+                                  // Column(
+                                  //   children: List.generate(
+                                  //       _c.sortDistributeListByProfit(d).length,
+                                  //       (k) {
+                                  //     final areas = _c
+                                  //         .sortDistributeListByProfit(d)[k]
+                                  //         .areas
+                                  //         .where((x) => x.areaId == area.id)
+                                  //         .toList();
+                                  //     final products = areas[areas.indexWhere(
+                                  //             (u) => u.areaId == area.id)]
+                                  //         .products;
+                                  //     return SizedBox(
+                                  //       width: double.infinity,
+                                  //       height: 60,
+                                  //       child: Container(
+                                  //         padding: const EdgeInsets.symmetric(
+                                  //             horizontal: 10),
+                                  //         decoration: const BoxDecoration(
+                                  //           color: colorCardRank,
+                                  //         ),
+                                  //         margin: EdgeInsets.only(
+                                  //             bottom: 10,
+                                  //             left: isMobile ? 0 : 40,
+                                  //             right: 80),
+                                  //         alignment: Alignment.center,
+                                  //         height: 45,
+                                  //         child: InkWell(
+                                  //           onTap: () {},
+                                  //           child: Row(
+                                  //             mainAxisAlignment:
+                                  //                 MainAxisAlignment.center,
+                                  //             children: [
+                                  //               Expanded(
+                                  //                   flex: 1,
+                                  //                   child: Row(
+                                  //                     crossAxisAlignment:
+                                  //                         CrossAxisAlignment
+                                  //                             .start,
+                                  //                     children: [
+                                  //                       AppTextNormal.labelBold(
+                                  //                         "${k + 1}. ",
+                                  //                         16.5,
+                                  //                         Colors.black,
+                                  //                       ),
+                                  //                       Container(
+                                  //                         margin:
+                                  //                             const EdgeInsets
+                                  //                                 .only(
+                                  //                                 left: 6),
+                                  //                         child: AppTextNormal
+                                  //                             .labelBold(
+                                  //                           _c.groups
+                                  //                                   .firstWhereOrNull((e) =>
+                                  //                                       e.id ==
+                                  //                                       _c
+                                  //                                           .sortDistributeListByProfit(d)[k]
+                                  //                                           .groupId)
+                                  //                                   ?.alias ??
+                                  //                               "-",
+                                  //                           16,
+                                  //                           Colors.black,
+                                  //                         ),
+                                  //                       ),
+                                  //                     ],
+                                  //                   )),
+                                  //               Expanded(
+                                  //                 flex: 4,
+                                  //                 child: Center(
+                                  //                   child:
+                                  //                       AppTextNormal.labelBold(
+                                  //                     "${products.fold(0, (sum, item) => sum + item.qty)} pcs",
+                                  //                     12.5,
+                                  //                     Colors.black,
+                                  //                     letterSpacing: 3.5,
+                                  //                     maxLines: 5,
+                                  //                   ),
+                                  //                 ),
+                                  //               ),
+                                  //               Expanded(
+                                  //                 flex: 1,
+                                  //                 child: Container(
+                                  //                   width: 70,
+                                  //                   padding:
+                                  //                       const EdgeInsets.all(6),
+                                  //                   margin:
+                                  //                       const EdgeInsets.all(6),
+                                  //                   alignment: Alignment.center,
+                                  //                   decoration:
+                                  //                       const BoxDecoration(
+                                  //                     borderRadius:
+                                  //                         BorderRadius.all(
+                                  //                             Radius.circular(
+                                  //                                 8)),
+                                  //                     color: colorPointRank,
+                                  //                   ),
+                                  //                   child: FittedBox(
+                                  //                     child: AppTextNormal
+                                  //                         .labelBold(
+                                  //                       "R\$ ${products.fold(0.0, (sum, item) => sum + item.profit)}",
+                                  //                       14,
+                                  //                       Colors.white,
+                                  //                     ),
+                                  //                   ),
+                                  //                 ),
+                                  //               ),
+                                  //             ],
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     );
+                                  //   }),
+                                  // )
                                 ]);
                           },
                         ),
