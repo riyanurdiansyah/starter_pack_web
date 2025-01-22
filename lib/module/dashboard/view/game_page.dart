@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:starter_pack_web/module/challenge/model/quiz_session_m.dart';
 import 'package:starter_pack_web/module/dashboard/controller/game_controller.dart';
 import 'package:starter_pack_web/utils/app_data_table.dart';
+import 'package:starter_pack_web/utils/app_extension.dart';
 
 import '../../../utils/app_color.dart';
 import '../../../utils/app_dialog.dart';
@@ -19,181 +20,193 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Obx(() {
-              if (_c.isLoading.value) {
-                return const SizedBox();
-              }
-              return Container(
-                color: Colors.white,
-                child: AppDataTable<QuizSessionM>(
-                  headers: const [
-                    "Image",
-                    "Username",
-                    "Group",
-                    "Remark",
-                    "Uploaded At"
-                  ],
-                  datas: _c.isUsingGame(),
-                  currentPage: _c.currentPage.value,
-                  totalPage: _c.isTotalPage(),
-                  onPageChanged: _c.onChangepage,
-                  onSearched: _c.onSearched,
-                  buildRow: (data) => Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 16),
-                        child: Row(
-                          children: [
-                            if (data.type == "MULTIPLE WELLNESS")
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        AppDialog.dialogMarkChallenge(data);
-                                      },
-                                      child: CachedNetworkImage(
-                                        imageUrl: data.image.split("||")[0],
-                                        width: 80,
-                                        height: 80,
-                                      ),
-                                    ),
-                                  ),
-                                  if (data.image.split("||").length > 1)
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Obx(() {
+                if (_c.isLoading.value) {
+                  return const SizedBox();
+                }
+                return Container(
+                  color: Colors.white,
+                  child: AppDataTable<QuizSessionM>(
+                    headers: const [
+                      "Image",
+                      "Username",
+                      "Group",
+                      "Remark",
+                      "REVENUE",
+                      "Uploaded At"
+                    ],
+                    datas: _c.isUsingGame(),
+                    currentPage: _c.currentPage.value,
+                    totalPage: _c.isTotalPage(),
+                    onPageChanged: _c.onChangepage,
+                    onSearched: _c.onSearched,
+                    buildRow: (data) => Column(
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 16),
+                          child: Row(
+                            children: [
+                              if (data.type == "MULTIPLE WELLNESS")
+                                Expanded(
+                                    child: Row(
+                                  children: [
                                     Expanded(
                                       child: InkWell(
                                         onTap: () {
                                           AppDialog.dialogMarkChallenge(data);
                                         },
                                         child: CachedNetworkImage(
-                                          imageUrl: data.image.split("||")[1],
-                                          errorWidget: (_, __, ___) =>
-                                              const SizedBox(),
+                                          imageUrl: data.image.split("||")[0],
                                           width: 80,
                                           height: 80,
                                         ),
                                       ),
                                     ),
-                                ],
-                              )),
-                            if (data.type == "WELLNESS")
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    AppDialog.dialogMarkChallenge(data);
-                                  },
-                                  child: CachedNetworkImage(
-                                    imageUrl: data.image,
-                                    width: 80,
-                                    height: 80,
+                                    if (data.image.split("||").length > 1)
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () {
+                                            AppDialog.dialogMarkChallenge(data);
+                                          },
+                                          child: CachedNetworkImage(
+                                            imageUrl: data.image.split("||")[1],
+                                            errorWidget: (_, __, ___) =>
+                                                const SizedBox(),
+                                            width: 80,
+                                            height: 80,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                )),
+                              if (data.type == "WELLNESS")
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      AppDialog.dialogMarkChallenge(data);
+                                    },
+                                    child: CachedNetworkImage(
+                                      imageUrl: data.image,
+                                      width: 80,
+                                      height: 80,
+                                    ),
                                   ),
                                 ),
+                              Expanded(
+                                child: AppTextNormal.labelW500(
+                                  data.username,
+                                  16,
+                                  colorPrimaryDark,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            Expanded(
-                              child: AppTextNormal.labelW500(
-                                data.username,
-                                16,
-                                colorPrimaryDark,
-                                textAlign: TextAlign.center,
+                              Expanded(
+                                child: AppTextNormal.labelW500(
+                                  _c.groups
+                                      .where((e) => e.id == data.groupId)
+                                      .first
+                                      .alias,
+                                  16,
+                                  colorPrimaryDark,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: AppTextNormal.labelW500(
-                                _c.groups
-                                    .where((e) => e.id == data.groupId)
-                                    .first
-                                    .alias,
-                                16,
-                                colorPrimaryDark,
-                                textAlign: TextAlign.center,
+                              Expanded(
+                                child: AppTextNormal.labelW500(
+                                  data.remark,
+                                  16,
+                                  colorPrimaryDark,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 10,
+                                  height: 1.25,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: AppTextNormal.labelW500(
-                                data.remark,
-                                16,
-                                colorPrimaryDark,
-                                textAlign: TextAlign.center,
-                                maxLines: 10,
-                                height: 1.25,
+                              Expanded(
+                                child: AppTextNormal.labelW500(
+                                  "${_c.challenges.firstWhereOrNull((e) => e.id == data.quizId)?.isRevenue ?? false}",
+                                  16,
+                                  colorPrimaryDark,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: AppTextNormal.labelW500(
-                                DateFormat("dd MMM yyyy HH:mm:ss")
-                                    .format(DateTime.parse(data.createdAt)),
-                                16,
-                                colorPrimaryDark,
-                                textAlign: TextAlign.center,
+                              Expanded(
+                                child: AppTextNormal.labelW500(
+                                  DateFormat("dd MMM yyyy HH:mm:ss")
+                                      .format(DateTime.parse(data.createdAt)),
+                                  16,
+                                  colorPrimaryDark,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 100,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 26,
-                                    height: 26,
-                                    padding: const EdgeInsets.all(2.5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        AppDialog.dialogMarkChallenge(data);
-                                      },
-                                      child: const Icon(
-                                        Icons.check,
-                                        size: 16,
-                                        color: Colors.white,
+                              SizedBox(
+                                width: 100,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 26,
+                                      height: 26,
+                                      padding: const EdgeInsets.all(2.5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          AppDialog.dialogMarkChallenge(data);
+                                        },
+                                        child: const Icon(
+                                          Icons.check,
+                                          size: 16,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  // 8.pw,
-                                  // Container(
-                                  //   width: 26,
-                                  //   height: 26,
-                                  //   padding: const EdgeInsets.all(2.5),
-                                  //   decoration: BoxDecoration(
-                                  //     color: Colors.red,
-                                  //     borderRadius: BorderRadius.circular(4),
-                                  //   ),
-                                  //   child: InkWell(
-                                  //     onTap: () {},
-                                  //     child: const Icon(
-                                  //       Icons.close,
-                                  //       size: 16,
-                                  //       color: Colors.white,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
+                                    // 8.pw,
+                                    // Container(
+                                    //   width: 26,
+                                    //   height: 26,
+                                    //   padding: const EdgeInsets.all(2.5),
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.red,
+                                    //     borderRadius: BorderRadius.circular(4),
+                                    //   ),
+                                    //   child: InkWell(
+                                    //     onTap: () {},
+                                    //     child: const Icon(
+                                    //       Icons.close,
+                                    //       size: 16,
+                                    //       color: Colors.white,
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        height: 0.6,
-                        width: double.infinity,
-                        color: Colors.grey.shade400,
-                      ),
-                    ],
+                        Container(
+                          height: 0.6,
+                          width: double.infinity,
+                          color: Colors.grey.shade400,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }),
-          ],
+                );
+              }),
+              50.ph,
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.small(

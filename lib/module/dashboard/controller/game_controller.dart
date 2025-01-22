@@ -10,10 +10,12 @@ import 'package:starter_pack_web/utils/app_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../utils/app_constanta.dart';
+import '../../challenge/model/challenge_m.dart';
 import '../../user/model/user_m.dart';
 
 class GameController extends GetxController {
   late SharedPreferences pref;
+  RxList<ChallengeM> challenges = <ChallengeM>[].obs;
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -38,11 +40,20 @@ class GameController extends GetxController {
   void onInit() async {
     onChangeLoading(true);
     pref = await SharedPreferences.getInstance();
+    await getChallenges();
     await getGroups();
     await getUser();
     await getSessionQuiz();
     await onChangeLoading(false);
     super.onInit();
+  }
+
+  Future<List<ChallengeM>> getChallenges() async {
+    final response = await firestore.collection("challenge").get();
+    challenges.value = response.docs.map((e) {
+      return ChallengeM.fromJson(e.data());
+    }).toList();
+    return challenges;
   }
 
   Future onChangeLoading(bool val) async {
@@ -134,10 +145,15 @@ class GameController extends GetxController {
 
   Future updateGame(QuizSessionM data) async {
     var id = const Uuid().v4();
+    final chal = challenges.firstWhereOrNull((e) => e.id == data.quizId);
+    if (chal == null) {
+      AppDialog.dialogSnackbar("Challenge is not found");
+      return;
+    }
     data = data.copyWith(
       isRated: true,
       isFinished: true,
-      point: data.isRevenue ? data.point : double.parse(tcPoint.text),
+      point: double.parse(tcPoint.text),
     );
     try {
       final body = {
@@ -158,7 +174,11 @@ class GameController extends GetxController {
 
       group.value = group.value.copyWith(
         pointBefore: group.value.point,
-        point: group.value.point + data.point,
+        point:
+            chal.isRevenue ? group.value.point : group.value.point + data.point,
+        revenue: chal.isRevenue
+            ? group.value.revenue + data.point
+            : group.value.revenue,
       );
       await firestore
           .collection("group")

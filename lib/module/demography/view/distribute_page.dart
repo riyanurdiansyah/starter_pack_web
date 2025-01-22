@@ -874,7 +874,7 @@ class DistributePage extends StatelessWidget {
                                                           ),
                                                           AppTextNormal
                                                               .labelW600(
-                                                            "Min : ${prod.qty}",
+                                                            "Max : ${prod.qty}",
                                                             12.5,
                                                             Colors.black,
                                                           ),
