@@ -371,51 +371,51 @@ class ChallengeQuizPage extends StatelessWidget {
               ],
             );
           }
-          // if (_c.dateNow.value
-          //     .isAfter(DateTime.parse(_c.challenge.value.end))) {
-          //   return Container(
-          //     width: double.infinity,
-          //     color: Colors.red,
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         AppTextNormal.labelBold(
-          //           "The time to complete the challenge has run out",
-          //           20,
-          //           Colors.white,
-          //           textAlign: TextAlign.center,
-          //         ),
-          //         45.ph,
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             OutlinedButton(
-          //               onPressed: () => context.pop(),
-          //               style: ButtonStyle(
-          //                 side: WidgetStateProperty.all(
-          //                   BorderSide(
-          //                     color: Colors.grey.shade200,
-          //                   ), // Ganti warna dan lebar sesuai kebutuhan
-          //                 ),
-          //                 shape: WidgetStateProperty.all(
-          //                   RoundedRectangleBorder(
-          //                     borderRadius: BorderRadius.circular(
-          //                         16), // Custom border radius
-          //                   ),
-          //                 ),
-          //               ),
-          //               child: AppTextNormal.labelBold(
-          //                 "Back",
-          //                 14,
-          //                 Colors.grey.shade200,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   );
-          // }
+          if (_c.dateNow.value
+              .isAfter(DateTime.parse(_c.challenge.value.end))) {
+            return Container(
+              width: double.infinity,
+              color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppTextNormal.labelBold(
+                    "The time to complete the challenge has run out",
+                    20,
+                    Colors.white,
+                    textAlign: TextAlign.center,
+                  ),
+                  45.ph,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () => context.pop(),
+                        style: ButtonStyle(
+                          side: WidgetStateProperty.all(
+                            BorderSide(
+                              color: Colors.grey.shade200,
+                            ), // Ganti warna dan lebar sesuai kebutuhan
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  16), // Custom border radius
+                            ),
+                          ),
+                        ),
+                        child: AppTextNormal.labelBold(
+                          "Back",
+                          14,
+                          Colors.grey.shade200,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
           if (!_c.isStarting.value && !_c.isHaveSession.value) {
             return SizedBox(
               width: double.infinity,
