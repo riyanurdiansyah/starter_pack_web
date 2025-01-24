@@ -739,9 +739,11 @@ class CartPage extends StatelessWidget {
                                             _c.products.fold(
                                                 0,
                                                 (total, product) =>
-                                                    total +
-                                                    (product.qty *
-                                                        product.harga))) {
+                                                    (total +
+                                                        (product.qty *
+                                                            product.harga)) -
+                                                    product.discount +
+                                                    product.charge)) {
                                           return Row(
                                             children: [
                                               Expanded(
@@ -754,10 +756,11 @@ class CartPage extends StatelessWidget {
                                                   maxLines: 3,
                                                 ),
                                               ),
+                                              // (data.harga * data.qty) - data.discount + data.charge
                                               Expanded(
                                                 flex: 2,
                                                 child: AppTextNormal.labelBold(
-                                                  "-\$${convertNumber(_c.products.fold(0, (total, product) => total + (product.qty * product.harga)) - _c.groupData.value.point)}",
+                                                  "-\$${convertNumber(_c.products.fold(0.0, (total, product) => (total + (product.qty * product.harga)) - product.discount + product.charge) - _c.groupData.value.point)}",
                                                   22,
                                                   Colors.red,
                                                   textAlign: TextAlign.end,
@@ -781,10 +784,12 @@ class CartPage extends StatelessWidget {
                                                       _c.products.fold(
                                                           0,
                                                           (total, product) =>
-                                                              total +
-                                                              (product.qty *
-                                                                  product
-                                                                      .harga))
+                                                              (total +
+                                                                  (product.qty *
+                                                                      product
+                                                                          .harga)) -
+                                                              product.discount +
+                                                              product.charge)
                                                   ? null
                                                   : () =>
                                                       AppDialog.dialogDelete(
