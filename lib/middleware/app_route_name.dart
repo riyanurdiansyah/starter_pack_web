@@ -4,6 +4,7 @@ class AppRouteName {
   static const String signin = 'signin';
   static const String reset = 'reset';
   static const String board = 'board';
+  static const String getting = 'getting';
   static const String product = 'product';
   static const String demography = 'demography';
   static const String distribute = 'distribute';

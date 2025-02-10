@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starter_pack_web/middleware/app_route_name.dart';
 import 'package:starter_pack_web/module/challenge/controller/challenge_controller.dart';
 import 'package:starter_pack_web/module/challenge/controller/challenge_quiz_controller.dart';
-import 'package:starter_pack_web/module/challenge/view/challenge_page.dart';
 import 'package:starter_pack_web/module/challenge/view/challenge_quiz_page.dart';
 import 'package:starter_pack_web/module/dashboard/controller/audio_controller.dart';
 import 'package:starter_pack_web/module/dashboard/controller/challengeset_controller.dart';
@@ -34,6 +33,8 @@ import 'package:starter_pack_web/module/demography/controller/finance_controller
 import 'package:starter_pack_web/module/demography/view/cart_page.dart';
 import 'package:starter_pack_web/module/demography/view/demography_page.dart';
 import 'package:starter_pack_web/module/demography/view/finance_page.dart';
+import 'package:starter_pack_web/module/getting/controller/getting_controller.dart';
+import 'package:starter_pack_web/module/getting/view/getting_page.dart';
 import 'package:starter_pack_web/module/home/controller/ranks_controller.dart';
 import 'package:starter_pack_web/module/home/view/ranks_page.dart';
 import 'package:starter_pack_web/module/login/controller/login_controller.dart';
@@ -353,6 +354,18 @@ GoRouter router = GoRouter(
           },
         ),
         GoRoute(
+          path: AppRouteName.getting,
+          name: AppRouteName.getting,
+          onExit: (_, __) {
+            Get.delete<GettingController>();
+            return true;
+          },
+          pageBuilder: (context, state) {
+            Get.put(GettingController());
+            return NoTransitionPage(child: GettingPage());
+          },
+        ),
+        GoRoute(
           path: AppRouteName.challenge,
           name: AppRouteName.challenge,
           onExit: (_, __) {
@@ -361,7 +374,7 @@ GoRouter router = GoRouter(
           },
           pageBuilder: (context, state) {
             Get.put(ChallengeController());
-            return NoTransitionPage(child: ChallengePage());
+            return NoTransitionPage(child: GettingPage());
           },
           routes: [
             GoRoute(

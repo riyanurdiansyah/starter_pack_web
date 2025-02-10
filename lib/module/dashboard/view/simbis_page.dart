@@ -82,7 +82,7 @@ class SimbisPage extends StatelessWidget {
                                                         .symmetric(vertical: 8),
                                                     child:
                                                         AppTextNormal.labelW500(
-                                                      "${productData.productName} : ${productData.qty}",
+                                                      "${productData.productName} : ${productData.qty} : ${productData.pricePerProduct}",
                                                       11,
                                                       colorPrimaryDark,
                                                       textAlign:

@@ -47,6 +47,12 @@ const totokImg = "assets/images/totok.png";
 const putuImg = "assets/images/putu.png";
 const desyImg = "assets/images/desy.png";
 
+const gettingImg = "assets/images/getting.png";
+const startImg = "assets/images/start.png";
+const engineImg = "assets/images/engine.png";
+
+const graduateImg = "assets/images/bg_graduates.png";
+
 const bgVidLogin = "assets/images/bg_login.gif";
 
 const loadingGif = "assets/gif/loading.gif";
