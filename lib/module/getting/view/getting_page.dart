@@ -23,8 +23,13 @@ class GettingPage extends StatelessWidget {
             height: size.height,
             child: Stack(
               children: [
-                Image.asset(
-                  graduateImg,
+                SizedBox(
+                  width: double.infinity,
+                  height: size.height,
+                  child: Image.asset(
+                    graduateImg,
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 Container(
                   width: double.infinity,
@@ -104,10 +109,13 @@ class GettingPage extends StatelessWidget {
           );
         }
         if (_c.isShow.value) {
-          return SizedBox(
+          return Container(
+            color: Colors.black,
             width: double.infinity,
             height: size.height,
-            child: VideoPlayer(_c.videoPlayerController),
+            child: VideoPlayer(
+              _c.videoPlayerController,
+            ),
           );
         }
         if (_c.isStarted.value) {
@@ -116,8 +124,13 @@ class GettingPage extends StatelessWidget {
             height: size.height,
             child: Stack(
               children: [
-                Image.asset(
-                  gettingImg,
+                SizedBox(
+                  width: double.infinity,
+                  height: size.height,
+                  child: Image.asset(
+                    gettingImg,
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 Positioned(
                   bottom: 125,

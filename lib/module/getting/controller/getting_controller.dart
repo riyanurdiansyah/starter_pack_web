@@ -32,7 +32,8 @@ class GettingController extends GetxController
           ..repeat(reverse: true);
     animation = CurvedAnimation(
         parent: animationController!, curve: Curves.fastOutSlowIn);
-    videoPlayerController = VideoPlayerController.asset("music/graduates.mp4");
+    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(
+        "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2FGraduates!.mp4?alt=media"));
     confettiController =
         ConfettiController(duration: const Duration(milliseconds: 3));
     startTimer();
@@ -79,6 +80,7 @@ class GettingController extends GetxController
                 videoPlayerController.value.duration &&
             !isDone.value &&
             videoPlayerController.value.duration.inSeconds.toInt() != 0) {
+          audioPlayerGas.stop();
           isDone.value = true;
           confettiController.play();
         }
