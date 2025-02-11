@@ -44,7 +44,7 @@ class GettingController extends GetxController
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        startDecreasingValue();
+        // startDecreasingValue();
       },
     );
   }
@@ -72,30 +72,18 @@ class GettingController extends GetxController
       });
     }
     if (speed.value == 500) {
-      audioPlayerGas.stop();
-      videoPlayerController.initialize();
-      videoPlayerController.play();
-      isShow.value = true;
-      videoPlayerController.addListener(() {
-        if (videoPlayerController.value.position ==
-                videoPlayerController.value.duration &&
-            !isDone.value &&
-            videoPlayerController.value.duration.inSeconds.toInt() != 0) {
-          isDone.value = true;
-          confettiController.play();
-        }
-      });
+      // audioPlayerGas.stop();
     }
   }
 
   void startDecreasingValue() {
-    if (!isLongPressing.value && speed.value > 0) {
-      Future.delayed(const Duration(milliseconds: 50), () {
-        speed.value =
-            (speed.value - 2).clamp(0.0, 500.0); // Turunkan nilai sampai 0
-        startDecreasingValue(); // Rekursif untuk terus menurunkan nilai
-      });
-    }
+    // if (!isLongPressing.value && speed.value > 0) {
+    //   Future.delayed(const Duration(milliseconds: 50), () {
+    //     speed.value =
+    //         (speed.value - 2).clamp(0.0, 500.0); // Turunkan nilai sampai 0
+    //     startDecreasingValue(); // Rekursif untuk terus menurunkan nilai
+    //   });
+    // }
   }
 
   void increaseValue() {
@@ -114,5 +102,22 @@ class GettingController extends GetxController
 
   void fullGas() async {
     await audioPlayerGas.play(AssetSource("music/car_engine.mp3"));
+    audioPlayerGas.onPlayerStateChanged.listen((PlayerState state) {
+      // Cek apakah audio sudah selesai diputar
+      if (state == PlayerState.completed) {
+        videoPlayerController.initialize();
+        videoPlayerController.play();
+        isShow.value = true;
+        videoPlayerController.addListener(() {
+          if (videoPlayerController.value.position ==
+                  videoPlayerController.value.duration &&
+              !isDone.value &&
+              videoPlayerController.value.duration.inSeconds.toInt() != 0) {
+            isDone.value = true;
+            confettiController.play();
+          }
+        });
+      }
+    });
   }
 }

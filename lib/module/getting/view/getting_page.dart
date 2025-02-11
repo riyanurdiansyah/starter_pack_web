@@ -42,8 +42,8 @@ class GettingPage extends StatelessWidget {
                         child: FadeTransition(
                           opacity: _c.animation!,
                           child: AppTextNormal.labelBold(
-                            "COMMITMENT 2025\nTARGET 8.9 T\nGROWTH 7.8",
-                            24,
+                            "COMMITMENT 2025\nTARGET 8.9 T\nGROWTH 7.8%",
+                            isMobile ? 24 : 55,
                             Colors.white,
                             maxLines: 3,
                             textAlign: TextAlign.center,
@@ -114,8 +114,11 @@ class GettingPage extends StatelessWidget {
             color: Colors.black,
             width: double.infinity,
             height: size.height,
-            child: VideoPlayer(
-              _c.videoPlayerController,
+            child: AspectRatio(
+              aspectRatio: 100,
+              child: VideoPlayer(
+                _c.videoPlayerController,
+              ),
             ),
           );
         }
@@ -191,15 +194,15 @@ class GettingPage extends StatelessWidget {
                         _c.startIncreasingValue();
                       },
                       onLongPressEnd: (e) {
-                        Future.delayed(const Duration(milliseconds: 350), () {
-                          _c.audioPlayerGas.stop();
-                        });
-                        _c.isLongPressing.value = false;
-                        _c.startDecreasingValue();
+                        // Future.delayed(const Duration(milliseconds: 350), () {
+                        //   _c.audioPlayerGas.stop();
+                        // });
+                        // _c.isLongPressing.value = false;
+                        // _c.startDecreasingValue();
                       },
                       onTap: () {
-                        _c.increaseValue();
-                        _c.gas();
+                        // _c.increaseValue();
+                        // _c.gas();
                       },
                       child: Container(
                         width: 100,
