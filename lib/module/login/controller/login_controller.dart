@@ -73,7 +73,7 @@ class LoginController extends GetxController {
               if (tcPassword.text == tcUsername.text) {
                 navigatorKey.currentContext!.goNamed(AppRouteName.reset);
               } else {
-                audioC.playMusic();
+                // audioC.playMusic();
                 navigatorKey.currentContext!.goNamed(AppRouteName.play);
               }
             } else {

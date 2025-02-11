@@ -51,7 +51,7 @@ class ResetController extends GetxController {
 
     user.value = user.value.copyWith(password: hashPassword(tcPassword.text));
     await docRef.update(user.toJson());
-    audioC.playMusic();
+    // audioC.playMusic();
     navigatorKey.currentContext!.goNamed(AppRouteName.play);
   }
 }

@@ -72,6 +72,7 @@ class GettingController extends GetxController
       });
     }
     if (speed.value == 500) {
+      audioPlayerGas.stop();
       videoPlayerController.initialize();
       videoPlayerController.play();
       isShow.value = true;
@@ -80,7 +81,6 @@ class GettingController extends GetxController
                 videoPlayerController.value.duration &&
             !isDone.value &&
             videoPlayerController.value.duration.inSeconds.toInt() != 0) {
-          audioPlayerGas.stop();
           isDone.value = true;
           confettiController.play();
         }
@@ -113,6 +113,6 @@ class GettingController extends GetxController
   }
 
   void fullGas() async {
-    await audioPlayerGas.play(AssetSource("music/fullgas.wav"));
+    await audioPlayerGas.play(AssetSource("music/car_engine.mp3"));
   }
 }

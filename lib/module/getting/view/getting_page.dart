@@ -15,6 +15,7 @@ class GettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
     return Scaffold(
       body: Obx(() {
         if (_c.isDone.value) {
@@ -128,7 +129,7 @@ class GettingPage extends StatelessWidget {
                   width: double.infinity,
                   height: size.height,
                   child: Image.asset(
-                    gettingImg,
+                    isMobile ? gettingImg : gettingLandImg,
                     fit: BoxFit.fill,
                   ),
                 ),

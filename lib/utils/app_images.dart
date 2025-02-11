@@ -48,6 +48,7 @@ const putuImg = "assets/images/putu.png";
 const desyImg = "assets/images/desy.png";
 
 const gettingImg = "assets/images/getting.png";
+const gettingLandImg = "assets/images/getting_landscape.png";
 const startImg = "assets/images/start.png";
 const engineImg = "assets/images/engine.png";
 
