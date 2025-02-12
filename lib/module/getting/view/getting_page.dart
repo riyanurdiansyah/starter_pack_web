@@ -181,52 +181,97 @@ class GettingPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: 100,
-                  left: 0,
-                  right: 0,
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onLongPressStart: (e) {
-                        _c.fullGas();
-                        _c.isLongPressing.value = true;
-                        _c.startIncreasingValue();
-                      },
-                      onLongPressEnd: (e) {
-                        // Future.delayed(const Duration(milliseconds: 350), () {
-                        //   _c.audioPlayerGas.stop();
-                        // });
-                        // _c.isLongPressing.value = false;
-                        // _c.startDecreasingValue();
-                      },
-                      onTap: () {
-                        // _c.increaseValue();
-                        // _c.gas();
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.red),
+                Obx(
+                  () => Positioned(
+                    bottom: 60,
+                    left: 0,
+                    right: 0,
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onLongPressStart: _c.isLongPressing.value
+                            ? null
+                            : (e) {
+                                _c.fullGas();
+                                _c.isLongPressing.value = true;
+                                _c.startIncreasingValue();
+                              },
+                        onLongPressEnd: (e) {
+                          // Future.delayed(const Duration(milliseconds: 350), () {
+                          //   _c.audioPlayerGas.stop();
+                          // });
+                          // _c.isLongPressing.value = false;
+                          // _c.startDecreasingValue();
+                        },
+                        onTap: () {
+                          // _c.increaseValue();
+                          // _c.gas();
+                        },
                         child: Container(
-                          margin: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2.5,
-                              color: Colors.white,
-                            ),
-                            shape: BoxShape.circle,
-                            color: Colors.red,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 35,
+                            vertical: 14,
                           ),
-                          child: const Icon(
-                            Icons.power_settings_new_rounded,
-                            size: 50,
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                              color: _c.isLongPressing.value
+                                  ? Colors.grey
+                                  : Colors.red.shade400,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                width: 2,
+                                color: _c.isLongPressing.value
+                                    ? Colors.grey
+                                    : Colors.red,
+                              )),
+                          child: AppTextNormal.labelBold(
+                            "Getting\nCommitment",
+                            25,
+                            Colors.white,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ),
                     ),
+                    // child: MouseRegion(
+                    //   cursor: SystemMouseCursors.click,
+                    //   child: GestureDetector(
+                    //     onLongPressStart: (e) {
+                    //       _c.fullGas();
+                    //       _c.isLongPressing.value = true;
+                    //       _c.startIncreasingValue();
+                    //     },
+                    //     onLongPressEnd: (e) {
+                    //       // Future.delayed(const Duration(milliseconds: 350), () {
+                    //       //   _c.audioPlayerGas.stop();
+                    //       // });
+                    //       // _c.isLongPressing.value = false;
+                    //       // _c.startDecreasingValue();
+                    //     },
+                    //     onTap: () {
+                    //       // _c.increaseValue();
+                    //       // _c.gas();
+                    //     },
+                    //     child: Container(
+                    //       decoration: const BoxDecoration(
+                    //           shape: BoxShape.circle, color: Colors.red),
+                    //       child: Container(
+                    //         margin: const EdgeInsets.all(14),
+                    //         decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //             width: 2.5,
+                    //             color: Colors.white,
+                    //           ),
+                    //           shape: BoxShape.circle,
+                    //           color: Colors.red,
+                    //         ),
+                    //         child:
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ),
               ],

@@ -35,7 +35,7 @@ class GettingController extends GetxController
     videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(
         "https://firebasestorage.googleapis.com/v0/b/mfg-rakor.appspot.com/o/assets%2FGraduates!.mp4?alt=media"));
     confettiController =
-        ConfettiController(duration: const Duration(milliseconds: 3));
+        ConfettiController(duration: const Duration(seconds: 3));
     startTimer();
     super.onInit();
   }
@@ -110,11 +110,14 @@ class GettingController extends GetxController
         isShow.value = true;
         videoPlayerController.addListener(() {
           if (videoPlayerController.value.position ==
+              videoPlayerController.value.duration) {
+            confettiController.play();
+          }
+          if (videoPlayerController.value.position ==
                   videoPlayerController.value.duration &&
               !isDone.value &&
               videoPlayerController.value.duration.inSeconds.toInt() != 0) {
             isDone.value = true;
-            confettiController.play();
           }
         });
       }
